@@ -129,6 +129,8 @@
 
   html {
     @apply scroll-smooth;
+    scrollbar-gutter: stable;
+    overflow-y: scroll;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -137,6 +139,7 @@
   body {
     @apply bg-background text-foreground font-sans;
     @apply min-h-screen;
+    scrollbar-gutter: stable;
   }
 
   /* ── Focus Styles ── */

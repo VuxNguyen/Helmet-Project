@@ -13,7 +13,7 @@ HelmetPro is a modern, high-performance e-commerce frontend built with **Next.js
 | **TypeScript** | Type safety throughout the codebase |
 | **Tailwind CSS v4** | Utility-first styling |
 | **Framer Motion** | Animations and transitions |
-| **Zustand** | Lightweight state management |
+| **Zustand** | Lightweight state management (with persist middleware) |
 | **Zod** | Schema validation |
 | **React Hook Form** | Form management with validation |
 | **Radix UI** | Accessible, unstyled UI primitives |
@@ -32,6 +32,17 @@ helmetpro/
 ├── public/                  # Static assets (images, icons)
 ├── src/
 │   ├── app/                 # Next.js App Router pages
+│   │   ├── (account)/       # User account route group
+│   │   │   ├── account/     # Dashboard pages
+│   │   │   │   ├── addresses/   # Address management
+│   │   │   │   ├── orders/      # Order history
+│   │   │   │   ├── profile/     # Profile settings
+│   │   │   │   ├── wishlist/    # Wishlist
+│   │   │   │   └── page.tsx     # Account overview
+│   │   │   └── layout.tsx   # Dashboard layout (sidebar nav)
+│   │   ├── (auth)/          # Authentication route group
+│   │   │   ├── login/       # Login page
+│   │   │   └── register/    # Registration page
 │   │   ├── (shop)/          # Shop route group
 │   │   │   ├── cart/        # Cart page
 │   │   │   ├── checkout/    # Checkout page
@@ -42,7 +53,7 @@ helmetpro/
 │   │   ├── brands/          # Brands showcase section
 │   │   ├── categories/      # Categories section
 │   │   ├── hero/            # Hero section with trust bar
-│   │   ├── layout/          # Navbar, footer, mobile menu
+│   │   ├── layout/          # Navbar, footer, mobile menu, dashboard sidebar, auth guard
 │   │   ├── locale-provider/ # i18n context provider
 │   │   ├── products/        # Shared product components
 │   │   └── ui/              # Base UI components (shadcn)
@@ -52,28 +63,24 @@ helmetpro/
 │   │   ├── products.ts      # Product data
 │   │   └── sample-products.ts # Sample product listings
 │   ├── features/            # Feature-based modules
+│   │   ├── auth/            # Authentication (schemas, login/register forms)
 │   │   ├── cart/            # Shopping cart
-│   │   │   ├── components/  # Cart item row, summary, empty state
-│   │   │   └── types/       # Cart type definitions
 │   │   ├── checkout/        # Checkout flow
-│   │   │   ├── components/  # Shipping form, payment, order summary
-│   │   │   ├── data/        # Constants
-│   │   │   ├── lib/         # Validation schemas
-│   │   │   └── types/       # Checkout type definitions
 │   │   └── products/        # Product listing & detail
-│   │       ├── components/  # Gallery, reviews, filters, pagination
-│   │       ├── data/        # Product data
-│   │       ├── hooks/       # Custom hooks
-│   │       ├── stores/      # Zustand stores
-│   │       └── types/       # Product type definitions
 │   ├── hooks/               # Global custom hooks
 │   │   └── use-translations.ts
 │   ├── lib/                 # Utility libraries
-│   │   └── dictionary.ts    # i18n dictionary
+│   │   ├── constants.ts     # App-wide constants
+│   │   ├── dictionary.ts    # i18n dictionary
+│   │   ├── motion.ts        # Framer Motion tokens
+│   │   └── utils.ts         # cn() utility
 │   └── stores/              # Global Zustand stores
-│       └── locale-store.ts  # Locale/i18n store
+│       ├── auth-store.ts    # Authentication state (persisted)
+│       ├── cart-store.ts    # Shopping cart (persisted)
+│       ├── locale-store.ts  # Locale/i18n state
+│       ├── ui-store.ts      # UI preferences
+│       └── wishlist-store.ts # Wishlist (persisted)
 ├── next.config.ts           # Next.js configuration
-├── tailwind.config.ts       # Tailwind CSS configuration
 ├── tsconfig.json            # TypeScript configuration
 ├── components.json          # shadcn/ui configuration
 └── package.json             # Dependencies & scripts
@@ -110,7 +117,7 @@ helmetpro/
 - **Cart Item Row** — Individual item with quantity controls
 - **Cart Summary** — Subtotal, shipping, total calculation
 - **Empty Cart** — Empty state with CTA to shop
-- **Persistent state** via Zustand
+- **Persistent state** via Zustand (survives page refresh)
 
 ### 💳 Checkout (`/checkout`)
 - **Shipping Form** — Address collection with validation (React Hook Form + Zod)
@@ -118,6 +125,22 @@ helmetpro/
 - **Payment Methods** — Payment selection UI
 - **Order Summary** — Review before placing order
 - **Multi-step form** validation
+
+### 👤 User Account (`/account`)
+- **Responsive Dashboard Sidebar** — Collapsible on mobile, sticky on desktop
+- **Account Overview** — Stats cards (orders, wishlist, cart) + recent orders
+- **Order History** — Searchable list with expandable details & status badges
+- **Wishlist** — Product grid with add-to-cart & remove, backed by persisted Zustand store
+- **Address Management** — Add/edit/delete addresses, set default, type labels (home/office)
+- **Profile Settings** — Avatar, name/email/phone/DOB fields, password change section
+- **Auth Guard** — Unauthenticated users redirected to login
+- **Demo Account** — One-click quick login that pre-populates wishlist
+
+### 🔐 Authentication (`/login`, `/register`)
+- **Login form** — Email/password with Zod validation
+- **Registration form** — Full name, email, password with confirm
+- **Persisted auth state** — Login survives page refresh via Zustand persist
+- **Demo login** — Quick-test button with pre-filled wishlist items
 
 ### 🌐 Internationalization (i18n)
 - **Vietnamese & English** language support
@@ -127,10 +150,10 @@ helmetpro/
 
 ### 🎨 UI/UX
 - **Responsive design** — Mobile-first, works on all screen sizes
-- **Dark mode** support via `next-themes`
+- **Dark mode** support via CSS variables
 - **Smooth animations** with Framer Motion
 - **Toast notifications** via Sonner
-- **Loading skeletons** (`react-loading-skeleton`)
+- **Loading skeletons** and error states
 - **Accessible components** via Radix UI primitives
 - **Modern icons** from Lucide React
 - **Tailwind CSS v4** with `tw-animate-css`
@@ -140,7 +163,8 @@ helmetpro/
 - **Server Components** where possible, Client Components when needed
 - **TypeScript** throughout for type safety
 - **Zod schemas** for runtime validation
-- **State management** split between Zustand (client state) and React Query (server state)
+- **State management** split between Zustand (client state, persisted) and React Query (server state)
+- **Route groups** for clean URL organization (`(account)`, `(auth)`, `(shop)`)
 
 ## 🚦 Getting Started
 
@@ -179,12 +203,10 @@ The application is ready to deploy on [Vercel](https://vercel.com) or any platfo
 
 ## 🔜 Planned Features
 
-- User authentication & profiles (NextAuth.js configured)
-- Order management & history
-- Wishlist functionality
-- Admin dashboard
 - Payment gateway integration
 - Real-time inventory tracking
+- Admin dashboard
+- Email notifications for orders
 
 ## 📄 License
 

@@ -303,13 +303,13 @@ export const dictionary = {
       en: "We partner with the world's most trusted helmet manufacturers. Each brand is selected for its commitment to safety, innovation, and craftsmanship.",
     },
   },
-  products: {
+   products: {
     featuredTitle: {
       vi: "Mũ bảo hiểm nổi bật",
       en: "Featured Helmets",
     },
     featuredSubtitle: {
-      vi: "Được chế tác cho những người không ngừng vươn xa — công nghệ an toàn tiên tiến kết hợp phong cách đỉnh cao.",
+      vi: "Được chế tạo cho những người không ngừng vươn xa — công nghệ an toàn tiên tiến kết hợp phong cách đỉnh cao.",
       en: "Engineered for the relentless — cutting-edge safety meets uncompromising style.",
     },
     addToCart: {
@@ -331,6 +331,99 @@ export const dictionary = {
     removeFromWishlist: {
       vi: "Xóa khỏi yêu thích",
       en: "Remove from wishlist",
+    },
+    // Product listing page
+    listingTitle: {
+      vi: "Tất cả mũ bảo hiểm",
+      en: "All Helmets",
+    },
+    listingDescription: {
+      vi: "Khám phá bộ sưu tập mũ bảo hiểm xe máy cao cấp của chúng tôi. An toàn kết hợp phong cách.",
+      en: "Discover our premium collection of motorcycle helmets. Safety meets style.",
+    },
+    filters: {
+      vi: "Bộ lọc",
+      en: "Filters",
+    },
+    clearAll: {
+      vi: "Xóa tất cả",
+      en: "Clear all",
+    },
+    activeFilters: {
+      vi: "Bộ lọc đang áp dụng:",
+      en: "Active filters:",
+    },
+    noProductsFound: {
+      vi: "Không tìm thấy sản phẩm",
+      en: "No products found",
+    },
+    noProductsHint: {
+      vi: "Thử điều chỉnh tìm kiếm hoặc bộ lọc để tìm sản phẩm bạn cần.",
+      en: "Try adjusting your search or filter criteria to find what you're looking for.",
+    },
+    showingOf: {
+      vi: "Hiển thị {{count}} trên tổng số {{total}} mũ bảo hiểm",
+      en: "Showing {{count}} of {{total}} helmets",
+    },
+    searchPlaceholder: {
+      vi: "Tìm kiếm mũ bảo hiểm...",
+      en: "Search helmets...",
+    },
+    resultsFor: {
+      vi: "kết quả cho",
+      en: "results for",
+    },
+    resultFor: {
+      vi: "kết quả cho",
+      en: "result for",
+    },
+    page: {
+      vi: "Trang",
+      en: "Page",
+    },
+    previousPage: {
+      vi: "Trang trước",
+      en: "Previous page",
+    },
+    nextPage: {
+      vi: "Trang sau",
+      en: "Next page",
+    },
+    inStock: {
+      vi: "Còn hàng",
+      en: "In Stock",
+    },
+    sort: {
+      vi: "Sắp xếp",
+      en: "Sort",
+    },
+    category: {
+      vi: "Danh mục",
+      en: "Category",
+    },
+    brand: {
+      vi: "Thương hiệu",
+      en: "Brand",
+    },
+    priceRange: {
+      vi: "Khoảng giá",
+      en: "Price Range",
+    },
+    minimumRating: {
+      vi: "Đánh giá tối thiểu",
+      en: "Minimum Rating",
+    },
+    availability: {
+      vi: "Tình trạng",
+      en: "Availability",
+    },
+    inStockOnly: {
+      vi: "Chỉ còn hàng",
+      en: "In Stock Only",
+    },
+    ratingUp: {
+      vi: "sao trở lên",
+      en: "& up",
     },
   },
   footerTrust: {

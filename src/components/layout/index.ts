@@ -3,6 +3,8 @@ export { Section } from "./section";
 export { Navbar } from "./navbar";
 export { Logo } from "./navbar/logo";
 export { NavLinks } from "./navbar/nav-links";
+export { AuthGuard } from "./auth-guard";
+export { DashboardSidebar } from "./dashboard-sidebar";
 export { MobileSearchBar } from "./navbar/search-bar";
 export { CartButton } from "./navbar/cart-button";
 export { WishlistButton } from "./navbar/wishlist-button";

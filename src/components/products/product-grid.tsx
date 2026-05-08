@@ -6,6 +6,7 @@ import { ProductCard } from "./product-card"
 import { staggerContainer, staggerItem } from "@/lib/motion"
 import { motion } from "framer-motion"
 import { useTranslations } from "@/hooks/use-translations"
+import { useCartStore } from "@/stores/cart-store"
 
 interface ProductGridProps {
   products: Product[]
@@ -40,10 +41,16 @@ export function ProductGrid({
     })
   }, [])
 
+  const addItem = useCartStore((state) => state.addItem)
+
   const handleAddToCart = useCallback((product: Product) => {
-    // Placeholder — will integrate with cart store later
-    console.log("Add to cart:", product.name)
-  }, [])
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+    })
+  }, [addItem])
 
   return (
     <section className="py-16 md:py-24">

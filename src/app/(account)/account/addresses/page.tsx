@@ -1,0 +1,10 @@
+import type { Metadata } from "next"
+import { AddressesContent } from "./addresses-content"
+
+export const metadata: Metadata = {
+  title: "Quản lý địa chỉ",
+}
+
+export default function AddressesPage() {
+  return <AddressesContent />
+}
