@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
+import { SiteShell } from "@/components/layout/site-shell";
 import { LocaleProvider } from "@/components/locale-provider";
 
 const inter = Inter({
@@ -62,9 +61,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-screen flex-col bg-background font-sans text-foreground">
         <LocaleProvider />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );

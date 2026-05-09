@@ -40,6 +40,15 @@ helmetpro/
 │   │   │   │   ├── wishlist/    # Wishlist
 │   │   │   │   └── page.tsx     # Account overview
 │   │   │   └── layout.tsx   # Dashboard layout (sidebar nav)
+│   │   ├── (admin)/         # Admin route group
+│   │   │   ├── admin/       # Admin dashboard pages
+│   │   │   │   ├── customers/   # Customer management
+│   │   │   │   ├── orders/      # Order management
+│   │   │   │   ├── products/    # Product management
+│   │   │   │   ├── settings/    # Store settings
+│   │   │   │   └── page.tsx     # Admin overview
+│   │   │   ├── layout.tsx   # Admin layout (sidebar + topbar)
+│   │   │   └── admin-layout-client.tsx
 │   │   ├── (auth)/          # Authentication route group
 │   │   │   ├── login/       # Login page
 │   │   │   └── register/    # Registration page
@@ -52,8 +61,9 @@ helmetpro/
 │   ├── components/          # Shared UI components
 │   │   ├── brands/          # Brands showcase section
 │   │   ├── categories/      # Categories section
+│   │   ├── common/          # Common reusable components (data-table, form-section, sort-header)
 │   │   ├── hero/            # Hero section with trust bar
-│   │   ├── layout/          # Navbar, footer, mobile menu, dashboard sidebar, auth guard
+│   │   ├── layout/          # Navbar, footer, mobile menu, dashboard sidebar, auth guard, admin sidebar
 │   │   ├── locale-provider/ # i18n context provider
 │   │   ├── products/        # Shared product components
 │   │   └── ui/              # Base UI components (shadcn)
@@ -63,6 +73,12 @@ helmetpro/
 │   │   ├── products.ts      # Product data
 │   │   └── sample-products.ts # Sample product listings
 │   ├── features/            # Feature-based modules
+│   │   ├── admin/           # Admin dashboard features
+│   │   │   ├── components/      # Overview stats, recent orders, low stock
+│   │   │   ├── customers/       # Customer management (CRUD, filters, details)
+│   │   │   ├── orders/          # Order management (status transitions, details)
+│   │   │   ├── products/        # Product management (CRUD, form, image upload)
+│   │   │   └── settings/        # Settings (profile, store, notifications, appearance, security)
 │   │   ├── auth/            # Authentication (schemas, login/register forms)
 │   │   ├── cart/            # Shopping cart
 │   │   ├── checkout/        # Checkout flow
@@ -75,6 +91,7 @@ helmetpro/
 │   │   ├── motion.ts        # Framer Motion tokens
 │   │   └── utils.ts         # cn() utility
 │   └── stores/              # Global Zustand stores
+│       ├── admin-store.ts   # Admin sidebar state
 │       ├── auth-store.ts    # Authentication state (persisted)
 │       ├── cart-store.ts    # Shopping cart (persisted)
 │       ├── locale-store.ts  # Locale/i18n state
@@ -136,6 +153,17 @@ helmetpro/
 - **Auth Guard** — Unauthenticated users redirected to login
 - **Demo Account** — One-click quick login that pre-populates wishlist
 
+### 🛠️ Admin Dashboard (`/admin`)
+- **Overview** — Stats cards (revenue, orders, customers, conversion) + recent orders + low stock alerts
+- **Products** — Full product catalog with search, category/brand/status filters, sortable data table, bulk actions
+- **Add/Edit Product** — Side sheet forms with image upload (drag & drop), Zod validation, media/preview/inventory sections
+- **Orders** — Order list with search, status/date filters, sortable table, detail drawer with status transitions & timeline
+- **Customers** — Customer list with search, status/spend filters, sortable table, detail drawer with spending overview & order history
+- **Settings** — Multi-tab settings (Profile, Store, Notifications, Appearance, Security) with per-tab React Hook Form + Zod validation
+- **Responsive Admin Layout** — Collapsible sidebar, mobile overlay, topbar
+- **Reusable Components** — Shared `DataTable` (TanStack Table), `SortHeader`, `FormSection`, status badges
+- **Dark-themed UI** — Consistent premium dark design with fintech-inspired dashboard aesthetics
+
 ### 🔐 Authentication (`/login`, `/register`)
 - **Login form** — Email/password with Zod validation
 - **Registration form** — Full name, email, password with confirm
@@ -164,7 +192,9 @@ helmetpro/
 - **TypeScript** throughout for type safety
 - **Zod schemas** for runtime validation
 - **State management** split between Zustand (client state, persisted) and React Query (server state)
-- **Route groups** for clean URL organization (`(account)`, `(auth)`, `(shop)`)
+- **Route groups** for clean URL organization (`(admin)`, `(account)`, `(auth)`, `(shop)`)
+- **Admin module** with reusable TanStack Table, sort headers, form sections, and status badge system
+- **Form management** via React Hook Form + Zod resolver with consistent form section patterns
 
 ## 🚦 Getting Started
 
@@ -205,7 +235,6 @@ The application is ready to deploy on [Vercel](https://vercel.com) or any platfo
 
 - Payment gateway integration
 - Real-time inventory tracking
-- Admin dashboard
 - Email notifications for orders
 
 ## 📄 License
