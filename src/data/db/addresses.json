@@ -1,0 +1,81 @@
+[
+  {
+    "id": "addr-1",
+    "userId": "user-1",
+    "name": "Alice Johnson",
+    "phone": "+1 (555) 123-4567",
+    "street": "123 Main St",
+    "apartment": "Apt 4B",
+    "city": "Portland",
+    "state": "OR",
+    "zipCode": "97201",
+    "country": "US",
+    "isDefault": true,
+    "type": "home"
+  },
+  {
+    "id": "addr-2",
+    "userId": "user-1",
+    "name": "Alice Johnson (Work)",
+    "phone": "+1 (555) 123-4567",
+    "street": "456 Corporate Blvd",
+    "city": "Portland",
+    "state": "OR",
+    "zipCode": "97204",
+    "country": "US",
+    "isDefault": false,
+    "type": "office"
+  },
+  {
+    "id": "addr-3",
+    "userId": "user-2",
+    "name": "Bob Smith",
+    "phone": "+1 (555) 234-5678",
+    "street": "456 Oak Ave",
+    "city": "Seattle",
+    "state": "WA",
+    "zipCode": "98101",
+    "country": "US",
+    "isDefault": true,
+    "type": "home"
+  },
+  {
+    "id": "addr-4",
+    "userId": "user-3",
+    "name": "Carol Davis",
+    "phone": "+1 (555) 345-6789",
+    "street": "789 Pine Rd",
+    "city": "Denver",
+    "state": "CO",
+    "zipCode": "80201",
+    "country": "US",
+    "isDefault": true,
+    "type": "home"
+  },
+  {
+    "id": "addr-5",
+    "userId": "user-4",
+    "name": "David Wilson",
+    "phone": "+1 (555) 456-7890",
+    "street": "321 Elm St",
+    "city": "Chicago",
+    "state": "IL",
+    "zipCode": "60601",
+    "country": "US",
+    "isDefault": true,
+    "type": "home"
+  },
+  {
+    "id": "addr-6",
+    "userId": "user-5",
+    "name": "Eve Martinez",
+    "phone": "+1 (555) 567-8901",
+    "street": "654 Maple Dr",
+    "city": "Austin",
+    "state": "TX",
+    "zipCode": "73301",
+    "country": "US",
+    "isDefault": true,
+    "type": "home"
+  }
+]

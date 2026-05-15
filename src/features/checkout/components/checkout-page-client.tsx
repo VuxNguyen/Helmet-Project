@@ -24,6 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useCartStore } from "@/stores/cart-store";
 import { checkoutFormSchema, type CheckoutFormValues } from "@/features/checkout/lib/schema";
+import { submitCheckout } from "@/features/checkout/api/checkout-api";
 import { SHIPPING_METHODS, PAYMENT_METHODS } from "@/features/checkout/data/constants";
 import { ShippingForm } from "@/features/checkout/components/shipping-form";
 import { DeliveryOptions } from "@/features/checkout/components/delivery-options";
@@ -127,12 +128,28 @@ export function CheckoutPageClient() {
 
     setIsSubmitting(true);
 
-    // Simulate order processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const formData = form.getValues();
+
+    try {
+      await submitCheckout({
+        shipping: formData.shippingAddress,
+        shippingMethod: formData.shippingMethod,
+        paymentMethod: formData.paymentMethod,
+        items: items.map((item) => ({
+          productId: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+      });
+
+      setIsSuccess(true);
+      clearCart();
+    } catch {
+      // Submission failed — allow retry
+    }
 
     setIsSubmitting(false);
-    setIsSuccess(true);
-    clearCart();
   };
 
   if (items.length === 0 && !isSuccess) {

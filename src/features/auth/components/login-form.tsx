@@ -10,8 +10,8 @@ import Link from "next/link"
 
 import { useTranslations } from "@/hooks/use-translations"
 import { loginSchema, type LoginFormData } from "@/features/auth/auth-schema"
-import { useAuthStore } from "@/stores/auth-store"
-import { useWishlistStore } from "@/stores/wishlist-store"
+import { useLogin } from "@/features/auth/hooks/use-auth-api"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -40,10 +40,8 @@ const itemVariants = {
 export function LoginForm() {
   const { t } = useTranslations()
   const router = useRouter()
-  const login = useAuthStore((state) => state.login)
-  const wishlist = useWishlistStore((state) => state)
+  const loginMutation = useLogin()
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -58,10 +56,10 @@ export function LoginForm() {
   })
 
   async function onSubmit(data: LoginFormData) {
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1200))
-    login({ name: data.email.split("@")[0], email: data.email })
-    router.push("/account")
+    loginMutation.mutate(data, {
+      onSuccess: () => router.push("/account"),
+      onError: (err: Error) => toast.error(err.message),
+    })
   }
 
   return (
@@ -162,9 +160,9 @@ export function LoginForm() {
               <Button
                 type="submit"
                 className="h-11 w-full gap-2"
-                disabled={isLoading}
+                disabled={loginMutation.isPending}
               >
-                {isLoading ? (
+                {loginMutation.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <>
@@ -209,12 +207,10 @@ export function LoginForm() {
               variant="secondary"
               className="h-11 w-full gap-2"
               onClick={() => {
-                login({ name: "Nguyễn Văn A", email: "demo@helmetpro.com" })
-                if (wishlist.items.length === 0) {
-                  wishlist.addItem({ id: "1", name: "Arai RX-7X Evo", price: 899.99, image: "/placeholder-helmet.svg", slug: "arai-rx-7x-evo" })
-                  wishlist.addItem({ id: "3", name: "AGV Pista GP RR", price: 1499.99, image: "/placeholder-helmet.svg", slug: "agv-pista-gp-rr" })
-                }
-                router.push("/account")
+                loginMutation.mutate(
+                  { email: "alice@example.com", password: "password123" },
+                  { onSuccess: () => router.push("/account") },
+                )
               }}
             >
               <ShieldCheck className="h-4 w-4" />

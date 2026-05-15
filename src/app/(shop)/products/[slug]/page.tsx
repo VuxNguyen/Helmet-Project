@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-import { getProductDetailBySlug, getRelatedProductsFor } from "@/features/products/data/product-detail-data"
 import { ProductDetailClient } from "@/features/products/components/product-detail-client"
 
 /* ───────── Props ───────── */
@@ -10,23 +9,36 @@ interface ProductPageProps {
   params: Promise<{ slug: string }>
 }
 
+/* ───────── Fetch Helpers ───────── */
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+
+async function fetchProduct(slug: string) {
+  const res = await fetch(`${BASE_URL}/api/products/${slug}`, { cache: "no-store" })
+  if (!res.ok) return null
+  return res.json() as Promise<{
+    product: import("@/features/products/types/product-detail").ProductDetail
+    related: import("@/features/products/types/product-detail").RelatedProduct[]
+  }>
+}
+
 /* ───────── Metadata ───────── */
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params
-  const product = getProductDetailBySlug(slug)
+  const data = await fetchProduct(slug)
 
-  if (!product) {
+  if (!data) {
     return { title: "Product Not Found | Helmet Pro" }
   }
 
   return {
-    title: `${product.name} | Helmet Pro`,
-    description: product.shortDescription,
+    title: `${data.product.name} | Helmet Pro`,
+    description: data.product.shortDescription,
     openGraph: {
-      title: `${product.name} | Helmet Pro`,
-      description: product.shortDescription,
-      images: product.images[0] ? [product.images[0]] : [],
+      title: `${data.product.name} | Helmet Pro`,
+      description: data.product.shortDescription,
+      images: data.product.images[0] ? [data.product.images[0]] : [],
     },
   }
 }
@@ -35,17 +47,16 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
-  const product = getProductDetailBySlug(slug)
-  const relatedProducts = getRelatedProductsFor(slug)
+  const data = await fetchProduct(slug)
 
-  if (!product) {
+  if (!data) {
     notFound()
   }
 
   return (
     <ProductDetailClient
-      product={product}
-      relatedProducts={relatedProducts}
+      product={data.product}
+      relatedProducts={data.related}
     />
   )
 }

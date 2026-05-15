@@ -1,0 +1,42 @@
+[
+  {
+    "id": "wish-1",
+    "userId": "user-1",
+    "productId": "3",
+    "name": "AGV Pista GP RR",
+    "price": 1499.99,
+    "image": "/placeholder-helmet.svg",
+    "inStock": true,
+    "addedAt": "2026-05-10T10:00:00.000Z"
+  },
+  {
+    "id": "wish-2",
+    "userId": "user-1",
+    "productId": "5",
+    "name": "HJC RPHA 91",
+    "price": 499.99,
+    "image": "/placeholder-helmet.svg",
+    "inStock": true,
+    "addedAt": "2026-05-12T14:00:00.000Z"
+  },
+  {
+    "id": "wish-3",
+    "userId": "user-2",
+    "productId": "1",
+    "name": "Arai RX-7X Evo",
+    "price": 899.99,
+    "image": "/placeholder-helmet.svg",
+    "inStock": true,
+    "addedAt": "2026-05-08T09:00:00.000Z"
+  },
+  {
+    "id": "wish-4",
+    "userId": "user-4",
+    "productId": "7",
+    "name": "LS2 Thunder Carbon",
+    "price": 399.99,
+    "image": "/placeholder-helmet.svg",
+    "inStock": true,
+    "addedAt": "2026-05-14T16:00:00.000Z"
+  }
+]

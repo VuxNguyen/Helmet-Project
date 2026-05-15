@@ -1,5 +1,12 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
+import { useAuthStore } from "@/stores/auth-store"
+import {
+  createAddress as apiCreateAddress,
+  updateAddress as apiUpdateAddress,
+  deleteAddress as apiDeleteAddress,
+  setDefaultAddress as apiSetDefaultAddress,
+} from "@/features/addresses/api/addresses-api"
 
 export interface Address {
   id: string
@@ -15,76 +22,78 @@ export interface Address {
 
 interface AddressesState {
   items: Address[]
-  addAddress: (address: Omit<Address, "id" | "isDefault">) => void
+  addAddress: (data: Omit<Address, "id" | "isDefault">) => void
   updateAddress: (id: string, data: Partial<Address>) => void
   removeAddress: (id: string) => void
   setDefault: (id: string) => void
+  setItems: (items: Address[]) => void
 }
 
-const defaultAddresses: Address[] = [
-  {
-    id: "1",
-    type: "home",
-    name: "Nguyễn Văn A",
-    phone: "0901 234 567",
-    street: "123 Nguyễn Huệ",
-    ward: "Phường Bến Nghé",
-    district: "Quận 1",
-    city: "TP. Hồ Chí Minh",
-    isDefault: true,
-  },
-  {
-    id: "2",
-    type: "office",
-    name: "Nguyễn Văn A",
-    phone: "0909 888 777",
-    street: "456 Lê Lợi",
-    ward: "Phường 3",
-    district: "Quận 3",
-    city: "TP. Hồ Chí Minh",
-    isDefault: false,
-  },
-]
+function getAuth() {
+  return useAuthStore.getState()
+}
 
 export const useAddressesStore = create<AddressesState>()(
   persist(
-    (set) => ({
-      items: defaultAddresses,
+    (set, get) => ({
+      items: [],
 
-      addAddress: (data) =>
+      setItems: (items) => set({ items }),
+
+      addAddress: (data) => {
+        const { isAuthenticated, user } = getAuth()
+        if (isAuthenticated) {
+          apiCreateAddress({
+            userId: user?.id,
+            name: data.name,
+            phone: data.phone,
+            street: data.street,
+            apartment: `${data.ward}, ${data.district}`,
+            city: data.city,
+            state: data.district,
+            zipCode: "00000",
+            country: "VN",
+            type: data.type,
+          }).catch(() => {})
+        }
         set((state) => ({
           items: [
             ...state.items,
-            {
-              ...data,
-              id: String(Date.now()),
-              isDefault: state.items.length === 0,
-            },
+            { ...data, id: String(Date.now()), isDefault: state.items.length === 0 },
           ],
-        })),
+        }))
+      },
 
-      updateAddress: (id, data) =>
+      updateAddress: (id, data) => {
+        if (getAuth().isAuthenticated) {
+          apiUpdateAddress(id, {
+            ...data,
+            apartment: data.ward ? `${data.ward}, ${data.district || ""}` : undefined,
+          }).catch(() => {})
+        }
         set((state) => ({
-          items: state.items.map((a) =>
-            a.id === id ? { ...a, ...data } : a,
-          ),
-        })),
+          items: state.items.map((a) => (a.id === id ? { ...a, ...data } : a)),
+        }))
+      },
 
-      removeAddress: (id) =>
+      removeAddress: (id) => {
+        if (getAuth().isAuthenticated) {
+          apiDeleteAddress(id).catch(() => {})
+        }
         set((state) => ({
           items: state.items.filter((a) => a.id !== id),
-        })),
+        }))
+      },
 
-      setDefault: (id) =>
+      setDefault: (id) => {
+        if (getAuth().isAuthenticated) {
+          apiSetDefaultAddress(id).catch(() => {})
+        }
         set((state) => ({
-          items: state.items.map((a) => ({
-            ...a,
-            isDefault: a.id === id,
-          })),
-        })),
+          items: state.items.map((a) => ({ ...a, isDefault: a.id === id })),
+        }))
+      },
     }),
-    {
-      name: "helmetpro-addresses",
-    },
+    { name: "helmetpro-addresses" },
   ),
 )

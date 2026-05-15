@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback, useEffect } from "react"
 import { CustomersToolbar } from "./customers-toolbar"
 import { CustomersTable } from "./customers-table"
 import { CustomerDetailsDrawer } from "./customer-details-drawer"
@@ -14,6 +14,11 @@ export function CustomersPage() {
   const [selectedCustomer, setSelectedCustomer] = useState<AdminCustomer | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const getFiltered = useAdminCustomersStore((s) => s.getFiltered)
+  const fetchItems = useAdminCustomersStore((s) => s.fetchItems)
+
+  useEffect(() => {
+    fetchItems()
+  }, [fetchItems])
 
   const filteredCustomers = useMemo(
     () =>

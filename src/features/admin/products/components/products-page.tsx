@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback, useEffect } from "react"
 import { Trash2, X, CheckCircle, FileEdit } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
@@ -23,6 +23,11 @@ export function ProductsPage() {
   const bulkUpdateStatus = useAdminProductsStore((s) => s.bulkUpdateStatus)
   const bulkDelete = useAdminProductsStore((s) => s.bulkDelete)
   const getFiltered = useAdminProductsStore((s) => s.getFiltered)
+  const fetchItems = useAdminProductsStore((s) => s.fetchItems)
+
+  useEffect(() => {
+    fetchItems()
+  }, [fetchItems])
 
   const filteredProducts = useMemo(
     () =>

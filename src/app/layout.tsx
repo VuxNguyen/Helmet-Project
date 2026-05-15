@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { SiteShell } from "@/components/layout/site-shell";
 import { LocaleProvider } from "@/components/locale-provider";
+import { Providers } from "@/components/providers";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -61,7 +62,9 @@ export default function RootLayout({
     >
       <body className="flex min-h-screen flex-col bg-background font-sans text-foreground">
         <LocaleProvider />
-        <SiteShell>{children}</SiteShell>
+        <Providers>
+          <SiteShell>{children}</SiteShell>
+        </Providers>
       </body>
     </html>
   );

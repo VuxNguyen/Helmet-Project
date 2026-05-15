@@ -1,0 +1,962 @@
+[
+  {
+    "id": "1",
+    "name": "Arai RX-7X Evo",
+    "brand": "Arai",
+    "slug": "arai-rx-7x-evo",
+    "sku": "HELM-0001",
+    "description": "Premium full-face helmet with advanced ventilation and superior aerodynamics. Designed for riders who demand the best in safety and comfort.",
+    "shortDescription": "Premium full-face helmet with advanced ventilation.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg", "/placeholder-helmet.svg"],
+    "price": 899.99,
+    "originalPrice": 999.99,
+    "discount": 10,
+    "rating": 4.8,
+    "reviewCount": 124,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 42,
+    "sku": "HELM-0001",
+    "featured": true,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Racing Red", "hex": "#DC2626" },
+      { "name": "Royal Blue", "hex": "#2563EB" },
+      { "name": "Pearl White", "hex": "#F5F5F5" }
+    ],
+    "sizes": [
+      { "label": "XS", "inStock": true },
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true },
+      { "label": "XXL", "inStock": false }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Multi-Composite PB-SNC2" },
+      { "label": "Weight", "value": "3.5 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Pinlock-ready" },
+      { "label": "Ventilation", "value": "5 intake, 4 exhaust" }
+    ],
+    "reviews": [
+      { "id": "r1", "author": "John D.", "rating": 5, "date": "2026-04-10", "title": "Best helmet ever", "content": "Incredible fit and finish. The ventilation is outstanding.", "helpful": 24, "verified": true },
+      { "id": "r2", "author": "Sarah M.", "rating": 4, "date": "2026-03-22", "title": "Great but pricey", "content": "Amazing quality but you pay for it. Worth it for serious riders.", "helpful": 12, "verified": true }
+    ],
+    "relatedIds": ["2", "3", "6"]
+  },
+  {
+    "id": "2",
+    "name": "Shoei X-Fifteen",
+    "brand": "Shoei",
+    "slug": "shoei-x-fifteen",
+    "sku": "HELM-0002",
+    "description": "Race-proven performance with cutting-edge safety technology. The X-Fifteen represents the pinnacle of Shoei's engineering.",
+    "shortDescription": "Race-proven performance with cutting-edge safety.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg", "/placeholder-helmet.svg"],
+    "price": 799.99,
+    "originalPrice": 899.99,
+    "discount": 11,
+    "rating": 4.7,
+    "reviewCount": 98,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 28,
+    "sku": "HELM-0002",
+    "featured": true,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "White", "hex": "#E8E8E8" },
+      { "name": "Racing Red", "hex": "#DC2626" }
+    ],
+    "sizes": [
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true },
+      { "label": "XXL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "AIM+ (Advanced Integrated Matrix Plus)" },
+      { "label": "Weight", "value": "3.7 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "CWR-F2 Pinlock-ready" },
+      { "label": "Ventilation", "value": "6 intake, 4 exhaust" }
+    ],
+    "reviews": [
+      { "id": "r3", "author": "Mike R.", "rating": 5, "date": "2026-04-05", "title": "Track ready", "content": "Used this at the track and it performed flawlessly.", "helpful": 18, "verified": true }
+    ],
+    "relatedIds": ["1", "4", "11"]
+  },
+  {
+    "id": "3",
+    "name": "AGV Pista GP RR",
+    "brand": "AGV",
+    "slug": "agv-pista-gp-rr",
+    "sku": "HELM-0003",
+    "description": "MotoGP-derived carbon fiber helmet for the ultimate track experience. Worn by champions.",
+    "shortDescription": "MotoGP-derived carbon fiber helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg", "/placeholder-helmet.svg"],
+    "price": 1499.99,
+    "rating": 4.9,
+    "reviewCount": 67,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 12,
+    "sku": "HELM-0003",
+    "featured": true,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "White", "hex": "#F5F5F5" },
+      { "name": "Racing Red", "hex": "#DC2626" },
+      { "name": "Yellow", "hex": "#F59E0B" }
+    ],
+    "sizes": [
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "100% Carbon Fiber" },
+      { "label": "Weight", "value": "3.1 lbs" },
+      { "label": "Safety Rating", "value": "ECE 22.06" },
+      { "label": "Visor", "value": "190° horizontal field" },
+      { "label": "Ventilation", "value": "5 front vents" }
+    ],
+    "reviews": [
+      { "id": "r4", "author": "Pro Rider 99", "rating": 5, "date": "2026-03-30", "title": "The ultimate track helmet", "content": "You can feel the carbon fiber difference. So light!", "helpful": 32, "verified": true }
+    ],
+    "relatedIds": ["1", "2", "6"]
+  },
+  {
+    "id": "4",
+    "name": "Scorpion EXO-R1 Air",
+    "brand": "Scorpion",
+    "slug": "scorpion-exo-r1-air",
+    "sku": "HELM-0004",
+    "description": "Premium sport helmet with air fit system and ultra-wide visor. Features Scorpion's patented AirFit system for a custom cheek pad fit.",
+    "shortDescription": "Premium sport helmet with air fit system.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg", "/placeholder-helmet.svg"],
+    "price": 549.99,
+    "originalPrice": 629.99,
+    "discount": 13,
+    "rating": 4.5,
+    "reviewCount": 203,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 56,
+    "sku": "HELM-0004",
+    "featured": true,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Blue", "hex": "#2563EB" },
+      { "name": "Green", "hex": "#16A34A" }
+    ],
+    "sizes": [
+      { "label": "XS", "inStock": true },
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "S.T.R.A.C. Polycarbonate" },
+      { "label": "Weight", "value": "3.4 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Pinlock-ready MaxVision" },
+      { "label": "Ventilation", "value": "3 intake, 2 exhaust" }
+    ],
+    "reviews": [],
+    "relatedIds": ["2", "11", "13"]
+  },
+  {
+    "id": "5",
+    "name": "HJC RPHA 91",
+    "brand": "HJC",
+    "slug": "hjc-rpha-91",
+    "sku": "HELM-0005",
+    "description": "Premium modular helmet with integrated Bluetooth readiness. The RPHA 91 is HJC's flagship modular touring helmet.",
+    "shortDescription": "Premium modular helmet with Bluetooth readiness.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg", "/placeholder-helmet.svg"],
+    "price": 499.99,
+    "rating": 4.4,
+    "reviewCount": 156,
+    "category": "Modular",
+    "categorySlug": "modular",
+    "inStock": true,
+    "stockCount": 35,
+    "sku": "HELM-0005",
+    "featured": true,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Silver", "hex": "#E8E8E8" },
+      { "name": "Blue", "hex": "#3B82F6" }
+    ],
+    "sizes": [
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true },
+      { "label": "XXL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Premium Integrated Matrix (PIM+)" },
+      { "label": "Weight", "value": "3.8 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "HJ-36 Pinlock-ready" },
+      { "label": "Ventilation", "value": "4 intake, 3 exhaust" }
+    ],
+    "reviews": [],
+    "relatedIds": ["9", "10", "12"]
+  },
+  {
+    "id": "6",
+    "name": "Bell Race Star DLX",
+    "brand": "Bell",
+    "slug": "bell-race-star-dlx",
+    "sku": "HELM-0006",
+    "description": "Pro-level racing helmet with panoramic visor and superior ventilation. Used by professional racers worldwide.",
+    "shortDescription": "Pro-level racing helmet with panoramic visor.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg", "/placeholder-helmet.svg"],
+    "price": 699.99,
+    "originalPrice": 799.99,
+    "discount": 12,
+    "rating": 4.6,
+    "reviewCount": 89,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": false,
+    "stockCount": 0,
+    "sku": "HELM-0006",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "White", "hex": "#F5F5F5" },
+      { "name": "Racing Red", "hex": "#DC2626" }
+    ],
+    "sizes": [
+      { "label": "M", "inStock": false },
+      { "label": "L", "inStock": false },
+      { "label": "XL", "inStock": false }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "3K Carbon Fiber" },
+      { "label": "Weight", "value": "3.6 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06, Snell" },
+      { "label": "Visor", "value": "Panoramic Pinlock-ready" },
+      { "label": "Ventilation", "value": "5 intake, 4 exhaust" }
+    ],
+    "reviews": [],
+    "relatedIds": ["1", "3", "2"]
+  },
+  {
+    "id": "7",
+    "name": "LS2 Thunder Carbon",
+    "brand": "LS2",
+    "slug": "ls2-thunder-carbon",
+    "sku": "HELM-0007",
+    "description": "Lightweight carbon fiber helmet with excellent value. LS2 brings carbon fiber technology to an accessible price point.",
+    "shortDescription": "Lightweight carbon fiber helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 399.99,
+    "rating": 4.3,
+    "reviewCount": 178,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 78,
+    "sku": "HELM-0007",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Carbon", "hex": "#4A4A4A" }
+    ],
+    "sizes": [
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Carbon Fiber" },
+      { "label": "Weight", "value": "3.3 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Pinlock-ready" }
+    ],
+    "reviews": [],
+    "relatedIds": ["8", "13", "16"]
+  },
+  {
+    "id": "8",
+    "name": "KYT NZ Race",
+    "brand": "KYT",
+    "slug": "kyt-nz-race",
+    "sku": "HELM-0008",
+    "description": "Affordable full-face helmet with race-inspired design. KYT brings MotoGP experience to an accessible price.",
+    "shortDescription": "Affordable full-face race-inspired helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 299.99,
+    "originalPrice": 379.99,
+    "discount": 21,
+    "rating": 4.2,
+    "reviewCount": 245,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 64,
+    "sku": "HELM-0008",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "White", "hex": "#F5F5F5" }
+    ],
+    "sizes": [
+      { "label": "XS", "inStock": true },
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "HPC (High Performance Composite)" },
+      { "label": "Weight", "value": "3.5 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Pinlock-ready" }
+    ],
+    "reviews": [],
+    "relatedIds": ["7", "13", "16"]
+  },
+  {
+    "id": "9",
+    "name": "Arai XD-4 Adventure",
+    "brand": "Arai",
+    "slug": "arai-xd-4-adventure",
+    "sku": "HELM-0009",
+    "description": "Versatile adventure helmet with peak visor. Perfect for dual-sport and adventure touring riders.",
+    "shortDescription": "Versatile adventure helmet with peak visor.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 749.99,
+    "rating": 4.7,
+    "reviewCount": 87,
+    "category": "Modular",
+    "categorySlug": "modular",
+    "inStock": true,
+    "stockCount": 18,
+    "sku": "HELM-0009",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Army Green", "hex": "#4A6741" }
+    ],
+    "sizes": [
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "PB-SNC2" },
+      { "label": "Weight", "value": "3.9 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Removable peak, Pinlock-ready" }
+    ],
+    "reviews": [],
+    "relatedIds": ["5", "10", "17"]
+  },
+  {
+    "id": "10",
+    "name": "Shoei Neotec 3",
+    "brand": "Shoei",
+    "slug": "shoei-neotec-3",
+    "sku": "HELM-0010",
+    "description": "Premium modular touring helmet with built-in sun visor. The ultimate companion for long-distance riders.",
+    "shortDescription": "Premium modular touring helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 649.99,
+    "originalPrice": 729.99,
+    "discount": 11,
+    "rating": 4.6,
+    "reviewCount": 134,
+    "category": "Modular",
+    "categorySlug": "modular",
+    "inStock": true,
+    "stockCount": 23,
+    "sku": "HELM-0010",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Silver", "hex": "#C0C0C0" },
+      { "name": "Pearl White", "hex": "#F5F5F5" }
+    ],
+    "sizes": [
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "AIM+ (Advanced Integrated Matrix Plus)" },
+      { "label": "Weight", "value": "4.0 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Built-in sun visor, Pinlock-ready" }
+    ],
+    "reviews": [],
+    "relatedIds": ["5", "9", "12"]
+  },
+  {
+    "id": "11",
+    "name": "AGV K6 S",
+    "brand": "AGV",
+    "slug": "agv-k6-s",
+    "sku": "HELM-0011",
+    "description": "Lightweight street helmet with carbon aramid fiber. The perfect balance of comfort, safety, and style for everyday riding.",
+    "shortDescription": "Lightweight street helmet with carbon aramid fiber.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 549.99,
+    "rating": 4.5,
+    "reviewCount": 192,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 47,
+    "sku": "HELM-0011",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "White", "hex": "#F5F5F5" },
+      { "name": "Red", "hex": "#DC2626" }
+    ],
+    "sizes": [
+      { "label": "XS", "inStock": true },
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Carbon Aramid Fiber" },
+      { "label": "Weight", "value": "3.2 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Pinlock-ready 190°" }
+    ],
+    "reviews": [],
+    "relatedIds": ["2", "4", "7"]
+  },
+  {
+    "id": "12",
+    "name": "HJC i100",
+    "brand": "HJC",
+    "slug": "hjc-i100",
+    "sku": "HELM-0012",
+    "description": "Affordable modular helmet with internal sun shield. Great entry-level modular option for touring riders.",
+    "shortDescription": "Affordable modular helmet with sun shield.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 329.99,
+    "originalPrice": 399.99,
+    "discount": 18,
+    "rating": 4.1,
+    "reviewCount": 267,
+    "category": "Modular",
+    "categorySlug": "modular",
+    "inStock": true,
+    "stockCount": 31,
+    "sku": "HELM-0012",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Gloss Black", "hex": "#000000" }
+    ],
+    "sizes": [
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true },
+      { "label": "XXL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Polycarbonate" },
+      { "label": "Weight", "value": "3.8 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Internal sun shield, Pinlock-ready" }
+    ],
+    "reviews": [],
+    "relatedIds": ["5", "10", "14"]
+  },
+  {
+    "id": "13",
+    "name": "Bell Qualifier DLX",
+    "brand": "Bell",
+    "slug": "bell-qualifier-dlx",
+    "sku": "HELM-0013",
+    "description": "Entry-level full-face helmet with great features. Includes transition shield and speaker pockets.",
+    "shortDescription": "Entry-level full-face helmet with transition shield.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 219.99,
+    "rating": 4.0,
+    "reviewCount": 412,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 92,
+    "sku": "HELM-0013",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Gloss White", "hex": "#FFFFFF" },
+      { "name": "Flat Gray", "hex": "#6B7280" }
+    ],
+    "sizes": [
+      { "label": "XS", "inStock": true },
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true },
+      { "label": "XXL", "inStock": true },
+      { "label": "XXXL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Polycarbonate" },
+      { "label": "Weight", "value": "3.6 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Transition shield, Pinlock-ready" }
+    ],
+    "reviews": [],
+    "relatedIds": ["7", "8", "16"]
+  },
+  {
+    "id": "14",
+    "name": "Scorpion EXO-491",
+    "brand": "Scorpion",
+    "slug": "scorpion-exo-491",
+    "sku": "HELM-0014",
+    "description": "Budget-friendly modular helmet with flip-up chin bar. Practical choice for city commuting.",
+    "shortDescription": "Budget-friendly modular helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 279.99,
+    "originalPrice": 349.99,
+    "discount": 20,
+    "rating": 4.2,
+    "reviewCount": 189,
+    "category": "Modular",
+    "categorySlug": "modular",
+    "inStock": false,
+    "stockCount": 0,
+    "sku": "HELM-0014",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Gloss Black", "hex": "#000000" }
+    ],
+    "sizes": [
+      { "label": "M", "inStock": false },
+      { "label": "L", "inStock": false }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Polycarbonate" },
+      { "label": "Weight", "value": "4.0 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Pinlock-ready" }
+    ],
+    "reviews": [],
+    "relatedIds": ["12", "5", "10"]
+  },
+  {
+    "id": "15",
+    "name": "LS2 Flex Retro",
+    "brand": "LS2",
+    "slug": "ls2-flex-retro",
+    "sku": "HELM-0015",
+    "description": "Stylish 3/4 open face helmet with retro vibes. Modern safety meets classic style for cruising around town.",
+    "shortDescription": "Stylish 3/4 open face retro helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 189.99,
+    "rating": 4.0,
+    "reviewCount": 156,
+    "category": "3/4",
+    "categorySlug": "3-4",
+    "inStock": true,
+    "stockCount": 53,
+    "sku": "HELM-0015",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Flat White", "hex": "#F5F5F5" },
+      { "name": "Army Green", "hex": "#4A6741" }
+    ],
+    "sizes": [
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Polycarbonate" },
+      { "label": "Weight", "value": "2.8 lbs" },
+      { "label": "Safety Rating", "value": "DOT" }
+    ],
+    "reviews": [],
+    "relatedIds": ["22", "17", "21"]
+  },
+  {
+    "id": "16",
+    "name": "KYT Sky Fighter",
+    "brand": "KYT",
+    "slug": "kyt-sky-fighter",
+    "sku": "HELM-0016",
+    "description": "Aggressive full-face helmet with racing pedigree. KYT's sport offering with excellent aerodynamics.",
+    "shortDescription": "Aggressive full-face racing helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 249.99,
+    "originalPrice": 299.99,
+    "discount": 17,
+    "rating": 4.1,
+    "reviewCount": 203,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 41,
+    "sku": "HELM-0016",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Red", "hex": "#DC2626" },
+      { "name": "Fluo Yellow", "hex": "#EAB308" }
+    ],
+    "sizes": [
+      { "label": "XS", "inStock": true },
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "HPC (High Performance Composite)" },
+      { "label": "Weight", "value": "3.4 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" }
+    ],
+    "reviews": [],
+    "relatedIds": ["8", "7", "13"]
+  },
+  {
+    "id": "17",
+    "name": "Shoei J-Cruise 3",
+    "brand": "Shoei",
+    "slug": "shoei-j-cruise-3",
+    "sku": "HELM-0017",
+    "description": "Premium open-face helmet with built-in sun visor. The ultimate open-face experience from Shoei.",
+    "shortDescription": "Premium open-face helmet with sun visor.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 549.99,
+    "rating": 4.5,
+    "reviewCount": 78,
+    "category": "Open Face",
+    "categorySlug": "open-face",
+    "inStock": true,
+    "stockCount": 19,
+    "sku": "HELM-0017",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Pearl White", "hex": "#F5F5F5" },
+      { "name": "Matte Navy", "hex": "#1E3A5F" }
+    ],
+    "sizes": [
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "AIM+ (Advanced Integrated Matrix Plus)" },
+      { "label": "Weight", "value": "3.2 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" },
+      { "label": "Visor", "value": "Built-in sun visor" }
+    ],
+    "reviews": [],
+    "relatedIds": ["15", "21", "22"]
+  },
+  {
+    "id": "18",
+    "name": "Arai Ram-X",
+    "brand": "Arai",
+    "slug": "arai-ram-x",
+    "sku": "HELM-0018",
+    "description": "Premium open-face helmet with Arai's signature quality. Rounded design for excellent airflow.",
+    "shortDescription": "Premium open-face helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 649.99,
+    "rating": 4.6,
+    "reviewCount": 92,
+    "category": "Open Face",
+    "categorySlug": "open-face",
+    "inStock": true,
+    "stockCount": 14,
+    "sku": "HELM-0018",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Gloss White", "hex": "#FFFFFF" }
+    ],
+    "sizes": [
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "PB-SNC2" },
+      { "label": "Weight", "value": "3.1 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" }
+    ],
+    "reviews": [],
+    "relatedIds": ["17", "21", "22"]
+  },
+  {
+    "id": "19",
+    "name": "HJC V10",
+    "brand": "HJC",
+    "slug": "hjc-v10",
+    "sku": "HELM-0019",
+    "description": "Full-face helmet with excellent ventilation and value. HJC's mid-range sport offering.",
+    "shortDescription": "Full-face helmet with excellent ventilation.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 449.99,
+    "rating": 4.3,
+    "reviewCount": 112,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 37,
+    "sku": "HELM-0019",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Gloss Black", "hex": "#000000" },
+      { "name": "White", "hex": "#F5F5F5" }
+    ],
+    "sizes": [
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Premium Integrated Matrix (PIM+)" },
+      { "label": "Weight", "value": "3.5 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" }
+    ],
+    "reviews": [],
+    "relatedIds": ["11", "7", "4"]
+  },
+  {
+    "id": "20",
+    "name": "Bell Eliminator",
+    "brand": "Bell",
+    "slug": "bell-eliminator",
+    "sku": "HELM-0020",
+    "description": "Full-face helmet with aggressive styling and premium features. Bell's mid-range sport offering.",
+    "shortDescription": "Full-face helmet with aggressive styling.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 379.99,
+    "originalPrice": 449.99,
+    "discount": 16,
+    "rating": 4.4,
+    "reviewCount": 145,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 25,
+    "sku": "HELM-0020",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Gloss White", "hex": "#FFFFFF" },
+      { "name": "Matte Gray", "hex": "#6B7280" }
+    ],
+    "sizes": [
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Polycarbonate" },
+      { "label": "Weight", "value": "3.7 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" }
+    ],
+    "reviews": [],
+    "relatedIds": ["13", "16", "19"]
+  },
+  {
+    "id": "21",
+    "name": "AGV X3000",
+    "brand": "AGV",
+    "slug": "agv-x3000",
+    "sku": "HELM-0021",
+    "description": "Classic open-face helmet with modern protection. AGV's answer to the vintage helmet trend.",
+    "shortDescription": "Classic open-face helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 329.99,
+    "rating": 4.2,
+    "reviewCount": 167,
+    "category": "Open Face",
+    "categorySlug": "open-face",
+    "inStock": true,
+    "stockCount": 33,
+    "sku": "HELM-0021",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Gloss White", "hex": "#FFFFFF" },
+      { "name": "Flat Gray", "hex": "#6B7280" }
+    ],
+    "sizes": [
+      { "label": "XS", "inStock": true },
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Polycarbonate" },
+      { "label": "Weight", "value": "2.9 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" }
+    ],
+    "reviews": [],
+    "relatedIds": ["15", "17", "22"]
+  },
+  {
+    "id": "22",
+    "name": "Scorpion Covert R",
+    "brand": "Scorpion",
+    "slug": "scorpion-covert-r",
+    "sku": "HELM-0022",
+    "description": "Stealthy open-face helmet with modern features. Perfect for cruiser riders who want protection without the full face.",
+    "shortDescription": "Stealthy open-face helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 199.99,
+    "rating": 3.9,
+    "reviewCount": 234,
+    "category": "Open Face",
+    "categorySlug": "open-face",
+    "inStock": true,
+    "stockCount": 61,
+    "sku": "HELM-0022",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Flat Dark Earth", "hex": "#8B7355" }
+    ],
+    "sizes": [
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Polycarbonate" },
+      { "label": "Weight", "value": "2.7 lbs" },
+      { "label": "Safety Rating", "value": "DOT" }
+    ],
+    "reviews": [],
+    "relatedIds": ["15", "21", "17"]
+  },
+  {
+    "id": "23",
+    "name": "LS2 Pioneer",
+    "brand": "LS2",
+    "slug": "ls2-pioneer",
+    "sku": "HELM-0023",
+    "description": "Budget-friendly full-face helmet with solid features. Great first helmet for new riders.",
+    "shortDescription": "Budget-friendly full-face helmet.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 149.99,
+    "originalPrice": 179.99,
+    "discount": 17,
+    "rating": 3.8,
+    "reviewCount": 389,
+    "category": "Full Face",
+    "categorySlug": "full-face",
+    "inStock": true,
+    "stockCount": 85,
+    "sku": "HELM-0023",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Gloss Black", "hex": "#000000" },
+      { "name": "White", "hex": "#F5F5F5" }
+    ],
+    "sizes": [
+      { "label": "XS", "inStock": true },
+      { "label": "S", "inStock": true },
+      { "label": "M", "inStock": true },
+      { "label": "L", "inStock": true },
+      { "label": "XL", "inStock": true },
+      { "label": "XXL", "inStock": true }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Polycarbonate" },
+      { "label": "Weight", "value": "3.5 lbs" },
+      { "label": "Safety Rating", "value": "DOT, ECE 22.06" }
+    ],
+    "reviews": [],
+    "relatedIds": ["13", "7", "16"]
+  },
+  {
+    "id": "24",
+    "name": "KYT Fly Style",
+    "brand": "KYT",
+    "slug": "kyt-fly-style",
+    "sku": "HELM-0024",
+    "description": "Classic 3/4 helmet with modern safety standards. Affordable retro style for everyday cruising.",
+    "shortDescription": "Classic 3/4 helmet with modern safety.",
+    "image": "/placeholder-helmet.svg",
+    "images": ["/placeholder-helmet.svg"],
+    "price": 129.99,
+    "rating": 3.7,
+    "reviewCount": 312,
+    "category": "3/4",
+    "categorySlug": "3-4",
+    "inStock": false,
+    "stockCount": 0,
+    "sku": "HELM-0024",
+    "featured": false,
+    "colors": [
+      { "name": "Matte Black", "hex": "#1A1A1A" },
+      { "name": "Gloss White", "hex": "#FFFFFF" }
+    ],
+    "sizes": [
+      { "label": "M", "inStock": false },
+      { "label": "L", "inStock": false }
+    ],
+    "specifications": [
+      { "label": "Shell Material", "value": "Polycarbonate" },
+      { "label": "Weight", "value": "2.6 lbs" },
+      { "label": "Safety Rating", "value": "DOT" }
+    ],
+    "reviews": [],
+    "relatedIds": ["15", "22", "21"]
+  }
+]

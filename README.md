@@ -1,202 +1,135 @@
-# HelmetPro 🏍️
+# HelmetPro
 
-**Premium Motorcycle Helmet E-commerce Frontend**
+**Premium Motorcycle Helmet E-commerce — Full-Stack Application**
 
-HelmetPro is a modern, high-performance e-commerce frontend built with **Next.js 16**, **React 19**, and **TypeScript**. It provides a complete shopping experience for premium motorcycle helmets with a beautiful, responsive UI.
+HelmetPro is a full-stack e-commerce platform built with **Next.js 16** (App Router), **React 19**, and **TypeScript**. The backend uses **Next.js API Routes** with **JSON file persistence** for data storage — no external database required. It provides a complete shopping experience for premium motorcycle helmets with a beautiful, responsive UI and a full admin dashboard.
 
-## 🚀 Tech Stack
+## Tech Stack
 
+### Frontend
 | Technology | Purpose |
 |------------|---------|
-| **Next.js 16.2** | React framework with App Router, server components, and streaming |
-| **React 19** | UI library with latest features |
-| **TypeScript** | Type safety throughout the codebase |
+| **Next.js 16.2** | React framework with App Router, server components, streaming |
+| **React 19** | UI library |
+| **TypeScript** | Type safety |
 | **Tailwind CSS v4** | Utility-first styling |
-| **Framer Motion** | Animations and transitions |
-| **Zustand** | Lightweight state management (with persist middleware) |
-| **Zod** | Schema validation |
-| **React Hook Form** | Form management with validation |
-| **Radix UI** | Accessible, unstyled UI primitives |
-| **NextAuth.js** | Authentication |
-| **TanStack React Query** | Server state management |
-| **Embla Carousel** | Carousel/slider component |
-| **Lucide React** | Icon library |
-| **Sonner** | Toast notifications |
-| **date-fns** | Date utilities |
+| **Framer Motion** | Animations & transitions |
+| **Zustand** | Client state management (persisted to localStorage) |
+| **TanStack React Query** | Server state management (data fetching, mutations) |
+| **React Hook Form + Zod** | Form management & validation |
+| **Radix UI** | Accessible UI primitives |
 | **shadcn/ui** | Component library foundation |
+| **TanStack Table** | Data tables (admin) |
+| **Embla Carousel** | Image carousels |
+| **Lucide React** | Icons |
+| **Sonner** | Toast notifications |
 
-## 📁 Project Structure
+### Backend
+| Technology | Purpose |
+|------------|---------|
+| **Next.js API Routes** | REST API endpoints (28 routes) |
+| **JSON File Persistence** | Data stored in `src/data/db/*.json` (7 files) |
+| **`json-db` helper** | Sync CRUD operations via Node.js `fs` |
+
+## Project Structure
 
 ```
 helmetpro/
-├── public/                  # Static assets (images, icons)
+├── public/                       # Static assets
 ├── src/
-│   ├── app/                 # Next.js App Router pages
-│   │   ├── (account)/       # User account route group
-│   │   │   ├── account/     # Dashboard pages
-│   │   │   │   ├── addresses/   # Address management
-│   │   │   │   ├── orders/      # Order history
-│   │   │   │   ├── profile/     # Profile settings
-│   │   │   │   ├── wishlist/    # Wishlist
-│   │   │   │   └── page.tsx     # Account overview
-│   │   │   └── layout.tsx   # Dashboard layout (sidebar nav)
-│   │   ├── (admin)/         # Admin route group
-│   │   │   ├── admin/       # Admin dashboard pages
-│   │   │   │   ├── customers/   # Customer management
-│   │   │   │   ├── orders/      # Order management
-│   │   │   │   ├── products/    # Product management
-│   │   │   │   ├── settings/    # Store settings
-│   │   │   │   └── page.tsx     # Admin overview
-│   │   │   ├── layout.tsx   # Admin layout (sidebar + topbar)
-│   │   │   └── admin-layout-client.tsx
-│   │   ├── (auth)/          # Authentication route group
-│   │   │   ├── login/       # Login page
-│   │   │   └── register/    # Registration page
-│   │   ├── (shop)/          # Shop route group
-│   │   │   ├── cart/        # Cart page
-│   │   │   ├── checkout/    # Checkout page
-│   │   │   └── products/    # Product listing & detail pages
-│   │   ├── layout.tsx       # Root layout
-│   │   └── page.tsx         # Homepage
-│   ├── components/          # Shared UI components
-│   │   ├── brands/          # Brands showcase section
-│   │   ├── categories/      # Categories section
-│   │   ├── common/          # Common reusable components (data-table, form-section, sort-header)
-│   │   ├── hero/            # Hero section with trust bar
-│   │   ├── layout/          # Navbar, footer, mobile menu, dashboard sidebar, auth guard, admin sidebar
-│   │   ├── locale-provider/ # i18n context provider
-│   │   ├── products/        # Shared product components
-│   │   └── ui/              # Base UI components (shadcn)
-│   ├── data/                # Static data files
-│   │   ├── brands.ts        # Brand data
-│   │   ├── categories.ts    # Category data
-│   │   ├── products.ts      # Product data
-│   │   └── sample-products.ts # Sample product listings
-│   ├── features/            # Feature-based modules
-│   │   ├── admin/           # Admin dashboard features
-│   │   │   ├── components/      # Overview stats, recent orders, low stock
-│   │   │   ├── customers/       # Customer management (CRUD, filters, details)
-│   │   │   ├── orders/          # Order management (status transitions, details)
-│   │   │   ├── products/        # Product management (CRUD, form, image upload)
-│   │   │   └── settings/        # Settings (profile, store, notifications, appearance, security)
-│   │   ├── auth/            # Authentication (schemas, login/register forms)
-│   │   ├── cart/            # Shopping cart
-│   │   ├── checkout/        # Checkout flow
-│   │   └── products/        # Product listing & detail
-│   ├── hooks/               # Global custom hooks
-│   │   └── use-translations.ts
-│   ├── lib/                 # Utility libraries
-│   │   ├── constants.ts     # App-wide constants
-│   │   ├── dictionary.ts    # i18n dictionary
-│   │   ├── motion.ts        # Framer Motion tokens
-│   │   └── utils.ts         # cn() utility
-│   └── stores/              # Global Zustand stores
-│       ├── admin-store.ts   # Admin sidebar state
-│       ├── auth-store.ts    # Authentication state (persisted)
-│       ├── cart-store.ts    # Shopping cart (persisted)
-│       ├── locale-store.ts  # Locale/i18n state
-│       ├── ui-store.ts      # UI preferences
-│       └── wishlist-store.ts # Wishlist (persisted)
-├── next.config.ts           # Next.js configuration
-├── tsconfig.json            # TypeScript configuration
-├── components.json          # shadcn/ui configuration
-└── package.json             # Dependencies & scripts
+│   ├── app/
+│   │   ├── (account)/account/    # User dashboard (orders, wishlist, addresses, profile)
+│   │   ├── (admin)/admin/        # Admin dashboard (products, orders, customers, settings)
+│   │   ├── (auth)/               # Login & register pages
+│   │   ├── (shop)/               # Cart, checkout, product listing & detail
+│   │   ├── api/                  # 28 REST API routes
+│   │   │   ├── auth/             # POST register, login, logout
+│   │   │   ├── products/         # GET list, featured, detail
+│   │   │   ├── cart/             # GET, POST, PATCH, DELETE
+│   │   │   ├── checkout/         # POST create order
+│   │   │   ├── orders/           # GET list, detail
+│   │   │   ├── wishlist/         # GET, POST, DELETE
+│   │   │   ├── addresses/        # GET, POST, PUT, DELETE, PATCH default
+│   │   │   ├── shipping-methods/ # GET
+│   │   │   ├── states/           # GET
+│   │   │   └── admin/            # Stats, products CRUD, orders, customers
+│   │   ├── layout.tsx
+│   │   └── page.tsx              # Homepage (featured products from API)
+│   ├── components/               # Shared UI components (shadcn/ui, layout, products)
+│   ├── data/
+│   │   ├── db/                   # JSON database files (7 files)
+│   │   │   ├── users.json
+│   │   │   ├── products.json
+│   │   │   ├── orders.json
+│   │   │   ├── customers.json
+│   │   │   ├── addresses.json
+│   │   │   ├── cart.json
+│   │   │   └── wishlist.json
+│   │   ├── brands.ts
+│   │   ├── categories.ts
+│   │   └── sample-products.ts
+│   ├── features/                 # Feature modules with API layer
+│   │   ├── admin/                # Dashboard + CRUD (products, orders, customers)
+│   │   ├── addresses/            # API client + auth sync hook
+│   │   ├── auth/                 # Login/register forms + React Query mutations
+│   │   ├── cart/                 # Zustand store + API sync
+│   │   ├── checkout/             # Multi-step form + API submit
+│   │   ├── orders/               # API client for order history
+│   │   ├── products/             # Listing, detail, API client
+│   │   └── wishlist/             # Zustand store + API sync
+│   ├── hooks/
+│   ├── lib/
+│   │   ├── json-db.ts            # Sync CRUD helper for JSON files
+│   │   ├── dictionary.ts         # i18n (vi/en)
+│   │   └── utils.ts              # cn()
+│   └── stores/                   # Zustand stores (persisted)
+│       ├── auth-store.ts
+│       ├── cart-store.ts
+│       ├── wishlist-store.ts
+│       ├── addresses-store.ts
+│       └── locale-store.ts
+├── docs/                         # Documentation
+│   ├── backend-api.md
+│   ├── backend-integration-guide.md
+│   ├── architecture.md
+│   ├── data-models.md
+│   └── i18n.md
+├── next.config.ts
+└── package.json
 ```
 
-## ✨ Features Implemented
+## Features
 
-### 🏠 Homepage
-- **Hero Section** — Visually engaging hero with CTA
-- **Trust Bar** — Social proof & trust indicators
-- **Categories Section** — Browse by helmet category
-- **Brands Showcase** — Featured helmet brands
-- **Featured Products** — Curated product grid
+### Backend API (28 Routes)
+- **Auth** — Register, login, logout with JSON persistence
+- **Products** — List (with filters, pagination), featured, detail by slug
+- **Cart** — Full CRUD: list, add item, update quantity, remove item
+- **Checkout** — Create order from cart
+- **Orders** — List by user, detail by ID
+- **Wishlist** — List, add item, remove item
+- **Addresses** — Full CRUD + set default
+- **Admin** — Stats, products CRUD, orders (status update), customers list/detail
+- **Shipping Methods & States** — Lookup endpoints
 
-### 🛍️ Product Listing (`/products`)
-- **Filter Sidebar** — Multi-criteria filtering (brand, category, price range, etc.)
-- **Search Bar** — Real-time product search
-- **Sort Dropdown** — Sort by price, name, popularity
-- **Mobile Filter Drawer** — Responsive filter UI for mobile devices
-- **Pagination** — Page-based navigation
-- **Product Grid** — Card-based product display
-- **State management** with Zustand filter store
-- **Custom hook** `use-product-listing` for data fetching & filtering
+### Frontend
+- **Homepage** — Hero, trust bar, categories, brands showcase, featured products from API
+- **Product Listing** — Filter sidebar, search, sort, pagination, mobile drawer
+- **Product Detail** — Image carousel, specs, reviews, related products, loading skeletons
+- **Shopping Cart** — Persistent Zustand store synced with API when authenticated
+- **Checkout** — Multi-step form with shipping, delivery, payment, order summary
+- **User Account** — Orders, wishlist, address management, profile settings
+- **Admin Dashboard** — Overview stats, products CRUD, orders management, customers
+- **Authentication** — Login/register with persisted session, demo login
+- **i18n** — Vietnamese & English with language switcher
 
-### 📄 Product Detail (`/products/[slug]`)
-- **Product Gallery** — Image carousel with Embla
-- **Product Info** — Title, price, description, specs
-- **Product Description** — Detailed product information
-- **Product Reviews** — Customer reviews section
-- **Related Products** — Cross-sell recommendations
-- **Loading UI** with skeleton states
+### Architecture
+- **Feature-based folder structure** with dedicated API layer per feature
+- **Local-first + API sync pattern**: Zustand is UI source of truth; when authenticated, mutations also fire API calls
+- **Server Components** by default, Client Components only when needed
+- **TanStack React Query** for server state, **Zustand** for client state (persisted to localStorage)
+- **JSON file persistence** via `src/lib/json-db.ts` — zero external dependencies
 
-### 🛒 Shopping Cart (`/cart`)
-- **Cart Item Row** — Individual item with quantity controls
-- **Cart Summary** — Subtotal, shipping, total calculation
-- **Empty Cart** — Empty state with CTA to shop
-- **Persistent state** via Zustand (survives page refresh)
-
-### 💳 Checkout (`/checkout`)
-- **Shipping Form** — Address collection with validation (React Hook Form + Zod)
-- **Delivery Options** — Select delivery method
-- **Payment Methods** — Payment selection UI
-- **Order Summary** — Review before placing order
-- **Multi-step form** validation
-
-### 👤 User Account (`/account`)
-- **Responsive Dashboard Sidebar** — Collapsible on mobile, sticky on desktop
-- **Account Overview** — Stats cards (orders, wishlist, cart) + recent orders
-- **Order History** — Searchable list with expandable details & status badges
-- **Wishlist** — Product grid with add-to-cart & remove, backed by persisted Zustand store
-- **Address Management** — Add/edit/delete addresses, set default, type labels (home/office)
-- **Profile Settings** — Avatar, name/email/phone/DOB fields, password change section
-- **Auth Guard** — Unauthenticated users redirected to login
-- **Demo Account** — One-click quick login that pre-populates wishlist
-
-### 🛠️ Admin Dashboard (`/admin`)
-- **Overview** — Stats cards (revenue, orders, customers, conversion) + recent orders + low stock alerts
-- **Products** — Full product catalog with search, category/brand/status filters, sortable data table, bulk actions
-- **Add/Edit Product** — Side sheet forms with image upload (drag & drop), Zod validation, media/preview/inventory sections
-- **Orders** — Order list with search, status/date filters, sortable table, detail drawer with status transitions & timeline
-- **Customers** — Customer list with search, status/spend filters, sortable table, detail drawer with spending overview & order history
-- **Settings** — Multi-tab settings (Profile, Store, Notifications, Appearance, Security) with per-tab React Hook Form + Zod validation
-- **Responsive Admin Layout** — Collapsible sidebar, mobile overlay, topbar
-- **Reusable Components** — Shared `DataTable` (TanStack Table), `SortHeader`, `FormSection`, status badges
-- **Dark-themed UI** — Consistent premium dark design with fintech-inspired dashboard aesthetics
-
-### 🔐 Authentication (`/login`, `/register`)
-- **Login form** — Email/password with Zod validation
-- **Registration form** — Full name, email, password with confirm
-- **Persisted auth state** — Login survives page refresh via Zustand persist
-- **Demo login** — Quick-test button with pre-filled wishlist items
-
-### 🌐 Internationalization (i18n)
-- **Vietnamese & English** language support
-- **Locale store** (Zustand) for language state
-- **Translation hooks** (`use-translations`)
-- **Language switcher** in navbar
-
-### 🎨 UI/UX
-- **Responsive design** — Mobile-first, works on all screen sizes
-- **Dark mode** support via CSS variables
-- **Smooth animations** with Framer Motion
-- **Toast notifications** via Sonner
-- **Loading skeletons** and error states
-- **Accessible components** via Radix UI primitives
-- **Modern icons** from Lucide React
-- **Tailwind CSS v4** with `tw-animate-css`
-
-### 🔧 Architecture Highlights
-- **Feature-based folder structure** — Scalable and maintainable
-- **Server Components** where possible, Client Components when needed
-- **TypeScript** throughout for type safety
-- **Zod schemas** for runtime validation
-- **State management** split between Zustand (client state, persisted) and React Query (server state)
-- **Route groups** for clean URL organization (`(admin)`, `(account)`, `(auth)`, `(shop)`)
-- **Admin module** with reusable TanStack Table, sort headers, form sections, and status badge system
-- **Form management** via React Hook Form + Zod resolver with consistent form section patterns
-
-## 🚦 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 20+
@@ -208,7 +141,7 @@ helmetpro/
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server (API + frontend)
 npm run dev
 
 # Build for production
@@ -221,22 +154,27 @@ npm start
 npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 📦 Build & Deploy
+### Demo Accounts
 
-```bash
-npm run build   # Builds the production application in the .next folder
-```
+| Role | Email | Password |
+|------|-------|----------|
+| Customer | `user@helmetpro.com` | `password123` |
+| Admin | `admin@helmetpro.com` | `admin123` |
 
-The application is ready to deploy on [Vercel](https://vercel.com) or any platform supporting Next.js.
+### API Endpoints
 
-## 🔜 Planned Features
+All API routes are at `/api/*` and backed by JSON files in `src/data/db/`. See `docs/backend-integration-guide.md` for the full specification.
 
+## Planned Features
+
+- Database upgrade (SQLite / PostgreSQL)
+- Password hashing with bcrypt
+- JWT / NextAuth.js authentication
+- Input validation with Zod on backend
 - Payment gateway integration
-- Real-time inventory tracking
-- Email notifications for orders
 
-## 📄 License
+## License
 
 This project is private and intended for development purposes.

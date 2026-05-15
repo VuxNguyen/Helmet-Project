@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -14,32 +15,50 @@ import {
   PackageCheck,
   Truck,
   XCircle,
+  Loader2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-const orders = [
-  { id: "ORD-001", date: "2026-04-28", total: 899.99, status: "delivered" as const, items: [{ name: "Arai RX-7X Evo", qty: 1, price: 899.99 }] },
-  { id: "ORD-002", date: "2026-05-01", total: 1299.98, status: "shipped" as const, items: [{ name: "Shoei X-Fifteen", qty: 1, price: 799.99 }, { name: "AGV Pista GP RR", qty: 1, price: 1499.99 }] },
-  { id: "ORD-003", date: "2026-05-05", total: 549.99, status: "processing" as const, items: [{ name: "Scorpion EXO-R1 Air", qty: 1, price: 549.99 }] },
-  { id: "ORD-004", date: "2026-03-15", total: 499.99, status: "delivered" as const, items: [{ name: "HJC RPHA 91", qty: 1, price: 499.99 }] },
-  { id: "ORD-005", date: "2026-02-20", total: 1499.99, status: "cancelled" as const, items: [{ name: "AGV Pista GP RR", qty: 1, price: 1499.99 }] },
-]
+import { useAuthStore } from "@/stores/auth-store"
+import { fetchOrders } from "@/features/orders/api/orders-api"
 
 const statusConfig: Record<string, { label: string; icon: typeof Package; variant: "default" | "secondary" | "outline" | "destructive" }> = {
   delivered: { label: "Đã giao", icon: PackageCheck, variant: "default" },
   shipped: { label: "Đang vận chuyển", icon: Truck, variant: "secondary" },
   processing: { label: "Đang xử lý", icon: Clock, variant: "outline" },
+  pending: { label: "Chờ xác nhận", icon: Clock, variant: "outline" },
+  confirmed: { label: "Đã xác nhận", icon: PackageCheck, variant: "default" },
   cancelled: { label: "Đã hủy", icon: XCircle, variant: "destructive" },
 }
 
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("vi-VN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  })
+}
+
 export function OrdersContent() {
+  const user = useAuthStore((s) => s.user)
   const [search, setSearch] = useState("")
   const [expanded, setExpanded] = useState<string | null>(null)
 
-  const filtered = orders.filter(
-    (o) =>
-      o.id.toLowerCase().includes(search.toLowerCase()) ||
-      o.items.some((i) => i.name.toLowerCase().includes(search.toLowerCase())),
+  const { data, isLoading } = useQuery({
+    queryKey: ["orders", user?.id],
+    queryFn: () => fetchOrders(user?.id || "guest"),
+    enabled: !!user?.id,
+  })
+
+  const orders = data?.orders ?? []
+
+  const filtered = useMemo(
+    () =>
+      orders.filter(
+        (o) =>
+          o.orderNumber.toLowerCase().includes(search.toLowerCase()) ||
+          o.items.some((i) => i.name.toLowerCase().includes(search.toLowerCase())),
+      ),
+    [orders, search],
   )
 
   return (
@@ -61,7 +80,11 @@ export function OrdersContent() {
         />
       </div>
 
-      {filtered.length === 0 ? (
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      ) : filtered.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center gap-2 py-12">
             <Package className="h-10 w-10 text-muted-foreground/50" />
@@ -71,7 +94,7 @@ export function OrdersContent() {
       ) : (
         <div className="space-y-3">
           {filtered.map((order) => {
-            const status = statusConfig[order.status]
+            const status = statusConfig[order.status] || statusConfig.pending
             const StatusIcon = status.icon
             const isExpanded = expanded === order.id
 
@@ -87,8 +110,8 @@ export function OrdersContent() {
                         <Package className="h-4 w-4 text-muted-foreground" />
                       </div>
                       <div>
-                        <CardTitle className="text-sm font-medium">{order.id}</CardTitle>
-                        <p className="text-xs text-muted-foreground">{order.date}</p>
+                        <CardTitle className="text-sm font-medium">{order.orderNumber}</CardTitle>
+                        <p className="text-xs text-muted-foreground">{formatDate(order.createdAt)}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -111,7 +134,7 @@ export function OrdersContent() {
                     <Separator />
                     {order.items.map((item, i) => (
                       <div key={i} className="flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">{item.name} x{item.qty}</span>
+                        <span className="text-muted-foreground">{item.name} x{item.quantity}</span>
                         <span className="font-medium">${item.price.toFixed(2)}</span>
                       </div>
                     ))}

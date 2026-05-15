@@ -19,7 +19,8 @@ import Link from "next/link"
 
 import { useTranslations } from "@/hooks/use-translations"
 import { registerSchema, type RegisterFormData } from "@/features/auth/auth-schema"
-import { useAuthStore } from "@/stores/auth-store"
+import { useRegister } from "@/features/auth/hooks/use-auth-api"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -47,10 +48,9 @@ const itemVariants = {
 export function RegisterForm() {
   const { t } = useTranslations()
   const router = useRouter()
-  const login = useAuthStore((state) => state.login)
+  const registerMutation = useRegister()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   const {
     register,
@@ -67,10 +67,10 @@ export function RegisterForm() {
   })
 
   async function onSubmit(data: RegisterFormData) {
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1200))
-    login({ name: data.fullName, email: data.email })
-    router.push("/account")
+    registerMutation.mutate(data, {
+      onSuccess: () => router.push("/account"),
+      onError: (err: Error) => toast.error(err.message),
+    })
   }
 
   return (
@@ -204,9 +204,9 @@ export function RegisterForm() {
               <Button
                 type="submit"
                 className="h-11 w-full gap-2"
-                disabled={isLoading}
+                disabled={registerMutation.isPending}
               >
-                {isLoading ? (
+                {registerMutation.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <>

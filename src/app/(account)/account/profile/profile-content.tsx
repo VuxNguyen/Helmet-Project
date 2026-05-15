@@ -11,7 +11,7 @@ import { Save, Camera } from "lucide-react"
 import { toast } from "sonner"
 
 export function ProfileContent() {
-  const { user, login } = useAuthStore()
+  const { user, token, login } = useAuthStore()
 
   const [form, setForm] = useState({
     name: user?.name || "",
@@ -26,7 +26,7 @@ export function ProfileContent() {
       toast.error("Vui lòng điền đầy đủ thông tin bắt buộc")
       return
     }
-    login({ name: form.name, email: form.email, phone: form.phone, dob: form.dob })
+    login({ id: user?.id || "", name: form.name, email: form.email, phone: form.phone, dob: form.dob }, token || "")
     toast.success("Đã cập nhật hồ sơ")
   }
 

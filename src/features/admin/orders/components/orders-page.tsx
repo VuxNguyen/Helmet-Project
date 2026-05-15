@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback, useEffect } from "react"
 import { toast } from "sonner"
 import { OrdersToolbar } from "./orders-toolbar"
 import { OrdersTable } from "./orders-table"
@@ -17,7 +17,12 @@ export function OrdersPage() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const updateOrderStatus = useAdminOrdersStore((s) => s.updateOrderStatus)
   const getFiltered = useAdminOrdersStore((s) => s.getFiltered)
+  const fetchItems = useAdminOrdersStore((s) => s.fetchItems)
   const allOrders = useAdminOrdersStore((s) => s.items)
+
+  useEffect(() => {
+    fetchItems()
+  }, [fetchItems])
 
   const filteredOrders = useMemo(
     () =>

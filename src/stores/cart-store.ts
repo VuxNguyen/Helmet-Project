@@ -1,10 +1,11 @@
-/**
- * Cart store — Zustand
- * Manages shopping cart state.
- */
-
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useAuthStore } from "@/stores/auth-store";
+import {
+  addCartItem as apiAddItem,
+  updateCartItem as apiUpdateItem,
+  removeCartItem as apiRemoveItem,
+} from "@/features/cart/api/cart-api";
 
 export interface CartItem {
   id: string;
@@ -23,11 +24,16 @@ interface CartState {
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  setItems: (items: CartItem[]) => void;
   toggleCart: () => void;
   openCart: () => void;
   closeCart: () => void;
   getItemCount: () => number;
   getTotal: () => number;
+}
+
+function isAuthenticated() {
+  return useAuthStore.getState().isAuthenticated;
 }
 
 export const useCartStore = create<CartState>()(
@@ -36,7 +42,12 @@ export const useCartStore = create<CartState>()(
       items: [],
       isOpen: false,
 
-      addItem: (item) =>
+      setItems: (items) => set({ items }),
+
+      addItem: (item) => {
+        if (isAuthenticated()) {
+          apiAddItem(item.id, 1, item.variant).catch(() => {});
+        }
         set((state) => {
           const existing = state.items.find((i) => i.id === item.id);
           if (existing) {
@@ -47,14 +58,22 @@ export const useCartStore = create<CartState>()(
             };
           }
           return { items: [...state.items, { ...item, quantity: 1 }] };
-        }),
+        });
+      },
 
-      removeItem: (id) =>
+      removeItem: (id) => {
+        if (isAuthenticated()) {
+          apiRemoveItem(id).catch(() => {});
+        }
         set((state) => ({
           items: state.items.filter((i) => i.id !== id),
-        })),
+        }));
+      },
 
-      updateQuantity: (id, quantity) =>
+      updateQuantity: (id, quantity) => {
+        if (isAuthenticated() && quantity > 0) {
+          apiUpdateItem(id, quantity).catch(() => {});
+        }
         set((state) => ({
           items:
             quantity <= 0
@@ -62,9 +81,17 @@ export const useCartStore = create<CartState>()(
               : state.items.map((i) =>
                   i.id === id ? { ...i, quantity } : i,
                 ),
-        })),
+        }));
+      },
 
-      clearCart: () => set({ items: [] }),
+      clearCart: () => {
+        if (isAuthenticated()) {
+          get().items.forEach((item) => {
+            apiRemoveItem(item.id).catch(() => {});
+          });
+        }
+        set({ items: [] });
+      },
 
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
       openCart: () => set({ isOpen: true }),
