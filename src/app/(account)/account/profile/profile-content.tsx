@@ -26,7 +26,7 @@ export function ProfileContent() {
       toast.error("Vui lòng điền đầy đủ thông tin bắt buộc")
       return
     }
-    login({ name: form.name, email: form.email })
+    login({ name: form.name, email: form.email, phone: form.phone, dob: form.dob })
     toast.success("Đã cập nhật hồ sơ")
   }
 

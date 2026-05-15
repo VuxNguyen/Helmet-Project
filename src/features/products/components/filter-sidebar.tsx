@@ -7,34 +7,48 @@ import { PRICE_RANGES, RATING_OPTIONS } from "../types/product-listing"
 import { Star } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { categories } from "@/data/categories"
-
-const CATEGORY_LABELS: Record<string, string> = {
-  "full-face": "Full Face",
-  modular: "Modular",
-  "open-face": "Open Face",
-  "3/4": "3/4 Helmet",
-}
+import { useTranslations } from "@/hooks/use-translations"
 
 export function FilterSidebar({ className }: { className?: string }) {
+  const { t } = useTranslations()
   const filters = useFilterStore((s) => s.filters)
   const setFilter = useFilterStore((s) => s.setFilter)
   const resetFilters = useFilterStore((s) => s.resetFilters)
   const activeFilterCount = useFilterStore((s) => s.activeFilterCount)
   const { availableBrands } = useProductListing()
 
+  const CATEGORY_LABELS: Record<string, string> = {
+    "full-face": t("categories.fullface.name"),
+    modular: t("categories.modular.name"),
+    "open-face": t("categories.openFace.name"),
+    "3/4": t("categories.threeQuarter.name"),
+  }
+
+  function getPriceRangeLabel(range: (typeof PRICE_RANGES)[number]): string {
+    if (range.min === null) {
+      return t("products_ext.priceRanges.under").replace("{{amount}}", String(range.max))
+    }
+    if (range.max === null) {
+      return t("products_ext.priceRanges.over").replace("{{amount}}", String(range.min))
+    }
+    return t("products_ext.priceRanges.range")
+      .replace("{{min}}", String(range.min))
+      .replace("{{max}}", String(range.max))
+  }
+
   return (
     <aside className={cn("space-y-6", className)}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground">
-          Filters
+          {t("products.filters")}
         </h2>
         {activeFilterCount > 0 && (
           <button
             onClick={resetFilters}
             className="text-xs font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
           >
-            Clear all
+            {t("products.clearAll")}
           </button>
         )}
       </div>
@@ -44,7 +58,7 @@ export function FilterSidebar({ className }: { className?: string }) {
       {/* Category Filter */}
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Category
+          {t("products.category")}
         </h3>
         <div className="space-y-1.5">
           {categories.map((cat) => {
@@ -75,7 +89,7 @@ export function FilterSidebar({ className }: { className?: string }) {
       {/* Brand Filter */}
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Brand
+          {t("products.brand")}
         </h3>
         <div className="space-y-1.5">
           {availableBrands.map((brand) => {
@@ -105,7 +119,7 @@ export function FilterSidebar({ className }: { className?: string }) {
       {/* Price Range */}
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Price Range
+          {t("products.priceRange")}
         </h3>
         <div className="space-y-1.5">
           {PRICE_RANGES.map((range) => {
@@ -126,7 +140,7 @@ export function FilterSidebar({ className }: { className?: string }) {
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
-                {range.label}
+                {getPriceRangeLabel(range)}
               </button>
             )
           })}
@@ -138,7 +152,7 @@ export function FilterSidebar({ className }: { className?: string }) {
       {/* Rating Filter */}
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Minimum Rating
+          {t("products.minimumRating")}
         </h3>
         <div className="space-y-1.5">
           {RATING_OPTIONS.map((rating) => {
@@ -165,7 +179,7 @@ export function FilterSidebar({ className }: { className?: string }) {
                     />
                   ))}
                 </div>
-                <span className="text-xs">& up</span>
+                <span className="text-xs">{t("products.ratingUp")}</span>
               </button>
             )
           })}
@@ -177,7 +191,7 @@ export function FilterSidebar({ className }: { className?: string }) {
       {/* Availability */}
       <div>
         <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          Availability
+          {t("products.availability")}
         </h3>
         <div className="space-y-1.5">
           <button
@@ -191,7 +205,7 @@ export function FilterSidebar({ className }: { className?: string }) {
                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
-            In Stock Only
+            {t("products.inStockOnly")}
           </button>
         </div>
       </div>

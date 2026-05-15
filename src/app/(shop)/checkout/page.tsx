@@ -13,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function CheckoutPage() {
-  return <CheckoutPageClient locale="en" />;
+  return <CheckoutPageClient />;
 }

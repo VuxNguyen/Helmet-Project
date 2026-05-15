@@ -6,17 +6,15 @@ import { motion } from "framer-motion";
 import { Package, Truck, ShieldCheck, RotateCcw, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { useTranslations } from "@/hooks/use-translations";
 import { useCartStore } from "@/stores/cart-store";
 import { SHIPPING_METHODS, TAX_RATE, FREE_SHIPPING_THRESHOLD } from "@/features/checkout/data/constants";
 import type { CheckoutFormValues } from "@/features/checkout/lib/schema";
 
-interface OrderSummaryProps {
-  locale?: "vi" | "en";
-}
-
-export function OrderSummary({ locale = "en" }: OrderSummaryProps) {
+export function OrderSummary() {
   const items = useCartStore((state) => state.items);
   const { watch } = useFormContext<CheckoutFormValues>();
+  const { t } = useTranslations();
   const selectedShipping = watch("shippingMethod");
 
   const subtotal = items.reduce(
@@ -33,7 +31,7 @@ export function OrderSummary({ locale = "en" }: OrderSummaryProps) {
     <div className="rounded-xl border border-border bg-card">
       <div className="p-5 sm:p-6">
         <h3 className="text-base font-semibold tracking-tight">
-          {locale === "vi" ? "Tóm tắt đơn hàng" : "Order Summary"}
+          {t("checkout.summary.title")}
         </h3>
 
         {/* Items List */}
@@ -56,7 +54,7 @@ export function OrderSummary({ locale = "en" }: OrderSummaryProps) {
                 )}
                 <div className="mt-0.5 flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">
-                    {locale === "vi" ? `SL: ${item.quantity}` : `Qty: ${item.quantity}`}
+                    {t("checkout.summary.quantityLabel").replace("{{count}}", item.quantity.toString())}
                   </span>
                   <span className="text-sm font-semibold tabular-nums">
                     ${(item.price * item.quantity).toFixed(2)}
@@ -73,19 +71,19 @@ export function OrderSummary({ locale = "en" }: OrderSummaryProps) {
         <div className="space-y-2.5">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">
-              {locale === "vi" ? "Tạm tính" : "Subtotal"}
+              {t("checkout.summary.subtotal")}
             </span>
             <span className="font-medium tabular-nums">${subtotal.toFixed(2)}</span>
           </div>
 
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">
-              {locale === "vi" ? "Vận chuyển" : "Shipping"}
+              {t("checkout.summary.shipping")}
             </span>
             <span className="font-medium tabular-nums">
               {shippingCost === 0 ? (
                 <span className="text-green-600 dark:text-green-400">
-                  {locale === "vi" ? "Miễn phí" : "Free"}
+                  {t("checkout.summary.freeShipping")}
                 </span>
               ) : (
                 `$${shippingCost.toFixed(2)}`
@@ -95,7 +93,7 @@ export function OrderSummary({ locale = "en" }: OrderSummaryProps) {
 
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">
-              {locale === "vi" ? `Thuế (${(TAX_RATE * 100).toFixed(0)}%)` : `Tax (${(TAX_RATE * 100).toFixed(0)}%)`}
+              {t("checkout.summary.tax").replace("{{rate}}", (TAX_RATE * 100).toFixed(0))}
             </span>
             <span className="font-medium tabular-nums">${tax.toFixed(2)}</span>
           </div>
@@ -104,7 +102,7 @@ export function OrderSummary({ locale = "en" }: OrderSummaryProps) {
 
           <div className="flex items-center justify-between">
             <span className="text-base font-semibold">
-              {locale === "vi" ? "Tổng cộng" : "Total"}
+              {t("checkout.summary.total")}
             </span>
             <span className="text-lg font-bold tabular-nums">
               ${total.toFixed(2)}
@@ -117,25 +115,19 @@ export function OrderSummary({ locale = "en" }: OrderSummaryProps) {
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <ShieldCheck className="h-3.5 w-3.5" strokeWidth={1.5} />
             <span>
-              {locale === "vi"
-                ? "Thanh toán an toàn với mã hóa SSL"
-                : "Secure checkout with SSL encryption"}
+              {t("checkout.summary.trustSecure")}
             </span>
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <RotateCcw className="h-3.5 w-3.5" strokeWidth={1.5} />
             <span>
-              {locale === "vi"
-                ? "Đổi trả miễn phí trong 30 ngày"
-                : "Free returns within 30 days"}
+              {t("checkout.summary.trustReturns")}
             </span>
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <ShoppingBag className="h-3.5 w-3.5" strokeWidth={1.5} />
             <span>
-              {locale === "vi"
-                ? "Miễn phí vận chuyển cho đơn trên $200"
-                : "Free shipping on orders over $200"}
+              {t("checkout.summary.trustShipping")}
             </span>
           </div>
         </div>

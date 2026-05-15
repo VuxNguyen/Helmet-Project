@@ -3,32 +3,32 @@ import { z } from "zod"
 export const loginSchema = z.object({
   email: z
     .string()
-    .min(1, "Email is required")
-    .email("Please enter a valid email"),
+    .min(1, "validation.emailRequired")
+    .email("validation.invalidEmail"),
   password: z
     .string()
-    .min(1, "Password is required")
-    .min(6, "Password must be at least 6 characters"),
+    .min(1, "validation.passwordRequired")
+    .min(6, "validation.passwordMinLength"),
 })
 
 export const registerSchema = z
   .object({
     fullName: z
       .string()
-      .min(1, "Full name is required")
-      .min(2, "Name must be at least 2 characters"),
+      .min(1, "validation.fullNameRequired")
+      .min(2, "validation.fullNameMinLength"),
     email: z
       .string()
-      .min(1, "Email is required")
-      .email("Please enter a valid email"),
+      .min(1, "validation.emailRequired")
+      .email("validation.invalidEmail"),
     password: z
       .string()
-      .min(1, "Password is required")
-      .min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
+      .min(1, "validation.passwordRequired")
+      .min(8, "validation.passwordMinLength"),
+    confirmPassword: z.string().min(1, "validation.confirmPasswordRequired"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
+    message: "validation.passwordsDoNotMatch",
     path: ["confirmPassword"],
   })
 

@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
+import { useTranslations } from "@/hooks/use-translations"
 import { registerSchema, type RegisterFormData } from "@/features/auth/auth-schema"
 import { useAuthStore } from "@/stores/auth-store"
 import { Button } from "@/components/ui/button"
@@ -44,6 +45,7 @@ const itemVariants = {
 }
 
 export function RegisterForm() {
+  const { t } = useTranslations()
   const router = useRouter()
   const login = useAuthStore((state) => state.login)
   const [showPassword, setShowPassword] = useState(false)
@@ -82,14 +84,14 @@ export function RegisterForm() {
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border bg-muted px-4 py-1.5">
           <ShieldCheck className="h-4 w-4 text-muted-foreground" />
           <span className="text-xs font-semibold tracking-wider text-muted-foreground">
-            HELMET PRO
+            {t("site.name")}
           </span>
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Create an account
+          {t("auth.register.title")}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Join Helmet Pro and discover premium riding gear.
+          {t("auth.register.subtitle")}
         </p>
       </motion.div>
 
@@ -98,13 +100,13 @@ export function RegisterForm() {
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full name</Label>
+                <Label htmlFor="fullName">{t("auth.register.fullNameLabel")}</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="fullName"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder={t("auth.register.fullNamePlaceholder")}
                     className="h-11 pl-10"
                     {...register("fullName")}
                     aria-invalid={!!errors.fullName}
@@ -112,37 +114,37 @@ export function RegisterForm() {
                 </div>
                 {errors.fullName && (
                   <p className="text-xs text-destructive">
-                    {errors.fullName.message}
+                    {t(errors.fullName.message ?? "")}
                   </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("auth.register.emailLabel")}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder={t("auth.register.emailPlaceholder")}
                     className="h-11 pl-10"
                     {...register("email")}
                     aria-invalid={!!errors.email}
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-xs text-destructive">{errors.email.message}</p>
+                  <p className="text-xs text-destructive">{t(errors.email.message ?? "")}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("auth.register.passwordLabel")}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder={t("auth.register.passwordPlaceholder")}
                     className="h-11 pl-10 pr-10"
                     {...register("password")}
                     aria-invalid={!!errors.password}
@@ -162,19 +164,19 @@ export function RegisterForm() {
                 </div>
                 {errors.password && (
                   <p className="text-xs text-destructive">
-                    {errors.password.message}
+                    {t(errors.password.message ?? "")}
                   </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm password</Label>
+                <Label htmlFor="confirmPassword">{t("auth.register.confirmPasswordLabel")}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder={t("auth.register.confirmPasswordPlaceholder")}
                     className="h-11 pl-10 pr-10"
                     {...register("confirmPassword")}
                     aria-invalid={!!errors.confirmPassword}
@@ -194,7 +196,7 @@ export function RegisterForm() {
                 </div>
                 {errors.confirmPassword && (
                   <p className="text-xs text-destructive">
-                    {errors.confirmPassword.message}
+                    {t(errors.confirmPassword.message ?? "")}
                   </p>
                 )}
               </div>
@@ -208,7 +210,7 @@ export function RegisterForm() {
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <>
-                    Create account
+                    {t("auth.register.createAccount")}
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -218,7 +220,7 @@ export function RegisterForm() {
             <div className="relative my-6">
               <Separator />
               <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
-                OR
+                {t("auth.register.orDivider")}
               </span>
             </div>
 
@@ -241,7 +243,7 @@ export function RegisterForm() {
                   fill="#EA4335"
                 />
               </svg>
-              Continue with Google
+              {t("auth.register.continueWithGoogle")}
             </Button>
           </CardContent>
         </Card>
@@ -249,13 +251,13 @@ export function RegisterForm() {
 
       <motion.div variants={itemVariants} className="mt-6 text-center text-sm">
         <span className="text-muted-foreground">
-          Already have an account?{" "}
+          {t("auth.register.alreadyHaveAccount")}{" "}
         </span>
         <Link
           href="/login"
           className="font-medium text-foreground underline-offset-4 hover:underline"
         >
-          Sign in
+          {t("auth.register.signIn")}
         </Link>
       </motion.div>
     </motion.div>

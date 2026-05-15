@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#f1f5f9"/>
+  <rect x="0" y="0" width="400" height="400" fill="url(#grid)" opacity="0.4"/>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <rect width="40" height="40" fill="none" stroke="#cbd5e1" stroke-width="0.5"/>
+    </pattern>
+    <linearGradient id="helm" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#64748b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+  </defs>
+  <!-- Helmet silhouette -->
+  <g transform="translate(200, 195)">
+    <!-- Main shell -->
+    <path d="M-95 20 C-95 -60 -60 -120 0 -130 C60 -120 95 -60 95 20 C95 40 85 55 70 65 C50 80 25 85 0 85 C-25 85 -50 80 -70 65 C-85 55 -95 40 -95 20Z" fill="url(#helm)" stroke="#475569" stroke-width="2"/>
+    <!-- Visor -->
+    <path d="M-80 10 C-50 -25 50 -25 80 10 C55 -10 -55 -10 -80 10Z" fill="#94a3b8" opacity="0.6" stroke="#64748b" stroke-width="1.5"/>
+    <!-- Visor highlight -->
+    <path d="M-60 0 C-35 -15 35 -15 60 0 C35 -8 -35 -8 -60 0Z" fill="#cbd5e1" opacity="0.3"/>
+    <!-- Chin vent -->
+    <rect x="-25" y="45" width="50" height="8" rx="4" fill="#1e293b" opacity="0.5"/>
+    <!-- Top vents -->
+    <rect x="-30" y="-95" width="60" height="6" rx="3" fill="#1e293b" opacity="0.4"/>
+    <rect x="-20" y="-105" width="40" height="5" rx="2.5" fill="#1e293b" opacity="0.3"/>
+    <!-- Side detail lines -->
+    <path d="M-85 30 C-75 50 -55 65 -30 70" stroke="#475569" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <path d="M85 30 C75 50 55 65 30 70" stroke="#475569" stroke-width="1.5" fill="none" opacity="0.5"/>
+  </g>
+  <!-- Text -->
+  <text x="200" y="340" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#94a3b8" font-weight="500">Helmet Image</text>
+  <text x="200" y="360" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#94a3b8">Placeholder</text>
+</svg>

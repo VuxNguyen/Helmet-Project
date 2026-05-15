@@ -6,12 +6,9 @@ import { CreditCard, Check, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "@/hooks/use-translations";
 import { PAYMENT_METHODS } from "@/features/checkout/data/constants";
 import type { CheckoutFormValues } from "@/features/checkout/lib/schema";
-
-interface PaymentMethodsProps {
-  locale?: "vi" | "en";
-}
 
 const paymentIcons: Record<string, React.ReactNode> = {
   "credit-card": (
@@ -28,13 +25,14 @@ const paymentIcons: Record<string, React.ReactNode> = {
   ),
 };
 
-export function PaymentMethods({ locale = "en" }: PaymentMethodsProps) {
+export function PaymentMethods() {
   const {
     setValue,
     watch,
     register,
     formState: { errors },
   } = useFormContext<CheckoutFormValues>();
+  const { t, locale } = useTranslations();
   const selectedMethod = watch("paymentMethod");
 
   return (
@@ -100,7 +98,7 @@ export function PaymentMethods({ locale = "en" }: PaymentMethodsProps) {
             {/* Card Number */}
             <div className="space-y-2">
               <Label htmlFor="cardNumber" className="text-sm font-medium">
-                {locale === "vi" ? "Số thẻ" : "Card Number"}
+                {t("checkout.payment.cardNumber")}
               </Label>
               <div className="relative">
                 <CreditCard className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.5} />
@@ -126,11 +124,11 @@ export function PaymentMethods({ locale = "en" }: PaymentMethodsProps) {
             {/* Cardholder Name */}
             <div className="space-y-2">
               <Label htmlFor="cardName" className="text-sm font-medium">
-                {locale === "vi" ? "Tên chủ thẻ" : "Cardholder Name"}
+                {t("checkout.payment.cardName")}
               </Label>
               <Input
                 id="cardName"
-                placeholder={locale === "vi" ? "Nhập tên chủ thẻ" : "John Doe"}
+                placeholder={t("checkout.payment.cardNamePlaceholder")}
                 className="h-11"
                 {...register("cardName")}
               />
@@ -143,7 +141,7 @@ export function PaymentMethods({ locale = "en" }: PaymentMethodsProps) {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="expiryDate" className="text-sm font-medium">
-                  {locale === "vi" ? "Ngày hết hạn" : "Expiry Date"}
+                  {t("checkout.payment.expiryDate")}
                 </Label>
                 <Input
                   id="expiryDate"
@@ -167,7 +165,7 @@ export function PaymentMethods({ locale = "en" }: PaymentMethodsProps) {
 
               <div className="space-y-2">
                 <Label htmlFor="cvv" className="text-sm font-medium">
-                  CVV
+                  {t("checkout.payment.cvv")}
                 </Label>
                 <div className="relative">
                   <Input
@@ -197,9 +195,7 @@ export function PaymentMethods({ locale = "en" }: PaymentMethodsProps) {
       <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2.5">
         <Lock className="h-3.5 w-3.5 shrink-0 text-muted-foreground" strokeWidth={1.5} />
         <p className="text-xs text-muted-foreground">
-          {locale === "vi"
-            ? "Thông tin thanh toán của bạn được mã hóa và bảo mật."
-            : "Your payment information is encrypted and secure."}
+          {t("checkout.payment.securityNotice")}
         </p>
       </div>
     </div>

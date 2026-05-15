@@ -22,7 +22,8 @@ import {
   productFormSchema,
   type ProductFormValues,
 } from "../lib/product-form-schema"
-import { CATEGORY_OPTIONS, BRAND_OPTIONS, type AdminProduct } from "../types"
+import { CATEGORY_OPTIONS, BRAND_OPTIONS, type AdminProduct, type ProductStatus } from "../types"
+import { useAdminProductsStore } from "../stores/admin-products-store"
 
 interface ProductFormProps {
   onSuccess?: () => void
@@ -34,6 +35,8 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [images, setImages] = useState<ImageFile[]>([])
   const [imagesError, setImagesError] = useState("")
+  const addProduct = useAdminProductsStore((s) => s.addProduct)
+  const updateProduct = useAdminProductsStore((s) => s.updateProduct)
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
@@ -75,7 +78,26 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
     }
     setIsSubmitting(true)
     await new Promise((resolve) => setTimeout(resolve, 1500))
-    console.log("Product data:", { ...data, images, productId: product?.id })
+
+    const base = {
+      name: data.name,
+      sku: data.sku,
+      brand: data.brand,
+      category: data.category,
+      price: data.price,
+      originalPrice: data.comparePrice,
+      stock: data.stock,
+      status: data.status as ProductStatus,
+      image: images[0]?.preview ?? product?.image ?? "/placeholder-helmet.svg",
+      description: data.description,
+    }
+
+    if (isEditing && product) {
+      updateProduct(product.id, base)
+    } else {
+      addProduct(base)
+    }
+
     setIsSubmitting(false)
     onSuccess?.()
   }

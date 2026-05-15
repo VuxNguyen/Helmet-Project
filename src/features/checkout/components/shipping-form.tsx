@@ -12,20 +12,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslations } from "@/hooks/use-translations";
 import { US_STATES } from "@/features/checkout/data/constants";
 import type { CheckoutFormValues } from "@/features/checkout/lib/schema";
 
-interface ShippingFormProps {
-  locale?: "vi" | "en";
-}
-
-export function ShippingForm({ locale = "en" }: ShippingFormProps) {
+export function ShippingForm() {
   const {
     register,
     formState: { errors },
     setValue,
     watch,
   } = useFormContext<CheckoutFormValues>();
+  const { t } = useTranslations();
 
   const shippingErrors = errors.shippingAddress;
   const watchedCountry = watch("shippingAddress.country");
@@ -36,13 +34,13 @@ export function ShippingForm({ locale = "en" }: ShippingFormProps) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="firstName" className="text-sm font-medium">
-            {locale === "vi" ? "Tên" : "First Name"}
+            {t("checkout.shipping.firstName")}
           </Label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.5} />
             <Input
               id="firstName"
-              placeholder={locale === "vi" ? "Nhập tên" : "John"}
+              placeholder={t("checkout.shipping.firstNamePlaceholder")}
               className="h-11 pl-10"
               {...register("shippingAddress.firstName")}
             />
@@ -54,13 +52,13 @@ export function ShippingForm({ locale = "en" }: ShippingFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="lastName" className="text-sm font-medium">
-            {locale === "vi" ? "Họ" : "Last Name"}
+            {t("checkout.shipping.lastName")}
           </Label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.5} />
             <Input
               id="lastName"
-              placeholder={locale === "vi" ? "Nhập họ" : "Doe"}
+              placeholder={t("checkout.shipping.lastNamePlaceholder")}
               className="h-11 pl-10"
               {...register("shippingAddress.lastName")}
             />
@@ -75,7 +73,7 @@ export function ShippingForm({ locale = "en" }: ShippingFormProps) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm font-medium">
-            {locale === "vi" ? "Email" : "Email"}
+            {t("checkout.shipping.email")}
           </Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.5} />
@@ -94,7 +92,7 @@ export function ShippingForm({ locale = "en" }: ShippingFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="phone" className="text-sm font-medium">
-            {locale === "vi" ? "Số điện thoại" : "Phone"}
+            {t("checkout.shipping.phone")}
           </Label>
           <div className="relative">
             <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.5} />
@@ -115,13 +113,13 @@ export function ShippingForm({ locale = "en" }: ShippingFormProps) {
       {/* Address */}
       <div className="space-y-2">
         <Label htmlFor="address" className="text-sm font-medium">
-          {locale === "vi" ? "Địa chỉ" : "Address"}
+          {t("checkout.shipping.address")}
         </Label>
         <div className="relative">
           <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.5} />
           <Input
             id="address"
-            placeholder={locale === "vi" ? "Số nhà, tên đường" : "123 Main Street"}
+            placeholder={t("checkout.shipping.addressPlaceholder")}
             className="h-11 pl-10"
             {...register("shippingAddress.address")}
           />
@@ -134,13 +132,13 @@ export function ShippingForm({ locale = "en" }: ShippingFormProps) {
       {/* Apartment */}
       <div className="space-y-2">
         <Label htmlFor="apartment" className="text-sm font-medium">
-          {locale === "vi" ? "Căn hộ / Tòa nhà (không bắt buộc)" : "Apartment / Suite (optional)"}
+          {t("checkout.shipping.apartment")}
         </Label>
         <div className="relative">
           <Building className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" strokeWidth={1.5} />
           <Input
             id="apartment"
-            placeholder={locale === "vi" ? "Căn hộ, tầng, v.v." : "Apt 4B, Floor 3"}
+            placeholder={t("checkout.shipping.apartmentPlaceholder")}
             className="h-11 pl-10"
             {...register("shippingAddress.apartment")}
           />
@@ -151,11 +149,11 @@ export function ShippingForm({ locale = "en" }: ShippingFormProps) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="space-y-2">
           <Label htmlFor="city" className="text-sm font-medium">
-            {locale === "vi" ? "Thành phố" : "City"}
+            {t("checkout.shipping.city")}
           </Label>
           <Input
             id="city"
-            placeholder={locale === "vi" ? "Thành phố" : "New York"}
+            placeholder={t("checkout.shipping.cityPlaceholder")}
             className="h-11"
             {...register("shippingAddress.city")}
           />
@@ -166,14 +164,14 @@ export function ShippingForm({ locale = "en" }: ShippingFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="state" className="text-sm font-medium">
-            {locale === "vi" ? "Tiểu bang" : "State"}
+            {t("checkout.shipping.state")}
           </Label>
           <Select
             value={watch("shippingAddress.state")}
             onValueChange={(value) => setValue("shippingAddress.state", value, { shouldValidate: true })}
           >
             <SelectTrigger id="state" className="h-11">
-              <SelectValue placeholder={locale === "vi" ? "Chọn tiểu bang" : "Select state"} />
+              <SelectValue placeholder={t("checkout.shipping.statePlaceholder")} />
             </SelectTrigger>
             <SelectContent className="max-h-[280px]">
               {US_STATES.map((state) => (
@@ -190,7 +188,7 @@ export function ShippingForm({ locale = "en" }: ShippingFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="zipCode" className="text-sm font-medium">
-            {locale === "vi" ? "Mã ZIP" : "ZIP Code"}
+            {t("checkout.shipping.zipCode")}
           </Label>
           <Input
             id="zipCode"
@@ -207,14 +205,14 @@ export function ShippingForm({ locale = "en" }: ShippingFormProps) {
       {/* Country */}
       <div className="space-y-2">
         <Label htmlFor="country" className="text-sm font-medium">
-          {locale === "vi" ? "Quốc gia" : "Country"}
+          {t("checkout.shipping.country")}
         </Label>
         <Select
           value={watch("shippingAddress.country")}
           onValueChange={(value) => setValue("shippingAddress.country", value, { shouldValidate: true })}
         >
           <SelectTrigger id="country" className="h-11">
-            <SelectValue placeholder={locale === "vi" ? "Chọn quốc gia" : "Select country"} />
+            <SelectValue placeholder={t("checkout.shipping.countryPlaceholder")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="US">United States</SelectItem>

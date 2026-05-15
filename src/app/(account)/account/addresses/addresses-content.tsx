@@ -15,46 +15,14 @@ import {
   X,
 } from "lucide-react"
 import { toast } from "sonner"
-
-interface Address {
-  id: string
-  type: "home" | "office"
-  name: string
-  phone: string
-  street: string
-  ward: string
-  district: string
-  city: string
-  isDefault: boolean
-}
-
-const initialAddresses: Address[] = [
-  {
-    id: "1",
-    type: "home",
-    name: "Nguyễn Văn A",
-    phone: "0901 234 567",
-    street: "123 Nguyễn Huệ",
-    ward: "Phường Bến Nghé",
-    district: "Quận 1",
-    city: "TP. Hồ Chí Minh",
-    isDefault: true,
-  },
-  {
-    id: "2",
-    type: "office",
-    name: "Nguyễn Văn A",
-    phone: "0909 888 777",
-    street: "456 Lê Lợi",
-    ward: "Phường 3",
-    district: "Quận 3",
-    city: "TP. Hồ Chí Minh",
-    isDefault: false,
-  },
-]
+import { useAddressesStore, type Address } from "@/stores/addresses-store"
 
 export function AddressesContent() {
-  const [addresses, setAddresses] = useState<Address[]>(initialAddresses)
+  const items = useAddressesStore((s) => s.items)
+  const addAddress = useAddressesStore((s) => s.addAddress)
+  const updateAddress = useAddressesStore((s) => s.updateAddress)
+  const removeAddress = useAddressesStore((s) => s.removeAddress)
+  const setDefault = useAddressesStore((s) => s.setDefault)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({
@@ -80,17 +48,10 @@ export function AddressesContent() {
     }
 
     if (editingId) {
-      setAddresses((prev) =>
-        prev.map((a) => (a.id === editingId ? { ...a, ...form } : a)),
-      )
+      updateAddress(editingId, form)
       toast.success("Đã cập nhật địa chỉ")
     } else {
-      const newAddress: Address = {
-        id: String(Date.now()),
-        ...form,
-        isDefault: addresses.length === 0,
-      }
-      setAddresses((prev) => [...prev, newAddress])
+      addAddress(form)
       toast.success("Đã thêm địa chỉ mới")
     }
     resetForm()
@@ -111,14 +72,12 @@ export function AddressesContent() {
   }
 
   function handleDelete(id: string) {
-    setAddresses((prev) => prev.filter((a) => a.id !== id))
+    removeAddress(id)
     toast.success("Đã xóa địa chỉ")
   }
 
   function handleSetDefault(id: string) {
-    setAddresses((prev) =>
-      prev.map((a) => ({ ...a, isDefault: a.id === id })),
-    )
+    setDefault(id)
     toast.success("Đã đặt làm địa chỉ mặc định")
   }
 
@@ -232,7 +191,7 @@ export function AddressesContent() {
         </Card>
       )}
 
-      {addresses.length === 0 ? (
+      {items.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center gap-4 py-16">
             <MapPin className="h-12 w-12 text-muted-foreground/30" />
@@ -246,7 +205,7 @@ export function AddressesContent() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-4">
-          {addresses.map((address) => (
+          {items.map((address) => (
             <Card key={address.id}>
               <CardContent className="flex items-start justify-between p-4">
                 <div className="flex gap-3">

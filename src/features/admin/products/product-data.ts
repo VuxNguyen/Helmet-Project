@@ -35,7 +35,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.8,
     reviewCount: 124,
     createdAt: daysAgo(12),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "2",
@@ -50,7 +50,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.7,
     reviewCount: 98,
     createdAt: daysAgo(15),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "3",
@@ -64,7 +64,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.9,
     reviewCount: 67,
     createdAt: daysAgo(20),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "4",
@@ -79,7 +79,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.5,
     reviewCount: 203,
     createdAt: daysAgo(5),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "5",
@@ -93,7 +93,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.4,
     reviewCount: 156,
     createdAt: daysAgo(8),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "6",
@@ -108,7 +108,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.6,
     reviewCount: 89,
     createdAt: daysAgo(30),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "7",
@@ -122,7 +122,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.3,
     reviewCount: 178,
     createdAt: daysAgo(3),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "8",
@@ -137,7 +137,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.2,
     reviewCount: 245,
     createdAt: daysAgo(10),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "9",
@@ -151,7 +151,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.7,
     reviewCount: 87,
     createdAt: daysAgo(22),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "10",
@@ -166,7 +166,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.6,
     reviewCount: 134,
     createdAt: daysAgo(14),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "11",
@@ -180,7 +180,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.5,
     reviewCount: 192,
     createdAt: daysAgo(7),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "12",
@@ -195,7 +195,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.1,
     reviewCount: 267,
     createdAt: daysAgo(45),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "13",
@@ -209,7 +209,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.0,
     reviewCount: 412,
     createdAt: daysAgo(2),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "14",
@@ -224,7 +224,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.2,
     reviewCount: 189,
     createdAt: daysAgo(90),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "15",
@@ -238,7 +238,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.0,
     reviewCount: 156,
     createdAt: daysAgo(18),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "16",
@@ -253,7 +253,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.1,
     reviewCount: 203,
     createdAt: daysAgo(11),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "17",
@@ -267,7 +267,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.5,
     reviewCount: 78,
     createdAt: daysAgo(25),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "18",
@@ -281,7 +281,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.6,
     reviewCount: 92,
     createdAt: daysAgo(60),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "19",
@@ -295,7 +295,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.3,
     reviewCount: 112,
     createdAt: daysAgo(9),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "20",
@@ -310,7 +310,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.4,
     reviewCount: 145,
     createdAt: daysAgo(16),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "21",
@@ -324,7 +324,7 @@ const rawProducts: AdminProduct[] = [
     rating: 4.2,
     reviewCount: 167,
     createdAt: daysAgo(13),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "22",
@@ -338,7 +338,7 @@ const rawProducts: AdminProduct[] = [
     rating: 3.9,
     reviewCount: 234,
     createdAt: daysAgo(6),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "23",
@@ -353,7 +353,7 @@ const rawProducts: AdminProduct[] = [
     rating: 3.8,
     reviewCount: 389,
     createdAt: daysAgo(4),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
   {
     id: "24",
@@ -367,7 +367,7 @@ const rawProducts: AdminProduct[] = [
     rating: 3.7,
     reviewCount: 312,
     createdAt: daysAgo(120),
-    image: "/placeholder-helmet.jpg",
+    image: "/placeholder-helmet.svg",
   },
 ]
 

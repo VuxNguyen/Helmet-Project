@@ -13,10 +13,20 @@ import {
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "@/hooks/use-translations"
 
+const SORT_LABEL_KEYS: Record<string, string> = {
+  featured: "products_ext.sortOptions.featured",
+  newest: "products_ext.sortOptions.newest",
+  "price-asc": "products_ext.sortOptions.priceAsc",
+  "price-desc": "products_ext.sortOptions.priceDesc",
+  "name-asc": "products_ext.sortOptions.nameAsc",
+  "name-desc": "products_ext.sortOptions.nameDesc",
+  rating: "products_ext.sortOptions.topRated",
+}
+
 export function SortDropdown() {
+  const { t } = useTranslations()
   const sort = useFilterStore((s) => s.sort)
   const setSort = useFilterStore((s) => s.setSort)
-  const { locale } = useTranslations()
 
   const currentOption = SORT_OPTIONS.find((opt) => opt.value === sort)
 
@@ -30,9 +40,9 @@ export function SortDropdown() {
         >
           <ArrowUpDown size={14} className="text-muted-foreground" />
           <span className="hidden sm:inline">
-            {locale === "vi" ? currentOption?.labelVi : currentOption?.labelEn}
+            {currentOption ? t(SORT_LABEL_KEYS[currentOption.value]) : ""}
           </span>
-          <span className="sm:hidden">Sort</span>
+          <span className="sm:hidden">{t("products.sort")}</span>
           <ChevronDown size={12} className="text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
@@ -48,7 +58,7 @@ export function SortDropdown() {
               className="cursor-pointer"
             >
               <span className="flex-1">
-                {locale === "vi" ? option.labelVi : option.labelEn}
+                {t(SORT_LABEL_KEYS[option.value])}
               </span>
               {sort === option.value && (
                 <Check size={14} className="ml-2 shrink-0" />

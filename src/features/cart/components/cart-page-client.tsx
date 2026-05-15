@@ -13,12 +13,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useTranslations } from "@/hooks/use-translations";
 import { useCartStore } from "@/stores/cart-store";
 import { CartItemRow } from "@/features/cart/components/cart-item-row";
 import { CartSummary } from "@/features/cart/components/cart-summary";
 import { EmptyCart } from "@/features/cart/components/empty-cart";
 
 export function CartPageClient() {
+  const { t } = useTranslations();
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
   const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
@@ -49,19 +51,16 @@ export function CartPageClient() {
               href="/"
               className="transition-colors hover:text-foreground"
             >
-              Home
+              {t("checkout.breadcrumb.home")}
             </Link>
             <span>/</span>
-            <span className="text-foreground">Cart</span>
+            <span className="text-foreground">{t("nav.cart")}</span>
           </div>
           <h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
-            Shopping Cart
+            {t("cart.pageTitle")}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {items.reduce((total, item) => total + item.quantity, 0)} item
-            {items.reduce((total, item) => total + item.quantity, 0) !== 1
-              ? "s"
-              : ""}
+            {t("cart.itemCount").replace("{{count}}", String(items.reduce((total, item) => total + item.quantity, 0)))}
           </p>
         </div>
         <div className="mt-4 flex items-center gap-3 sm:mt-0">
@@ -72,12 +71,12 @@ export function CartPageClient() {
             onClick={() => clearCart()}
           >
             <Trash2 className="h-3.5 w-3.5" strokeWidth={1.5} />
-            Clear Cart
+            {t("cart.clearCart")}
           </Button>
           <Button asChild variant="ghost" size="sm" className="h-9 gap-2 text-xs">
             <Link href="/products">
               <ArrowLeft className="h-3.5 w-3.5" strokeWidth={1.5} />
-              Continue Shopping
+              {t("cart.continueShopping")}
             </Link>
           </Button>
         </div>
@@ -92,7 +91,7 @@ export function CartPageClient() {
           {/* Item Count + Action */}
           <div className="mb-4 flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">
-              {items.length} item{items.length !== 1 ? "s" : ""} in your cart
+              {t("cart.itemsInCart").replace("{{count}}", String(items.length))}
             </span>
           </div>
 
@@ -112,21 +111,21 @@ export function CartPageClient() {
                 className="h-4 w-4 shrink-0 text-foreground/60"
                 strokeWidth={1.5}
               />
-              <span>Secure checkout</span>
+              <span>{t("cart.trustSecureCheckout")}</span>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <RotateCcw
                 className="h-4 w-4 shrink-0 text-foreground/60"
                 strokeWidth={1.5}
               />
-              <span>30-day free returns</span>
+              <span>{t("cart.trustFreeReturns")}</span>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <ShoppingBag
                 className="h-4 w-4 shrink-0 text-foreground/60"
                 strokeWidth={1.5}
               />
-              <span>Free shipping over $200</span>
+              <span>{t("cart.trustFreeShipOver")}</span>
             </div>
           </div>
         </div>

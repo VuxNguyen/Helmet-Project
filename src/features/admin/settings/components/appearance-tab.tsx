@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select"
 import { FormSection } from "@/components/common/form-section"
 import { appearanceSchema } from "../lib/settings-schema"
+import { useAdminSettingsStore } from "../stores/admin-settings-store"
 import { THEME_OPTIONS, SIDEBAR_OPTIONS, type AppearanceFormValues } from "../types"
 
 const APPEARANCE_OPTIONS = [
@@ -33,6 +34,8 @@ const APPEARANCE_OPTIONS = [
 
 export function AppearanceTab() {
   const [submitting, setSubmitting] = useState(false)
+  const settings = useAdminSettingsStore((s) => s.settings)
+  const updateSettings = useAdminSettingsStore((s) => s.updateSettings)
 
   const {
     handleSubmit,
@@ -42,19 +45,28 @@ export function AppearanceTab() {
   } = useForm<AppearanceFormValues>({
     resolver: zodResolver(appearanceSchema),
     defaultValues: {
-      theme: "dark",
-      sidebarBehavior: "expanded",
-      reducedMotion: false,
-      compactMode: false,
+      theme: settings.themeMode,
+      sidebarBehavior: settings.sidebarBehavior,
+      reducedMotion: settings.reducedMotion,
+      compactMode: settings.compactMode,
     },
   })
 
-  const onSubmit = useCallback(async () => {
-    setSubmitting(true)
-    await new Promise((r) => setTimeout(r, 800))
-    toast.success("Appearance settings updated.")
-    setSubmitting(false)
-  }, [])
+  const onSubmit = useCallback(
+    async (data: AppearanceFormValues) => {
+      setSubmitting(true)
+      await new Promise((r) => setTimeout(r, 800))
+      updateSettings({
+        themeMode: data.theme,
+        sidebarBehavior: data.sidebarBehavior,
+        reducedMotion: data.reducedMotion,
+        compactMode: data.compactMode,
+      })
+      toast.success("Appearance settings updated.")
+      setSubmitting(false)
+    },
+    [updateSettings],
+  )
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

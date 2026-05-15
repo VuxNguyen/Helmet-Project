@@ -11,6 +11,7 @@ export interface WishlistItem {
   name: string;
   price: number;
   image: string;
+  slug?: string;
 }
 
 interface WishlistState {
@@ -40,7 +41,7 @@ export const useWishlistStore = create<WishlistState>()(
 
       isWishlisted: (id) => get().items.some((i) => i.id === id),
 
-      toggleItem: (item) => {
+      toggleItem: (item: WishlistItem) => {
         const exists = get().items.some((i) => i.id === item.id);
         if (exists) {
           set((state) => ({

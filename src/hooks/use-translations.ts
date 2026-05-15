@@ -59,8 +59,14 @@ function resolve(obj: Dictionary, path: string, locale: Locale): string {
 export function useTranslations() {
   const locale = useLocaleStore((s) => s.locale);
 
-  function t(key: string): string {
-    return resolve(dictionary, key, locale);
+  function t(key: string, params?: Record<string, string | number>): string {
+    let value = resolve(dictionary, key, locale);
+    if (params) {
+      for (const [k, v] of Object.entries(params)) {
+        value = value.replaceAll(`{{${k}}}`, String(v));
+      }
+    }
+    return value;
   }
 
   return { t, locale };

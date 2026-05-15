@@ -1,43 +1,42 @@
+"use client"
+
 import { Badge } from "@/components/ui/badge"
 import { InventoryItem } from "./inventory-item"
-
-const lowStockProducts = [
-  { name: "Full Face Carbon Pro", sku: "FF-2024-001", stock: 3, threshold: 20 },
-  { name: "Modular Adventure X", sku: "MD-2024-008", stock: 5, threshold: 15 },
-  { name: "Open Face Classic", sku: "OF-2024-012", stock: 8, threshold: 25 },
-  { name: "Dual Sport Elite", sku: "DS-2024-004", stock: 0, threshold: 10 },
-  { name: "Half Shell Cruiser", sku: "HS-2024-019", stock: 12, threshold: 30 },
-  { name: "Youth Dirt Racer", sku: "YD-2024-022", stock: 2, threshold: 15 },
-]
+import { useTranslations } from "@/hooks/use-translations"
+import { useAdminProductsStore } from "@/features/admin/products/stores/admin-products-store"
 
 export function LowStockProducts() {
+  const products = useAdminProductsStore((s) => s.items)
+  const lowStock = products.filter((p) => p.stock <= 10).slice(0, 6)
+  const { t } = useTranslations()
+
   return (
     <div className="rounded-xl border border-border bg-card">
       <div className="flex items-center justify-between border-b border-border px-6 py-4">
         <div>
-          <h3 className="text-sm font-semibold">Low Stock Products</h3>
-          <p className="text-xs text-muted-foreground">Items needing replenishment.</p>
+          <h3 className="text-sm font-semibold">{t("admin.lowStock.title")}</h3>
+          <p className="text-xs text-muted-foreground">{t("admin.lowStock.description")}</p>
         </div>
         <Badge variant="destructive" className="text-xs">
-          {lowStockProducts.length} alerts
+          {t("admin.lowStock.alerts", { count: lowStock.length })}
         </Badge>
       </div>
 
       <div className="divide-y divide-border">
-        {lowStockProducts.map((product) => (
+        {lowStock.map((product) => (
           <InventoryItem
-            key={product.sku}
+            key={product.id}
             name={product.name}
             sku={product.sku}
             stock={product.stock}
-            threshold={product.threshold}
+            threshold={10}
           />
         ))}
       </div>
 
       <div className="border-t border-border px-6 py-3">
         <button className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground">
-          View all products &rarr;
+          {t("admin.lowStock.viewAll")} &rarr;
         </button>
       </div>
     </div>

@@ -2,13 +2,14 @@
 
 import { useState, useMemo, useCallback } from "react"
 import { Trash2, X, CheckCircle, FileEdit } from "lucide-react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ProductsToolbar } from "./products-toolbar"
 import { ProductsTable } from "./products-table"
 import { AddProductSheet } from "./add-product-sheet"
 import { EditProductSheet } from "./edit-product-sheet"
-import { adminProducts, getFilteredProducts } from "../product-data"
+import { useAdminProductsStore } from "../stores/admin-products-store"
 import type { ProductStatus, AdminProduct } from "../types"
 
 export function ProductsPage() {
@@ -19,16 +20,19 @@ export function ProductsPage() {
   const [brandFilter, setBrandFilter] = useState<string | null>(null)
   const [statusFilter, setStatusFilter] = useState<ProductStatus | null>(null)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const bulkUpdateStatus = useAdminProductsStore((s) => s.bulkUpdateStatus)
+  const bulkDelete = useAdminProductsStore((s) => s.bulkDelete)
+  const getFiltered = useAdminProductsStore((s) => s.getFiltered)
 
   const filteredProducts = useMemo(
     () =>
-      getFilteredProducts(adminProducts, {
+      getFiltered({
         search,
         category: categoryFilter,
         brand: brandFilter,
         status: statusFilter,
       }),
-    [search, categoryFilter, brandFilter, statusFilter],
+    [search, categoryFilter, brandFilter, statusFilter, getFiltered],
   )
 
   const handleSelectionChange = useCallback((ids: string[]) => {
@@ -36,14 +40,17 @@ export function ProductsPage() {
   }, [])
 
   const handleBulkDelete = useCallback(() => {
-    console.log("Bulk delete:", selectedIds)
-  }, [selectedIds])
+    bulkDelete(selectedIds)
+    setSelectedIds([])
+    toast.success(`${selectedIds.length} product(s) deleted`)
+  }, [selectedIds, bulkDelete])
 
   const handleBulkStatus = useCallback(
     (status: ProductStatus) => {
-      console.log("Bulk status update:", selectedIds, status)
+      bulkUpdateStatus(selectedIds, status)
+      toast.success(`${selectedIds.length} product(s) marked as ${status}`)
     },
-    [selectedIds],
+    [selectedIds, bulkUpdateStatus],
   )
 
   const handleClearSelection = useCallback(() => {

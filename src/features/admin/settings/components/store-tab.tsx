@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select"
 import { FormSection } from "@/components/common/form-section"
 import { storeSchema } from "../lib/settings-schema"
+import { useAdminSettingsStore } from "../stores/admin-settings-store"
 import {
   CURRENCY_OPTIONS,
   LANGUAGE_OPTIONS,
@@ -26,6 +27,8 @@ import {
 
 export function StoreTab() {
   const [submitting, setSubmitting] = useState(false)
+  const settings = useAdminSettingsStore((s) => s.settings)
+  const updateSettings = useAdminSettingsStore((s) => s.updateSettings)
 
   const {
     register,
@@ -36,21 +39,25 @@ export function StoreTab() {
   } = useForm<StoreFormValues>({
     resolver: zodResolver(storeSchema),
     defaultValues: {
-      storeName: "Helmet Pro",
-      storeEmail: "store@helmetpro.com",
-      currency: "USD",
-      language: "en",
-      timezone: "America/New_York",
-      description: "Premium motorcycle helmets and gear.",
+      storeName: settings.storeName,
+      storeEmail: settings.storeEmail,
+      currency: settings.currency,
+      language: settings.language,
+      timezone: settings.timezone,
+      description: settings.description,
     },
   })
 
-  const onSubmit = useCallback(async () => {
-    setSubmitting(true)
-    await new Promise((r) => setTimeout(r, 800))
-    toast.success("Store settings updated successfully.")
-    setSubmitting(false)
-  }, [])
+  const onSubmit = useCallback(
+    async (data: StoreFormValues) => {
+      setSubmitting(true)
+      await new Promise((r) => setTimeout(r, 800))
+      updateSettings(data)
+      toast.success("Store settings updated successfully.")
+      setSubmitting(false)
+    },
+    [updateSettings],
+  )
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

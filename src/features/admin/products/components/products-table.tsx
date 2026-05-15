@@ -64,13 +64,13 @@ export function ProductsTable({ data, onSelectionChange, onEdit }: ProductsTable
           <div
             className="h-9 w-9 rounded-lg bg-muted bg-cover bg-center shrink-0"
             style={
-              row.original.image && row.original.image !== "/placeholder-helmet.jpg"
+              row.original.image && row.original.image !== "/placeholder-helmet.svg"
                 ? { backgroundImage: `url(${row.original.image})` }
                 : undefined
             }
           >
             {(!row.original.image ||
-              row.original.image === "/placeholder-helmet.jpg") && (
+              row.original.image === "/placeholder-helmet.svg") && (
               <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-muted-foreground">
                 {row.original.name.charAt(0)}
               </div>

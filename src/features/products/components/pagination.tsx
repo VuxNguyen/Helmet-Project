@@ -5,8 +5,10 @@ import { useProductListing } from "../hooks/use-product-listing"
 import { cn } from "@/lib/utils"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useTranslations } from "@/hooks/use-translations"
 
 export function Pagination() {
+  const { t } = useTranslations()
   const page = useFilterStore((s) => s.page)
   const setPage = useFilterStore((s) => s.setPage)
   const { pagination, totalFiltered } = useProductListing()
@@ -43,23 +45,18 @@ export function Pagination() {
   const pageNumbers = getPageNumbers()
 
   return (
-    <nav className="flex items-center justify-between gap-4 pt-8" aria-label="Pagination">
+    <nav className="flex items-center justify-between gap-4 pt-8" aria-label={t("products_ext.pagination.label")}>
       {/* Result count */}
       <p className="text-sm text-muted-foreground">
         <span className="hidden sm:inline">
-          Showing{" "}
-          <span className="font-medium text-foreground">
-            {(currentPage - 1) * pagination.pageSize + 1}
-          </span>{" "}
-          to{" "}
-          <span className="font-medium text-foreground">
-            {Math.min(currentPage * pagination.pageSize, totalFiltered)}
-          </span>{" "}
-          of{" "}
-          <span className="font-medium text-foreground">{totalFiltered}</span> results
+          {t("products.showingOf")
+            .replace("{{count}}", String(Math.min(currentPage * pagination.pageSize, totalFiltered)))
+            .replace("{{total}}", String(totalFiltered))}
         </span>
         <span className="sm:hidden">
-          Page {currentPage} of {totalPages}
+          {t("products_ext.pagination.pageOf")
+            .replace("{{current}}", String(currentPage))
+            .replace("{{total}}", String(totalPages))}
         </span>
       </p>
 
@@ -70,7 +67,7 @@ export function Pagination() {
           size="sm"
           onClick={() => setPage(currentPage - 1)}
           disabled={currentPage <= 1}
-          aria-label="Previous page"
+          aria-label={t("products.previousPage")}
           className="h-9 w-9 p-0"
         >
           <ChevronLeft size={16} />
@@ -90,7 +87,7 @@ export function Pagination() {
               variant={pageNum === currentPage ? "default" : "outline"}
               size="sm"
               onClick={() => setPage(pageNum)}
-              aria-label={`Page ${pageNum}`}
+              aria-label={t("products_ext.pagination.pageLabel").replace("{{number}}", String(pageNum))}
               aria-current={pageNum === currentPage ? "page" : undefined}
               className={cn(
                 "h-9 w-9 p-0 text-sm",
@@ -107,7 +104,7 @@ export function Pagination() {
           size="sm"
           onClick={() => setPage(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          aria-label="Next page"
+          aria-label={t("products.nextPage")}
           className="h-9 w-9 p-0"
         >
           <ChevronRight size={16} />

@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback } from "react"
 import { CustomersToolbar } from "./customers-toolbar"
 import { CustomersTable } from "./customers-table"
 import { CustomerDetailsDrawer } from "./customer-details-drawer"
-import { adminCustomers, getFilteredCustomers } from "../customer-data"
+import { useAdminCustomersStore } from "../stores/admin-customers-store"
 import type { AdminCustomer, CustomerStatus } from "../types"
 
 export function CustomersPage() {
@@ -13,15 +13,16 @@ export function CustomersPage() {
   const [minSpent, setMinSpent] = useState("")
   const [selectedCustomer, setSelectedCustomer] = useState<AdminCustomer | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const getFiltered = useAdminCustomersStore((s) => s.getFiltered)
 
   const filteredCustomers = useMemo(
     () =>
-      getFilteredCustomers(adminCustomers, {
+      getFiltered({
         search,
         status: statusFilter,
         minSpent,
       }),
-    [search, statusFilter, minSpent],
+    [search, statusFilter, minSpent, getFiltered],
   )
 
   const handleViewDetails = useCallback((customer: AdminCustomer) => {

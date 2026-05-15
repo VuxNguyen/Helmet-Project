@@ -13,7 +13,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-001",
     customer: { name: "Alice Johnson", email: "alice@example.com" },
     items: [
-      { id: "p1", name: "Arai RX-7X Evo", sku: "HELM-0001", quantity: 1, price: 899.99, image: "/placeholder-helmet.jpg" },
+      { id: "p1", name: "Arai RX-7X Evo", sku: "HELM-0001", quantity: 1, price: 899.99, image: "/placeholder-helmet.svg" },
     ],
     total: 959.98,
     subtotal: 899.99,
@@ -32,8 +32,8 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-002",
     customer: { name: "Bob Smith", email: "bob@example.com" },
     items: [
-      { id: "p2", name: "Shoei X-Fifteen", sku: "HELM-0002", quantity: 1, price: 799.99, image: "/placeholder-helmet.jpg" },
-      { id: "p3", name: "Visor Tint", sku: "ACC-0012", quantity: 2, price: 39.99, image: "/placeholder-helmet.jpg" },
+      { id: "p2", name: "Shoei X-Fifteen", sku: "HELM-0002", quantity: 1, price: 799.99, image: "/placeholder-helmet.svg" },
+      { id: "p3", name: "Visor Tint", sku: "ACC-0012", quantity: 2, price: 39.99, image: "/placeholder-helmet.svg" },
     ],
     total: 919.96,
     subtotal: 879.97,
@@ -52,7 +52,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-003",
     customer: { name: "Carol Davis", email: "carol@example.com" },
     items: [
-      { id: "p4", name: "AGV Pista GP RR", sku: "HELM-0003", quantity: 1, price: 1499.99, image: "/placeholder-helmet.jpg" },
+      { id: "p4", name: "AGV Pista GP RR", sku: "HELM-0003", quantity: 1, price: 1499.99, image: "/placeholder-helmet.svg" },
     ],
     total: 1559.98,
     subtotal: 1499.99,
@@ -71,7 +71,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-004",
     customer: { name: "David Wilson", email: "david@example.com" },
     items: [
-      { id: "p5", name: "Scorpion EXO-R1 Air", sku: "HELM-0004", quantity: 1, price: 549.99, image: "/placeholder-helmet.jpg" },
+      { id: "p5", name: "Scorpion EXO-R1 Air", sku: "HELM-0004", quantity: 1, price: 549.99, image: "/placeholder-helmet.svg" },
     ],
     total: 579.98,
     subtotal: 549.99,
@@ -91,8 +91,8 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-005",
     customer: { name: "Eve Martinez", email: "eve@example.com" },
     items: [
-      { id: "p6", name: "HJC RPHA 91", sku: "HELM-0005", quantity: 1, price: 499.99, image: "/placeholder-helmet.jpg" },
-      { id: "p7", name: "Pinlock Insert", sku: "ACC-0034", quantity: 1, price: 34.99, image: "/placeholder-helmet.jpg" },
+      { id: "p6", name: "HJC RPHA 91", sku: "HELM-0005", quantity: 1, price: 499.99, image: "/placeholder-helmet.svg" },
+      { id: "p7", name: "Pinlock Insert", sku: "ACC-0034", quantity: 1, price: 34.99, image: "/placeholder-helmet.svg" },
     ],
     total: 564.97,
     subtotal: 534.98,
@@ -111,7 +111,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-006",
     customer: { name: "Frank Lee", email: "frank@example.com" },
     items: [
-      { id: "p8", name: "Bell Race Star DLX", sku: "HELM-0006", quantity: 1, price: 699.99, image: "/placeholder-helmet.jpg" },
+      { id: "p8", name: "Bell Race Star DLX", sku: "HELM-0006", quantity: 1, price: 699.99, image: "/placeholder-helmet.svg" },
     ],
     total: 759.98,
     subtotal: 699.99,
@@ -130,7 +130,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-007",
     customer: { name: "Grace Kim", email: "grace@example.com" },
     items: [
-      { id: "p9", name: "LS2 Thunder Carbon", sku: "HELM-0007", quantity: 2, price: 399.99, image: "/placeholder-helmet.jpg" },
+      { id: "p9", name: "LS2 Thunder Carbon", sku: "HELM-0007", quantity: 2, price: 399.99, image: "/placeholder-helmet.svg" },
     ],
     total: 859.97,
     subtotal: 799.98,
@@ -149,7 +149,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-008",
     customer: { name: "Henry Patel", email: "henry@example.com" },
     items: [
-      { id: "p10", name: "KYT NZ Race", sku: "HELM-0008", quantity: 1, price: 299.99, image: "/placeholder-helmet.jpg" },
+      { id: "p10", name: "KYT NZ Race", sku: "HELM-0008", quantity: 1, price: 299.99, image: "/placeholder-helmet.svg" },
     ],
     total: 329.98,
     subtotal: 299.99,
@@ -168,8 +168,8 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-009",
     customer: { name: "Iris Chen", email: "iris@example.com" },
     items: [
-      { id: "p11", name: "Arai XD-4 Adventure", sku: "HELM-0009", quantity: 1, price: 749.99, image: "/placeholder-helmet.jpg" },
-      { id: "p12", name: "Chin Curtain", sku: "ACC-0056", quantity: 1, price: 24.99, image: "/placeholder-helmet.jpg" },
+      { id: "p11", name: "Arai XD-4 Adventure", sku: "HELM-0009", quantity: 1, price: 749.99, image: "/placeholder-helmet.svg" },
+      { id: "p12", name: "Chin Curtain", sku: "ACC-0056", quantity: 1, price: 24.99, image: "/placeholder-helmet.svg" },
     ],
     total: 824.97,
     subtotal: 774.98,
@@ -188,7 +188,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-010",
     customer: { name: "Jack Thompson", email: "jack@example.com" },
     items: [
-      { id: "p13", name: "Shoei Neotec 3", sku: "HELM-0010", quantity: 1, price: 649.99, image: "/placeholder-helmet.jpg" },
+      { id: "p13", name: "Shoei Neotec 3", sku: "HELM-0010", quantity: 1, price: 649.99, image: "/placeholder-helmet.svg" },
     ],
     total: 709.98,
     subtotal: 649.99,
@@ -207,7 +207,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-011",
     customer: { name: "Karen Walsh", email: "karen@example.com" },
     items: [
-      { id: "p14", name: "AGV K6 S", sku: "HELM-0011", quantity: 1, price: 549.99, image: "/placeholder-helmet.jpg" },
+      { id: "p14", name: "AGV K6 S", sku: "HELM-0011", quantity: 1, price: 549.99, image: "/placeholder-helmet.svg" },
     ],
     total: 579.98,
     subtotal: 549.99,
@@ -226,7 +226,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-012",
     customer: { name: "Leo Garcia", email: "leo@example.com" },
     items: [
-      { id: "p15", name: "HJC i100", sku: "HELM-0012", quantity: 1, price: 329.99, image: "/placeholder-helmet.jpg" },
+      { id: "p15", name: "HJC i100", sku: "HELM-0012", quantity: 1, price: 329.99, image: "/placeholder-helmet.svg" },
     ],
     total: 359.98,
     subtotal: 329.99,
@@ -245,7 +245,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-013",
     customer: { name: "Mia Robinson", email: "mia@example.com" },
     items: [
-      { id: "p16", name: "Bell Qualifier DLX", sku: "HELM-0013", quantity: 2, price: 219.99, image: "/placeholder-helmet.jpg" },
+      { id: "p16", name: "Bell Qualifier DLX", sku: "HELM-0013", quantity: 2, price: 219.99, image: "/placeholder-helmet.svg" },
     ],
     total: 489.97,
     subtotal: 439.98,
@@ -264,7 +264,7 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-014",
     customer: { name: "Nathan Brown", email: "nathan@example.com" },
     items: [
-      { id: "p17", name: "Scorpion EXO-491", sku: "HELM-0014", quantity: 1, price: 279.99, image: "/placeholder-helmet.jpg" },
+      { id: "p17", name: "Scorpion EXO-491", sku: "HELM-0014", quantity: 1, price: 279.99, image: "/placeholder-helmet.svg" },
     ],
     total: 309.98,
     subtotal: 279.99,
@@ -283,8 +283,8 @@ export const adminOrders: AdminOrder[] = [
     orderNumber: "ORD-2026-015",
     customer: { name: "Olivia Taylor", email: "olivia@example.com" },
     items: [
-      { id: "p18", name: "LS2 Flex Retro", sku: "HELM-0015", quantity: 1, price: 189.99, image: "/placeholder-helmet.jpg" },
-      { id: "p19", name: "Helmet Bag", sku: "ACC-0078", quantity: 1, price: 49.99, image: "/placeholder-helmet.jpg" },
+      { id: "p18", name: "LS2 Flex Retro", sku: "HELM-0015", quantity: 1, price: 189.99, image: "/placeholder-helmet.svg" },
+      { id: "p19", name: "Helmet Bag", sku: "ACC-0078", quantity: 1, price: 49.99, image: "/placeholder-helmet.svg" },
     ],
     total: 269.97,
     subtotal: 239.98,

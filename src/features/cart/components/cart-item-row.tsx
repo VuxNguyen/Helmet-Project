@@ -6,6 +6,7 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/hooks/use-translations";
 import { useCartStore, type CartItem } from "@/stores/cart-store";
 
 interface CartItemRowProps {
@@ -14,6 +15,7 @@ interface CartItemRowProps {
 }
 
 export function CartItemRow({ item, isRemoving }: CartItemRowProps) {
+  const { t } = useTranslations();
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
 
@@ -35,11 +37,11 @@ export function CartItemRow({ item, isRemoving }: CartItemRowProps) {
     >
       {/* Product Image */}
       <Link
-        href={`/products/${item.id}`}
+        href={`/products/${item.slug || item.id}`}
         className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-muted sm:h-28 sm:w-28"
       >
         <Image
-          src={item.image || "/placeholder-helmet.jpg"}
+          src={item.image || "/placeholder-helmet.svg"}
           alt={item.name}
           fill
           className="object-cover"
@@ -53,7 +55,7 @@ export function CartItemRow({ item, isRemoving }: CartItemRowProps) {
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <Link
-              href={`/products/${item.id}`}
+              href={`/products/${item.slug || item.id}`}
               className="text-sm font-medium leading-snug text-foreground transition-colors hover:text-foreground/70 sm:text-base"
             >
               {item.name}
@@ -69,7 +71,7 @@ export function CartItemRow({ item, isRemoving }: CartItemRowProps) {
             size="icon"
             onClick={() => removeItem(item.id)}
             className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
-            aria-label={`Remove ${item.name} from cart`}
+            aria-label={t("cart.removeItemAria").replace("{{name}}", item.name)}
           >
             <Trash2 className="h-4 w-4" strokeWidth={1.5} />
           </Button>
@@ -83,7 +85,7 @@ export function CartItemRow({ item, isRemoving }: CartItemRowProps) {
               onClick={() => updateQuantity(item.id, item.quantity - 1)}
               disabled={item.quantity <= 1}
               className="flex h-8 w-8 items-center justify-center rounded-l-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
-              aria-label="Decrease quantity"
+              aria-label={t("cart.decreaseQtyAria")}
             >
               <Minus className="h-3.5 w-3.5" strokeWidth={1.5} />
             </button>
@@ -93,7 +95,7 @@ export function CartItemRow({ item, isRemoving }: CartItemRowProps) {
             <button
               onClick={() => updateQuantity(item.id, item.quantity + 1)}
               className="flex h-8 w-8 items-center justify-center rounded-r-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              aria-label="Increase quantity"
+              aria-label={t("cart.increaseQtyAria")}
             >
               <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
             </button>
@@ -106,7 +108,7 @@ export function CartItemRow({ item, isRemoving }: CartItemRowProps) {
             </span>
             {item.quantity > 1 && (
               <p className="text-xs text-muted-foreground tabular-nums">
-                ${item.price.toFixed(2)} each
+                ${item.price.toFixed(2)} {t("cart.each")}
               </p>
             )}
           </div>

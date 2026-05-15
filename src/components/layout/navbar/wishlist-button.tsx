@@ -22,7 +22,7 @@ export function WishlistButton({ className }: WishlistButtonProps) {
       className={cn("relative p-2 rounded-full", className)}
       aria-label={`Wishlist with ${count} items`}
     >
-      <Link href="/wishlist">
+      <Link href="/account/wishlist">
         <Heart className="h-5 w-5" strokeWidth={1.5} />
         {count > 0 && (
           <motion.span

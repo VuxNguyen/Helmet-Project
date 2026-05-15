@@ -7,10 +7,10 @@ import type { ProductDetail, RelatedProduct } from "../types/product-detail"
 import { sampleProducts } from "@/data/sample-products"
 
 const placeholderImages = [
-  "/placeholder-helmet.jpg",
-  "/placeholder-helmet.jpg",
-  "/placeholder-helmet.jpg",
-  "/placeholder-helmet.jpg",
+  "/placeholder-helmet.svg",
+  "/placeholder-helmet.svg",
+  "/placeholder-helmet.svg",
+  "/placeholder-helmet.svg",
 ]
 
 export const sampleProductDetail: ProductDetail = {

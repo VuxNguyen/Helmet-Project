@@ -2,12 +2,15 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { useState, useCallback } from "react"
 import { motion } from "framer-motion"
-import { Star, ArrowRight } from "lucide-react"
+import { Star, ArrowRight, ShoppingBag } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { motionTokens } from "@/lib/motion"
 import { Button } from "@/components/ui/button"
+import { useTranslations } from "@/hooks/use-translations"
+import { useCartStore } from "@/stores/cart-store"
 import type { RelatedProduct } from "../types/product-detail"
 
 /* ───────── Types ───────── */
@@ -31,6 +34,33 @@ function formatPrice(price: number): string {
 /* ───────── Component ───────── */
 
 export function RelatedProducts({ products, className }: RelatedProductsProps) {
+  const { t } = useTranslations()
+  const addItem = useCartStore((s) => s.addItem)
+  const [addingIds, setAddingIds] = useState<Set<string>>(new Set())
+
+  const handleAddToCart = useCallback(
+    (product: RelatedProduct, e: React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      setAddingIds((prev) => new Set(prev).add(product.id))
+      addItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        slug: product.slug,
+      })
+      setTimeout(() => {
+        setAddingIds((prev) => {
+          const next = new Set(prev)
+          next.delete(product.id)
+          return next
+        })
+      }, 800)
+    },
+    [addItem],
+  )
+
   if (products.length === 0) return null
 
   return (
@@ -45,15 +75,15 @@ export function RelatedProducts({ products, className }: RelatedProductsProps) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-foreground">
-            Complete Your Gear
+            {t("products_ext.related.title")}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Customers who viewed this also liked these helmets.
+            {t("products_ext.related.subtitle")}
           </p>
         </div>
         <Button variant="ghost" className="hidden gap-2 sm:flex" asChild>
           <Link href="/products">
-            View All
+            {t("products_ext.related.viewAll")}
             <ArrowRight size={14} />
           </Link>
         </Button>
@@ -94,11 +124,29 @@ export function RelatedProducts({ products, className }: RelatedProductsProps) {
                   </span>
                 )}
 
+                {/* Add to cart button on hover */}
+                {product.inStock && (
+                  <div className="absolute inset-x-0 bottom-0 flex items-center justify-center p-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="w-full gap-1.5 bg-background/90 text-foreground backdrop-blur-sm hover:bg-background text-xs h-8"
+                      onClick={(e) => handleAddToCart(product, e)}
+                      disabled={addingIds.has(product.id)}
+                    >
+                      <ShoppingBag size={13} strokeWidth={1.5} />
+                      {addingIds.has(product.id)
+                        ? t("products.adding")
+                        : t("products.addToCart")}
+                    </Button>
+                  </div>
+                )}
+
                 {/* Out of stock overlay */}
                 {!product.inStock && (
                   <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-[2px]">
                     <span className="text-xs font-semibold uppercase tracking-wider text-foreground">
-                      Out of Stock
+                      {t("products.outOfStock")}
                     </span>
                   </div>
                 )}
@@ -154,7 +202,7 @@ export function RelatedProducts({ products, className }: RelatedProductsProps) {
       <div className="mt-8 text-center sm:hidden">
         <Button variant="outline" className="gap-2" asChild>
           <Link href="/products">
-            View All Products
+            {t("products_ext.related.viewAllProducts")}
             <ArrowRight size={14} />
           </Link>
         </Button>

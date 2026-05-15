@@ -13,8 +13,8 @@ export function WishlistContent() {
   const { items, removeItem } = useWishlistStore()
   const addToCart = useCartStore((s) => s.addItem)
 
-  function handleAddToCart(item: { id: string; name: string; price: number; image: string }) {
-    addToCart({ id: item.id, name: item.name, price: item.price, image: item.image })
+  function handleAddToCart(item: { id: string; name: string; price: number; image: string; slug?: string }) {
+    addToCart({ id: item.id, name: item.name, price: item.price, image: item.image, slug: item.slug })
     toast.success("Đã thêm vào giỏ hàng")
   }
 
@@ -71,7 +71,7 @@ export function WishlistContent() {
               <CardContent className="space-y-3 p-3">
                 <div>
                   <Link
-                    href={`/products/${item.id}`}
+                    href={`/products/${item.slug || item.id}`}
                     className="text-sm font-medium hover:underline"
                   >
                     {item.name}

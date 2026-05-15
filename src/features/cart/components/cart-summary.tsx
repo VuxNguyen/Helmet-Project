@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { useTranslations } from "@/hooks/use-translations";
 import { useCartStore } from "@/stores/cart-store";
 
 const FREE_SHIPPING_THRESHOLD = 200;
@@ -15,6 +16,7 @@ const SHIPPING_COST = 15;
 const TAX_RATE = 0.08;
 
 export function CartSummary() {
+  const { t } = useTranslations();
   const items = useCartStore((state) => state.items);
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<{
@@ -56,7 +58,7 @@ export function CartSummary() {
       setCouponError("");
       setCouponCode("");
     } else {
-      setCouponError("Invalid coupon code. Try HELMET10 or RIDER20.");
+      setCouponError(t("cart.couponInvalid"));
     }
   };
 
@@ -67,7 +69,7 @@ export function CartSummary() {
 
   return (
     <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
-      <h3 className="text-base font-semibold tracking-tight">Order Summary</h3>
+      <h3 className="text-base font-semibold tracking-tight">{t("cart.orderSummary")}</h3>
 
       {/* Free Shipping Progress */}
       {subtotal < FREE_SHIPPING_THRESHOLD && (
@@ -75,11 +77,7 @@ export function CartSummary() {
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Truck className="h-3.5 w-3.5" strokeWidth={1.5} />
             <span>
-              Add{" "}
-              <span className="font-semibold text-foreground">
-                ${freeShippingRemaining.toFixed(2)}
-              </span>{" "}
-              more for free shipping
+              {t("cart.addForFreeShipping").replace("{{amount}}", freeShippingRemaining.toFixed(2))}
             </span>
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-border">
@@ -97,7 +95,7 @@ export function CartSummary() {
         <div className="mt-4 rounded-lg bg-green-50 p-3 dark:bg-green-950/30">
           <div className="flex items-center gap-2 text-xs font-medium text-green-700 dark:text-green-400">
             <Truck className="h-3.5 w-3.5" strokeWidth={1.5} />
-            <span>You qualify for free shipping!</span>
+            <span>{t("cart.freeShippingQualified")}</span>
           </div>
         </div>
       )}
@@ -122,7 +120,7 @@ export function CartSummary() {
                 onClick={handleRemoveCoupon}
                 className="text-xs font-medium text-muted-foreground underline transition-colors hover:text-destructive"
               >
-                Remove
+                {t("cart.removeCoupon")}
               </button>
             </motion.div>
           ) : (
@@ -135,7 +133,7 @@ export function CartSummary() {
               <div className="relative flex-1">
                 <Tag className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" strokeWidth={1.5} />
                 <Input
-                  placeholder="Coupon code"
+                  placeholder={t("cart.couponPlaceholder")}
                   value={couponCode}
                   onChange={(e) => {
                     setCouponCode(e.target.value);
@@ -157,7 +155,7 @@ export function CartSummary() {
                 {isApplyingCoupon ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  "Apply"
+                  t("cart.applyCoupon")
                 )}
               </Button>
             </motion.div>
@@ -177,7 +175,7 @@ export function CartSummary() {
       {/* Pricing Lines */}
       <div className="mt-5 space-y-2.5">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Subtotal</span>
+          <span className="text-muted-foreground">{t("cart.subtotal")}</span>
           <span className="font-medium tabular-nums">
             ${subtotal.toFixed(2)}
           </span>
@@ -190,7 +188,7 @@ export function CartSummary() {
             className="flex items-center justify-between text-sm"
           >
             <span className="text-green-600 dark:text-green-400">
-              Discount ({appliedCoupon?.discount}%)
+              {t("cart.discount").replace("{{percent}}", String(appliedCoupon?.discount ?? 0))}
             </span>
             <span className="font-medium tabular-nums text-green-600 dark:text-green-400">
               -${discount.toFixed(2)}
@@ -199,10 +197,10 @@ export function CartSummary() {
         )}
 
         <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Shipping</span>
+          <span className="text-muted-foreground">{t("cart.shipping")}</span>
           <span className="font-medium tabular-nums">
             {shipping === 0 ? (
-              <span className="text-green-600 dark:text-green-400">Free</span>
+              <span className="text-green-600 dark:text-green-400">{t("cart.freeShippingLabel")}</span>
             ) : (
               `$${shipping.toFixed(2)}`
             )}
@@ -210,14 +208,14 @@ export function CartSummary() {
         </div>
 
         <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Tax (8%)</span>
+          <span className="text-muted-foreground">{t("cart.tax")}</span>
           <span className="font-medium tabular-nums">${tax.toFixed(2)}</span>
         </div>
 
         <Separator className="my-2" />
 
         <div className="flex items-center justify-between">
-          <span className="text-base font-semibold">Total</span>
+          <span className="text-base font-semibold">{t("cart.total")}</span>
           <span className="text-lg font-bold tabular-nums">
             ${total.toFixed(2)}
           </span>
@@ -227,7 +225,7 @@ export function CartSummary() {
       {/* Checkout Button */}
       <Button asChild className="mt-6 h-11 w-full gap-2 text-sm font-medium" disabled={items.length === 0}>
         <Link href="/checkout">
-          Proceed to Checkout
+          {t("cart.proceedToCheckout")}
           <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
         </Link>
       </Button>
@@ -236,7 +234,7 @@ export function CartSummary() {
       <div className="mt-4 space-y-2">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Gift className="h-3.5 w-3.5" strokeWidth={1.5} />
-          <span>Free returns within 30 days</span>
+          <span>{t("cart.trustFreeReturns30")}</span>
         </div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <svg
@@ -251,7 +249,7 @@ export function CartSummary() {
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
             <line x1="1" y1="10" x2="23" y2="10" />
           </svg>
-          <span>Secure checkout with SSL encryption</span>
+          <span>{t("cart.trustSslCheckout")}</span>
         </div>
       </div>
     </div>

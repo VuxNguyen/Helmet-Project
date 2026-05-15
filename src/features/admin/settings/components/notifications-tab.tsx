@@ -6,6 +6,7 @@ import { Loader2, Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { FormSection } from "@/components/common/form-section"
+import { useAdminSettingsStore } from "../stores/admin-settings-store"
 import type { NotificationFormValues } from "../types"
 
 const NOTIFICATION_GROUPS = [
@@ -68,15 +69,17 @@ const NOTIFICATION_GROUPS = [
 
 export function NotificationsTab() {
   const [submitting, setSubmitting] = useState(false)
+  const settings = useAdminSettingsStore((s) => s.settings)
+  const updateSettings = useAdminSettingsStore((s) => s.updateSettings)
   const [values, setValues] = useState<NotificationFormValues>({
-    orderConfirmed: true,
-    orderShipped: true,
-    orderDelivered: true,
-    lowStock: true,
-    newCustomer: false,
-    reviewSubmitted: true,
-    marketingEmails: false,
-    weeklyReport: true,
+    orderConfirmed: settings.orderConfirmed,
+    orderShipped: settings.orderShipped,
+    orderDelivered: settings.orderDelivered,
+    lowStock: settings.lowStock,
+    newCustomer: settings.newCustomer,
+    reviewSubmitted: settings.reviewSubmitted,
+    marketingEmails: settings.marketingEmails,
+    weeklyReport: settings.weeklyReport,
   })
 
   const handleToggle = useCallback((key: keyof NotificationFormValues) => {
@@ -86,9 +89,10 @@ export function NotificationsTab() {
   const handleSubmit = useCallback(async () => {
     setSubmitting(true)
     await new Promise((r) => setTimeout(r, 800))
+    updateSettings(values)
     toast.success("Notification preferences updated.")
     setSubmitting(false)
-  }, [])
+  }, [values, updateSettings])
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

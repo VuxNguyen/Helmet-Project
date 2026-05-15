@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { ShoppingBag, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "@/hooks/use-translations";
 import { Button } from "@/components/ui/button";
 
 export function EmptyCart() {
+  const { t } = useTranslations();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -22,54 +24,53 @@ export function EmptyCart() {
       </div>
 
       <h2 className="mt-6 text-xl font-semibold tracking-tight">
-        Your cart is empty
+        {t("cart.emptyTitle")}
       </h2>
       <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-        Your cart is waiting to be filled. Browse our premium collection
-        and find your perfect ride.
+        {t("cart.emptyDescription")}
       </p>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Button asChild size="lg" className="h-11 gap-2 px-6">
           <Link href="/products">
             <ShoppingBag className="h-4 w-4" strokeWidth={1.5} />
-            Browse Helmets
+            {t("cart.browseHelmets")}
           </Link>
         </Button>
         <Button asChild variant="outline" size="lg" className="h-11 gap-2 px-6">
           <Link href="/">
             <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
-            Go Home
+            {t("cart.goHome")}
           </Link>
         </Button>
       </div>
 
       {/* Quick Links */}
       <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
-        <span>Popular categories:</span>
+        <span>{t("cart.popularCategories")}</span>
         <Link
           href="/products?category=full-face"
           className="underline transition-colors hover:text-foreground"
         >
-          Full Face
+          {t("categories.fullface.name")}
         </Link>
         <Link
           href="/products?category=modular"
           className="underline transition-colors hover:text-foreground"
         >
-          Modular
+          {t("categories.modular.name")}
         </Link>
         <Link
           href="/products?category=open-face"
           className="underline transition-colors hover:text-foreground"
         >
-          Open Face
+          {t("categories.openFace.name")}
         </Link>
         <Link
           href="/products?category=half"
           className="underline transition-colors hover:text-foreground"
         >
-          Half Helmet
+          {t("categories.half.name")}
         </Link>
       </div>
     </motion.div>

@@ -48,11 +48,12 @@ function formatDate(dateStr: string): string {
 }
 
 function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
+  const { t } = useTranslations()
   const fullStars = Math.floor(rating)
   const hasHalf = rating - fullStars >= 0.5
 
   return (
-    <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+    <div className="flex items-center gap-0.5" aria-label={t("products_ext.reviews_section.ratingAria").replace("{{rating}}", String(rating))}>
       {Array.from({ length: 5 }, (_, i) => {
         const fill =
           i < fullStars
@@ -78,10 +79,11 @@ function ColorSelector({
   selected: string
   onChange: (hex: string) => void
 }) {
+  const { t } = useTranslations()
   return (
     <div>
       <h3 className="text-sm font-medium text-foreground">
-        Color: <span className="text-muted-foreground font-normal">{colors.find((c) => c.hex === selected)?.name}</span>
+        {t("products_ext.color")} <span className="text-muted-foreground font-normal">{colors.find((c) => c.hex === selected)?.name}</span>
       </h3>
       <div className="mt-3 flex flex-wrap gap-2.5">
         {colors.map((color) => (
@@ -127,15 +129,16 @@ function SizeSelector({
   selected: string
   onChange: (label: string) => void
 }) {
+  const { t } = useTranslations()
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-foreground">Size</h3>
+        <h3 className="text-sm font-medium text-foreground">{t("products_ext.size")}</h3>
         <button
           type="button"
           className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground transition-colors"
         >
-          Size Guide
+          {t("products_ext.sizeGuide")}
         </button>
       </div>
       <div className="mt-3 grid grid-cols-7 gap-2">
@@ -145,7 +148,7 @@ function SizeSelector({
             type="button"
             onClick={() => size.inStock && onChange(size.label)}
             disabled={!size.inStock}
-            aria-label={`Size ${size.label}${!size.inStock ? " - Out of stock" : ""}`}
+            aria-label={`${t("products_ext.size")} ${size.label}${!size.inStock ? ` - ${t("products.outOfStock")}` : ""}`}
             aria-pressed={selected === size.label}
             className={cn(
               "flex h-10 items-center justify-center rounded-lg border text-sm font-medium transition-all duration-200",
@@ -185,7 +188,8 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
       id: `${product.id}-${selectedColor}-${selectedSize}`,
       name: product.name,
       price: product.price,
-      image: product.images[0] ?? "/placeholder-helmet.jpg",
+      image: product.images[0] ?? "/placeholder-helmet.svg",
+      slug: product.slug,
       variant: `${selectedColor ? `${product.colors.find((c) => c.hex === selectedColor)?.name} / ` : ""}${selectedSize}`,
     })
     setTimeout(() => {
@@ -212,13 +216,13 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
       className={cn("flex flex-col gap-8", className)}
     >
       {/* ── Breadcrumb ── */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-muted-foreground">
+      <nav aria-label={t("products_ext.tabs.ariaLabel")} className="flex items-center gap-2 text-sm text-muted-foreground">
         <Link href="/" className="hover:text-foreground transition-colors">
-          Home
+          {t("nav.home")}
         </Link>
         <span aria-hidden="true">/</span>
         <Link href="/products" className="hover:text-foreground transition-colors">
-          Products
+          {t("nav.shop")}
         </Link>
         <span aria-hidden="true">/</span>
         <Link
@@ -251,7 +255,7 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
         <StarRating rating={product.rating} size={16} />
         <span className="text-sm font-medium text-foreground">{product.rating}</span>
         <span className="text-sm text-muted-foreground">
-          ({product.reviewCount} reviews)
+          {t("products_ext.reviewCount").replace("{{count}}", String(product.reviewCount))}
         </span>
       </div>
 
@@ -266,7 +270,7 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
               {formatPrice(product.originalPrice)}
             </span>
             <Badge variant="destructive" className="rounded-md px-2 py-0.5 text-xs font-semibold">
-              Save {product.discount}%
+              {t("products_ext.savePercent").replace("{{percent}}", String(product.discount))}
             </Badge>
           </>
         )}
@@ -276,7 +280,7 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
       {product.originalPrice && (
         <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 dark:border-green-900 dark:bg-green-950/30">
           <p className="text-sm font-medium text-green-800 dark:text-green-300">
-            You save {formatPrice(discountedPrice - product.price)} on this item!
+            {t("products_ext.youSave").replace("{{amount}}", String(discountedPrice - product.price))}
           </p>
         </div>
       )}
@@ -301,14 +305,14 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
 
       {/* ── Quantity ── */}
       <div>
-        <h3 className="text-sm font-medium text-foreground">Quantity</h3>
+        <h3 className="text-sm font-medium text-foreground">{t("products_ext.quantity")}</h3>
         <div className="mt-3 flex items-center gap-3">
           <div className="flex items-center rounded-lg border border-border">
             <button
               type="button"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
               disabled={quantity <= 1}
-              aria-label="Decrease quantity"
+              aria-label={t("cart.decreaseQtyAria")}
               className="flex size-10 items-center justify-center text-foreground transition-colors hover:bg-accent disabled:opacity-30"
             >
               <span className="text-lg leading-none">−</span>
@@ -320,14 +324,14 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
               type="button"
               onClick={() => setQuantity((q) => Math.min(product.stockCount, q + 1))}
               disabled={quantity >= product.stockCount}
-              aria-label="Increase quantity"
+              aria-label={t("cart.increaseQtyAria")}
               className="flex size-10 items-center justify-center text-foreground transition-colors hover:bg-accent disabled:opacity-30"
             >
               <span className="text-lg leading-none">+</span>
             </button>
           </div>
           <span className="text-xs text-muted-foreground">
-            {product.stockCount} in stock
+            {product.stockCount} {t("products.inStock")}
           </span>
         </div>
       </div>
@@ -343,12 +347,12 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
           {isAddingToCart ? (
             <>
               <span className="size-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
-              Adding...
+              {t("products.adding")}
             </>
           ) : (
             <>
               <ShoppingBag size={18} />
-              {product.inStock ? "Add to Cart" : "Out of Stock"}
+              {product.inStock ? t("products.addToCart") : t("products.outOfStock")}
             </>
           )}
         </Button>
@@ -356,7 +360,7 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
           variant="outline"
           size="lg"
           onClick={handleToggleWishlist}
-          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          aria-label={isWishlisted ? t("products.removeFromWishlist") : t("products.addToWishlist")}
           className={cn(
             "gap-2",
             isWishlisted &&
@@ -369,7 +373,7 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
               isWishlisted && "fill-red-500 text-red-500 dark:fill-red-400 dark:text-red-400",
             )}
           />
-          {isWishlisted ? "Wishlisted" : "Wishlist"}
+          {isWishlisted ? t("products_ext.wishlisted") : t("nav.wishlist")}
         </Button>
       </div>
 
@@ -380,8 +384,8 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
             <Truck size={18} className="text-primary" />
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">Free Shipping</p>
-            <p className="text-xs text-muted-foreground">On orders over $100</p>
+            <p className="text-sm font-medium text-foreground">{t("trust.freeShipping")}</p>
+            <p className="text-xs text-muted-foreground">{t("trust.freeShippingDesc")}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -389,8 +393,8 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
             <RotateCcw size={18} className="text-primary" />
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">30-Day Returns</p>
-            <p className="text-xs text-muted-foreground">No questions asked</p>
+            <p className="text-sm font-medium text-foreground">{t("trust.returns")}</p>
+            <p className="text-xs text-muted-foreground">{t("trust.returnsDesc")}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -398,8 +402,8 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
             <ShieldCheck size={18} className="text-primary" />
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">2-Year Warranty</p>
-            <p className="text-xs text-muted-foreground">Manufacturer guarantee</p>
+            <p className="text-sm font-medium text-foreground">{t("trust_ext.twoYearWarranty")}</p>
+            <p className="text-xs text-muted-foreground">{t("trust_ext.manufacturerGuarantee")}</p>
           </div>
         </div>
       </div>

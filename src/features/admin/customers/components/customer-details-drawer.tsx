@@ -1,5 +1,6 @@
 "use client"
 
+
 import {
   Sheet,
   SheetContent,
@@ -30,6 +31,15 @@ interface CustomerDetailsDrawerProps {
   onOpenChange: (open: boolean) => void
 }
 
+function getLastOrderLabel(customer: AdminCustomer | null): string {
+  if (!customer) return ""
+  const diff = Math.floor(
+    (Date.now() - new Date(customer.lastOrderDate).getTime()) /
+      (1000 * 60 * 60 * 24),
+  )
+  return diff === 0 ? "today" : diff === 1 ? "yesterday" : `${diff} days ago`
+}
+
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", {
     month: "long",
@@ -43,14 +53,9 @@ export function CustomerDetailsDrawer({
   open,
   onOpenChange,
 }: CustomerDetailsDrawerProps) {
-  if (!customer) return null
+  const lastOrderLabel = getLastOrderLabel(customer)
 
-  const diff = Math.floor(
-    (Date.now() - new Date(customer.lastOrderDate).getTime()) /
-      (1000 * 60 * 60 * 24),
-  )
-  const lastOrderLabel =
-    diff === 0 ? "today" : diff === 1 ? "yesterday" : `${diff} days ago`
+  if (!customer) return null
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

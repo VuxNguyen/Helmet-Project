@@ -8,6 +8,7 @@ import { motion } from "framer-motion"
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2, ShieldCheck } from "lucide-react"
 import Link from "next/link"
 
+import { useTranslations } from "@/hooks/use-translations"
 import { loginSchema, type LoginFormData } from "@/features/auth/auth-schema"
 import { useAuthStore } from "@/stores/auth-store"
 import { useWishlistStore } from "@/stores/wishlist-store"
@@ -37,6 +38,7 @@ const itemVariants = {
 }
 
 export function LoginForm() {
+  const { t } = useTranslations()
   const router = useRouter()
   const login = useAuthStore((state) => state.login)
   const wishlist = useWishlistStore((state) => state)
@@ -73,17 +75,17 @@ export function LoginForm() {
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border bg-muted px-4 py-1.5">
           <ShieldCheck className="h-4 w-4 text-muted-foreground" />
           <span className="text-xs font-semibold tracking-wider text-muted-foreground">
-            HELMET PRO
+            {t("site.name")}
           </span>
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Welcome back
+          {t("auth.login.title")}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Sign in to your account to continue shopping.
+          {t("auth.login.subtitle")}
         </p>
         <p className="mt-1 text-xs text-muted-foreground/60">
-          Use the <strong>Demo Account</strong> button below to test the dashboard
+          {t("auth.login.demoSuggest")}
         </p>
       </motion.div>
 
@@ -92,39 +94,39 @@ export function LoginForm() {
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("auth.login.emailLabel")}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder={t("auth.login.emailPlaceholder")}
                     className="h-11 pl-10"
                     {...register("email")}
                     aria-invalid={!!errors.email}
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-xs text-destructive">{errors.email.message}</p>
+                  <p className="text-xs text-destructive">{t(errors.email.message ?? "")}</p>
                 )}
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="/forgot-password"
-                    className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                  <Label htmlFor="password">{t("auth.login.passwordLabel")}</Label>
+                  <span
+                    className="text-xs text-muted-foreground cursor-not-allowed opacity-60"
+                    title={t("auth.login.comingSoon")}
                   >
-                    Forgot password?
-                  </Link>
+                    {t("auth.login.forgotPassword")}
+                  </span>
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
+                    placeholder={t("auth.login.passwordPlaceholder")}
                     className="h-11 pl-10 pr-10"
                     {...register("password")}
                     aria-invalid={!!errors.password}
@@ -143,7 +145,7 @@ export function LoginForm() {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-xs text-destructive">{errors.password.message}</p>
+                  <p className="text-xs text-destructive">{t(errors.password.message ?? "")}</p>
                 )}
               </div>
 
@@ -153,7 +155,7 @@ export function LoginForm() {
                   htmlFor="remember"
                   className="text-sm font-normal text-muted-foreground"
                 >
-                  Remember me
+                  {t("auth.login.rememberMe")}
                 </Label>
               </div>
 
@@ -166,7 +168,7 @@ export function LoginForm() {
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <>
-                    Sign In
+                    {t("auth.login.signIn")}
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -176,7 +178,7 @@ export function LoginForm() {
             <div className="relative my-6">
               <Separator />
               <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
-                OR
+                {t("auth.login.orDivider")}
               </span>
             </div>
 
@@ -199,7 +201,7 @@ export function LoginForm() {
                   fill="#EA4335"
                 />
               </svg>
-              Continue with Google
+              {t("auth.login.continueWithGoogle")}
             </Button>
 
             <Button
@@ -209,26 +211,26 @@ export function LoginForm() {
               onClick={() => {
                 login({ name: "Nguyễn Văn A", email: "demo@helmetpro.com" })
                 if (wishlist.items.length === 0) {
-                  wishlist.addItem({ id: "1", name: "Arai RX-7X Evo", price: 899.99, image: "/placeholder-helmet.jpg" })
-                  wishlist.addItem({ id: "3", name: "AGV Pista GP RR", price: 1499.99, image: "/placeholder-helmet.jpg" })
+                  wishlist.addItem({ id: "1", name: "Arai RX-7X Evo", price: 899.99, image: "/placeholder-helmet.svg", slug: "arai-rx-7x-evo" })
+                  wishlist.addItem({ id: "3", name: "AGV Pista GP RR", price: 1499.99, image: "/placeholder-helmet.svg", slug: "agv-pista-gp-rr" })
                 }
                 router.push("/account")
               }}
             >
               <ShieldCheck className="h-4 w-4" />
-              Demo Account (Quick Login)
+              {t("auth.login.demoAccount")}
             </Button>
           </CardContent>
         </Card>
       </motion.div>
 
       <motion.div variants={itemVariants} className="mt-6 text-center text-sm">
-        <span className="text-muted-foreground">Don&apos;t have an account? </span>
+        <span className="text-muted-foreground">{t("auth.login.noAccount")} </span>
         <Link
           href="/register"
           className="font-medium text-foreground underline-offset-4 hover:underline"
         >
-          Create one
+          {t("auth.login.createOne")}
         </Link>
       </motion.div>
     </motion.div>

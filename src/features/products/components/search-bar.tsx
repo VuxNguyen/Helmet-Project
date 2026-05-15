@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/input"
 import { useTranslations } from "@/hooks/use-translations"
 
 export function SearchBar() {
+  const { t } = useTranslations()
   const search = useFilterStore((s) => s.search)
   const setSearch = useFilterStore((s) => s.setSearch)
-  const { locale } = useTranslations()
   const inputRef = useRef<HTMLInputElement>(null)
 
   // Handle keyboard shortcut: Ctrl+K or Cmd+K
@@ -33,7 +33,7 @@ export function SearchBar() {
       <Input
         ref={inputRef}
         type="search"
-        placeholder={locale === "vi" ? "Tìm kiếm mũ bảo hiểm..." : "Search helmets..."}
+        placeholder={t("products.searchPlaceholder")}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="h-10 rounded-lg border-border bg-muted/50 pl-9 pr-16 text-sm placeholder:text-muted-foreground/60 focus-visible:bg-background"
@@ -42,7 +42,7 @@ export function SearchBar() {
         <button
           onClick={() => setSearch("")}
           className="absolute right-9 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-          aria-label="Clear search"
+          aria-label={t("products_ext.clearSearch")}
         >
           <X size={14} />
         </button>

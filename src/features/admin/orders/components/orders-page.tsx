@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { OrdersToolbar } from "./orders-toolbar"
 import { OrdersTable } from "./orders-table"
 import { OrderDetailsDrawer } from "./order-details-drawer"
-import { adminOrders, getFilteredOrders } from "../order-data"
+import { useAdminOrdersStore } from "../stores/admin-orders-store"
 import { STATUS_CONFIG, type AdminOrder, type OrderStatus } from "../types"
 
 export function OrdersPage() {
@@ -15,16 +15,19 @@ export function OrdersPage() {
   const [dateTo, setDateTo] = useState("")
   const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const updateOrderStatus = useAdminOrdersStore((s) => s.updateOrderStatus)
+  const getFiltered = useAdminOrdersStore((s) => s.getFiltered)
+  const allOrders = useAdminOrdersStore((s) => s.items)
 
   const filteredOrders = useMemo(
     () =>
-      getFilteredOrders(adminOrders, {
+      getFiltered({
         search,
         status: statusFilter,
         dateFrom,
         dateTo,
       }),
-    [search, statusFilter, dateFrom, dateTo],
+    [search, statusFilter, dateFrom, dateTo, getFiltered],
   )
 
   const handleViewDetails = useCallback((order: AdminOrder) => {
@@ -34,11 +37,14 @@ export function OrdersPage() {
 
   const handleStatusUpdate = useCallback(
     (orderId: string, newStatus: OrderStatus) => {
+      updateOrderStatus(orderId, newStatus)
+      const updated = allOrders.find((o) => o.id === orderId)
+      setSelectedOrder(updated ?? null)
       toast.success(
         `Order updated to ${STATUS_CONFIG[newStatus].label}`,
       )
     },
-    [],
+    [updateOrderStatus, allOrders],
   )
 
   return (

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
+import { useTranslations } from "@/hooks/use-translations"
 import { useAdminStore } from "@/stores/admin-store"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -22,18 +23,19 @@ import {
 } from "lucide-react"
 
 const navItems = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Products", href: "/admin/products", icon: Package },
-  { label: "Orders", href: "/admin/orders", icon: ShoppingCart },
-  { label: "Customers", href: "/admin/customers", icon: Users },
-  { label: "Reviews", href: "/admin/reviews", icon: Star },
-  { label: "Discounts", href: "/admin/discounts", icon: Percent },
-  { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-  { label: "Settings", href: "/admin/settings", icon: Settings },
+  { labelKey: "admin.sidebar.dashboard", href: "/admin", icon: LayoutDashboard },
+  { labelKey: "admin.sidebar.products", href: "/admin/products", icon: Package },
+  { labelKey: "admin.sidebar.orders", href: "/admin/orders", icon: ShoppingCart },
+  { labelKey: "admin.sidebar.customers", href: "/admin/customers", icon: Users },
+  { labelKey: "admin.sidebar.reviews", href: "/admin/reviews", icon: Star },
+  { labelKey: "admin.sidebar.discounts", href: "/admin/discounts", icon: Percent },
+  { labelKey: "admin.sidebar.analytics", href: "/admin/analytics", icon: BarChart3 },
+  { labelKey: "admin.sidebar.settings", href: "/admin/settings", icon: Settings },
 ]
 
 function AdminSidebarContent({ collapsed }: { collapsed: boolean }) {
   const pathname = usePathname()
+  const { t } = useTranslations()
 
   return (
     <div className="flex h-full flex-col">
@@ -50,7 +52,7 @@ function AdminSidebarContent({ collapsed }: { collapsed: boolean }) {
                 exit={{ opacity: 0, width: 0 }}
                 className="text-sm font-semibold tracking-tight whitespace-nowrap overflow-hidden"
               >
-                Helmet Pro
+                {t("site.name")}
               </motion.span>
             )}
           </AnimatePresence>
@@ -62,7 +64,7 @@ function AdminSidebarContent({ collapsed }: { collapsed: boolean }) {
           {navItems.map((item) => {
             const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"))
             return (
-              <TooltipWrapper key={item.href} showTooltip={collapsed} label={item.label}>
+              <TooltipWrapper key={item.href} showTooltip={collapsed} label={t(item.labelKey)}>
                 <Link
                   href={item.href}
                   className={cn(
@@ -82,7 +84,7 @@ function AdminSidebarContent({ collapsed }: { collapsed: boolean }) {
                         exit={{ opacity: 0 }}
                         className="text-sm whitespace-nowrap"
                       >
-                        {item.label}
+                        {t(item.labelKey)}
                       </motion.span>
                     )}
                   </AnimatePresence>
@@ -94,7 +96,7 @@ function AdminSidebarContent({ collapsed }: { collapsed: boolean }) {
       </ScrollArea>
 
       <div className={cn("border-t border-border p-3", collapsed && "px-2")}>
-        <TooltipWrapper showTooltip={collapsed} label="Sign out">
+        <TooltipWrapper showTooltip={collapsed} label={t("admin.sidebar.signOut")}>
           <button
             className={cn(
               "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
@@ -110,7 +112,7 @@ function AdminSidebarContent({ collapsed }: { collapsed: boolean }) {
                   exit={{ opacity: 0 }}
                   className="text-sm whitespace-nowrap"
                 >
-                  Sign out
+                  {t("admin.sidebar.signOut")}
                 </motion.span>
               )}
             </AnimatePresence>
@@ -144,6 +146,7 @@ function TooltipWrapper({
 
 export function AdminSidebar() {
   const { sidebarCollapsed, toggleSidebar } = useAdminStore()
+  const { t } = useTranslations()
 
   return (
     <aside
@@ -156,7 +159,7 @@ export function AdminSidebar() {
       <button
         onClick={toggleSidebar}
         className="flex h-8 items-center justify-center border-t border-border text-muted-foreground hover:text-foreground transition-colors"
-        aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        aria-label={sidebarCollapsed ? t("admin.sidebar.expandSidebar") : t("admin.sidebar.collapseSidebar")}
       >
         {sidebarCollapsed ? <PanelLeft className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
       </button>
@@ -167,6 +170,7 @@ export function AdminSidebar() {
 export function AdminMobileSidebar() {
   const pathname = usePathname()
   const { isMobileSidebarOpen, closeMobileSidebar } = useAdminStore()
+  const { t } = useTranslations()
 
   return (
     <AnimatePresence>
@@ -192,9 +196,9 @@ export function AdminMobileSidebar() {
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
                     H
                   </div>
-                  <span className="text-sm font-semibold tracking-tight">Helmet Pro</span>
+                  <span className="text-sm font-semibold tracking-tight">{t("site.name")}</span>
                 </Link>
-                <Button variant="ghost" size="icon" onClick={closeMobileSidebar} aria-label="Close sidebar">
+                <Button variant="ghost" size="icon" onClick={closeMobileSidebar} aria-label={t("admin.sidebar.closeSidebar")}>
                   <PanelLeftClose className="h-4 w-4" />
                 </Button>
               </div>
@@ -216,7 +220,7 @@ export function AdminMobileSidebar() {
                         )}
                       >
                         <item.icon className="h-4 w-4 shrink-0" />
-                        {item.label}
+                        {t(item.labelKey)}
                       </Link>
                     )
                   })}
@@ -226,7 +230,7 @@ export function AdminMobileSidebar() {
               <div className="border-t border-border p-3">
                 <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
                   <LogOut className="h-4 w-4 shrink-0" />
-                  Sign out
+                  {t("admin.sidebar.signOut")}
                 </button>
               </div>
             </div>

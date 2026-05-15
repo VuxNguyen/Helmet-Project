@@ -10,6 +10,7 @@ import { PackageSearch } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useFilterStore } from "../stores/filter-store"
 import { useCartStore } from "@/stores/cart-store"
+import { useTranslations } from "@/hooks/use-translations"
 
 export function ProductListingGrid() {
   const { products, isEmpty } = useProductListing()
@@ -23,6 +24,7 @@ export function ProductListingGrid() {
       name: product.name,
       price: product.price,
       image: product.image,
+      slug: product.slug,
     })
   }, [addItem])
 
@@ -65,17 +67,18 @@ export function ProductListingGrid() {
 }
 
 function EmptyState({ onReset }: { onReset: () => void }) {
+  const { t } = useTranslations()
   return (
     <div className="flex flex-col items-center justify-center py-20">
       <div className="flex size-16 items-center justify-center rounded-full bg-muted">
         <PackageSearch size={28} className="text-muted-foreground" />
       </div>
-      <h3 className="mt-4 text-lg font-semibold text-foreground">No products found</h3>
+      <h3 className="mt-4 text-lg font-semibold text-foreground">{t("products.noProductsFound")}</h3>
       <p className="mt-2 max-w-sm text-center text-sm text-muted-foreground">
-        Try adjusting your search or filter criteria to find what you&#39;re looking for.
+        {t("products.noProductsHint")}
       </p>
       <Button variant="outline" size="sm" className="mt-6" onClick={onReset}>
-        Clear all filters
+        {t("products.clearAll")}
       </Button>
     </div>
   )

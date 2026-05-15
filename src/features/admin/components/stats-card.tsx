@@ -1,5 +1,8 @@
+"use client"
+
 import { type LucideIcon, TrendingUp, TrendingDown } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useTranslations } from "@/hooks/use-translations"
 
 interface StatsCardProps {
   title: string
@@ -10,6 +13,7 @@ interface StatsCardProps {
 }
 
 export function StatsCard({ title, value, change, trend, icon: Icon }: StatsCardProps) {
+  const { t } = useTranslations()
   const isUp = trend === "up"
 
   return (
@@ -36,7 +40,7 @@ export function StatsCard({ title, value, change, trend, icon: Icon }: StatsCard
           >
             {change}
           </span>
-          <span className="text-xs text-muted-foreground">vs last month</span>
+          <span className="text-xs text-muted-foreground">{t("admin.statsCard.vsLastMonth")}</span>
         </div>
       </div>
     </div>

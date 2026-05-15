@@ -18,6 +18,7 @@ import {
   Truck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/hooks/use-translations";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,18 +30,7 @@ import { DeliveryOptions } from "@/features/checkout/components/delivery-options
 import { PaymentMethods } from "@/features/checkout/components/payment-methods";
 import { OrderSummary } from "@/features/checkout/components/order-summary";
 
-interface CheckoutPageClientProps {
-  locale?: "vi" | "en";
-}
-
 type CheckoutStep = "shipping" | "delivery" | "payment" | "review";
-
-const stepLabels = {
-  shipping: { en: "Shipping Address", vi: "Địa chỉ giao hàng" },
-  delivery: { en: "Delivery Method", vi: "Phương thức giao hàng" },
-  payment: { en: "Payment", vi: "Thanh toán" },
-  review: { en: "Review Order", vi: "Xem lại đơn hàng" },
-};
 
 const stepIcons: Record<CheckoutStep, typeof MapPin> = {
   shipping: MapPin,
@@ -51,13 +41,14 @@ const stepIcons: Record<CheckoutStep, typeof MapPin> = {
 
 const stepOrder: CheckoutStep[] = ["shipping", "delivery", "payment", "review"];
 
-export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
+export function CheckoutPageClient() {
   const router = useRouter();
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
   const [currentStep, setCurrentStep] = useState<CheckoutStep>("shipping");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { t, locale } = useTranslations();
 
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutFormSchema),
@@ -150,16 +141,14 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
         <div className="text-center">
           <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground" strokeWidth={1} />
           <h2 className="mt-4 text-xl font-semibold">
-            {locale === "vi" ? "Giỏ hàng trống" : "Your cart is empty"}
+            {t("checkout.cart.emptyTitle")}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            {locale === "vi"
-              ? "Thêm sản phẩm vào giỏ hàng để tiến hành thanh toán."
-              : "Add some items to your cart before checking out."}
+            {t("checkout.cart.emptyDesc")}
           </p>
           <Button asChild className="mt-6">
             <Link href="/products">
-              {locale === "vi" ? "Tiếp tục mua sắm" : "Continue Shopping"}
+              {t("checkout.cart.continueShopping")}
             </Link>
           </Button>
         </div>
@@ -180,22 +169,20 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
             <ShoppingBag className="h-8 w-8 text-green-600 dark:text-green-400" strokeWidth={1.5} />
           </div>
           <h2 className="mt-6 text-2xl font-bold tracking-tight">
-            {locale === "vi" ? "Đặt hàng thành công!" : "Order Placed Successfully!"}
+            {t("checkout.success.title")}
           </h2>
           <p className="mt-3 text-sm text-muted-foreground">
-            {locale === "vi"
-              ? "Cảm ơn bạn đã mua hàng. Chúng tôi sẽ gửi email xác nhận chi tiết đơn hàng."
-              : "Thank you for your purchase! We'll send you a confirmation email with your order details."}
+            {t("checkout.success.description")}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Button asChild>
               <Link href="/products">
-                {locale === "vi" ? "Tiếp tục mua sắm" : "Continue Shopping"}
+                {t("checkout.cart.continueShopping")}
               </Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/">
-                {locale === "vi" ? "Về trang chủ" : "Go to Homepage"}
+                {t("checkout.success.goHome")}
               </Link>
             </Button>
           </div>
@@ -210,15 +197,15 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
         {/* Page Header */}
         <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground sm:mb-8">
           <Link href="/" className="transition-colors hover:text-foreground">
-            {locale === "vi" ? "Trang chủ" : "Home"}
+            {t("checkout.breadcrumb.home")}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.5} />
           <Link href="/cart" className="transition-colors hover:text-foreground">
-            {locale === "vi" ? "Giỏ hàng" : "Cart"}
+            {t("checkout.breadcrumb.cart")}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.5} />
           <span className="text-foreground">
-            {locale === "vi" ? "Thanh toán" : "Checkout"}
+            {t("checkout.breadcrumb.checkout")}
           </span>
         </div>
 
@@ -277,9 +264,7 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
                           !isCompleted && !isActive && "text-muted-foreground/50"
                         )}
                       >
-                        {locale === "vi"
-                          ? stepLabels[step].vi
-                          : stepLabels[step].en}
+                        {t("checkout.step." + step)}
                       </span>
                     </button>
                   );
@@ -314,16 +299,14 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
                     </div>
                     <div>
                       <h2 className="text-lg font-semibold tracking-tight">
-                        {locale === "vi" ? "Địa chỉ giao hàng" : "Shipping Address"}
+                        {t("checkout.shipping.title")}
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        {locale === "vi"
-                          ? "Nhập thông tin nhận hàng của bạn"
-                          : "Enter your delivery information"}
+                        {t("checkout.shipping.subtitle")}
                       </p>
                     </div>
                   </div>
-                  <ShippingForm locale={locale} />
+                  <ShippingForm />
                 </div>
               )}
 
@@ -336,16 +319,14 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
                     </div>
                     <div>
                       <h2 className="text-lg font-semibold tracking-tight">
-                        {locale === "vi" ? "Phương thức giao hàng" : "Delivery Method"}
+                        {t("checkout.delivery.title")}
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        {locale === "vi"
-                          ? "Chọn phương thức vận chuyển phù hợp"
-                          : "Choose your preferred shipping method"}
+                        {t("checkout.delivery.subtitle")}
                       </p>
                     </div>
                   </div>
-                  <DeliveryOptions locale={locale} />
+                  <DeliveryOptions />
                 </div>
               )}
 
@@ -358,16 +339,14 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
                     </div>
                     <div>
                       <h2 className="text-lg font-semibold tracking-tight">
-                        {locale === "vi" ? "Thanh toán" : "Payment"}
+                        {t("checkout.payment.title")}
                       </h2>
                       <p className="text-sm text-muted-foreground">
-                        {locale === "vi"
-                          ? "Chọn phương thức thanh toán"
-                          : "Select your payment method"}
+                        {t("checkout.payment.subtitle")}
                       </p>
                     </div>
                   </div>
-                  <PaymentMethods locale={locale} />
+                  <PaymentMethods />
                 </div>
               )}
 
@@ -378,14 +357,14 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
                   <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
                     <div className="mb-3 flex items-center justify-between">
                       <h3 className="text-sm font-semibold">
-                        {locale === "vi" ? "Địa chỉ giao hàng" : "Shipping Address"}
+                        {t("checkout.review.shippingLabel")}
                       </h3>
                       <button
                         type="button"
                         onClick={() => setCurrentStep("shipping")}
                         className="text-xs font-medium text-muted-foreground underline transition-colors hover:text-foreground"
                       >
-                        {locale === "vi" ? "Sửa" : "Edit"}
+                        {t("checkout.review.edit")}
                       </button>
                     </div>
                     <div className="text-sm text-muted-foreground">
@@ -411,14 +390,14 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
                   <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
                     <div className="mb-3 flex items-center justify-between">
                       <h3 className="text-sm font-semibold">
-                        {locale === "vi" ? "Phương thức giao hàng" : "Delivery Method"}
+                        {t("checkout.review.deliveryLabel")}
                       </h3>
                       <button
                         type="button"
                         onClick={() => setCurrentStep("delivery")}
                         className="text-xs font-medium text-muted-foreground underline transition-colors hover:text-foreground"
                       >
-                        {locale === "vi" ? "Sửa" : "Edit"}
+                        {t("checkout.review.edit")}
                       </button>
                     </div>
                     <p className="text-sm text-muted-foreground">
@@ -434,14 +413,14 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
                   <div className="rounded-xl border border-border bg-card p-5 sm:p-6">
                     <div className="mb-3 flex items-center justify-between">
                       <h3 className="text-sm font-semibold">
-                        {locale === "vi" ? "Thanh toán" : "Payment"}
+                        {t("checkout.review.paymentLabel")}
                       </h3>
                       <button
                         type="button"
                         onClick={() => setCurrentStep("payment")}
                         className="text-xs font-medium text-muted-foreground underline transition-colors hover:text-foreground"
                       >
-                        {locale === "vi" ? "Sửa" : "Edit"}
+                        {t("checkout.review.edit")}
                       </button>
                     </div>
                     <p className="text-sm text-muted-foreground">
@@ -469,14 +448,10 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
                     />
                     <div>
                       <p className="text-sm font-medium">
-                        {locale === "vi"
-                          ? "Lưu thông tin cho lần sau"
-                          : "Save info for next time"}
+                        {t("checkout.review.saveInfo")}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {locale === "vi"
-                          ? "Lưu địa chỉ và thông tin thanh toán an toàn để thanh toán nhanh hơn."
-                          : "Securely save your address and payment info for faster checkout."}
+                        {t("checkout.review.saveInfoDesc")}
                       </p>
                     </div>
                   </label>
@@ -494,14 +469,14 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
                     className="gap-2"
                   >
                     <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
-                    {locale === "vi" ? "Quay lại" : "Back"}
+                    {t("checkout.nav.back")}
                   </Button>
                 )}
               </div>
 
               {currentStepIndex < stepOrder.length - 1 && (
                 <Button onClick={handleNext} className="gap-2">
-                  {locale === "vi" ? "Tiếp theo" : "Continue"}
+                  {t("checkout.nav.continue")}
                   <ChevronRight className="h-4 w-4" strokeWidth={1.5} />
                 </Button>
               )}
@@ -515,14 +490,12 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.5} />
-                      {locale === "vi" ? "Đang xử lý..." : "Processing..."}
+                      {t("checkout.nav.processing")}
                     </>
                   ) : (
                     <>
                       <ShieldCheck className="h-4 w-4" strokeWidth={1.5} />
-                      {locale === "vi"
-                        ? "Đặt hàng"
-                        : "Place Order"}
+                      {t("checkout.nav.placeOrder")}
                     </>
                   )}
                 </Button>
@@ -532,7 +505,7 @@ export function CheckoutPageClient({ locale = "en" }: CheckoutPageClientProps) {
 
           {/* Right Column — Order Summary (Sticky) */}
           <div className="lg:sticky lg:top-24 lg:self-start">
-            <OrderSummary locale={locale} />
+            <OrderSummary />
           </div>
         </div>
       </div>

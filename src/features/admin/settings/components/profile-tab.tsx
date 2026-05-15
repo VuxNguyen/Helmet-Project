@@ -10,10 +10,13 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { FormSection } from "@/components/common/form-section"
 import { profileSchema } from "../lib/settings-schema"
+import { useAdminSettingsStore } from "../stores/admin-settings-store"
 import type { ProfileFormValues } from "../types"
 
 export function ProfileTab() {
   const [submitting, setSubmitting] = useState(false)
+  const settings = useAdminSettingsStore((s) => s.settings)
+  const updateSettings = useAdminSettingsStore((s) => s.updateSettings)
 
   const {
     register,
@@ -22,19 +25,23 @@ export function ProfileTab() {
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: "Admin User",
-      email: "admin@helmetpro.com",
-      phone: "+1 (555) 000-0000",
-      bio: "Store administrator at Helmet Pro.",
+      name: settings.name,
+      email: settings.email,
+      phone: settings.phone,
+      bio: settings.bio,
     },
   })
 
-  const onSubmit = useCallback(async () => {
-    setSubmitting(true)
-    await new Promise((r) => setTimeout(r, 800))
-    toast.success("Profile updated successfully.")
-    setSubmitting(false)
-  }, [])
+  const onSubmit = useCallback(
+    async (data: ProfileFormValues) => {
+      setSubmitting(true)
+      await new Promise((r) => setTimeout(r, 800))
+      updateSettings(data)
+      toast.success("Profile updated successfully.")
+      setSubmitting(false)
+    },
+    [updateSettings],
+  )
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

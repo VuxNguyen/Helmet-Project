@@ -4,13 +4,10 @@ import { useFormContext } from "react-hook-form";
 import { motion } from "framer-motion";
 import { Truck, Clock, Zap, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/hooks/use-translations";
 import { SHIPPING_METHODS } from "@/features/checkout/data/constants";
 import type { CheckoutFormValues } from "@/features/checkout/lib/schema";
 import type { ShippingMethod } from "@/features/checkout/types";
-
-interface DeliveryOptionsProps {
-  locale?: "vi" | "en";
-}
 
 const shippingIcons: Record<ShippingMethod, typeof Truck> = {
   standard: Truck,
@@ -18,9 +15,10 @@ const shippingIcons: Record<ShippingMethod, typeof Truck> = {
   "next-day": Zap,
 };
 
-export function DeliveryOptions({ locale = "en" }: DeliveryOptionsProps) {
+export function DeliveryOptions() {
   const { setValue, watch } = useFormContext<CheckoutFormValues>();
   const selectedMethod = watch("shippingMethod");
+  const { t, locale } = useTranslations();
 
   return (
     <div className="space-y-3">
@@ -75,7 +73,7 @@ export function DeliveryOptions({ locale = "en" }: DeliveryOptionsProps) {
                   method.cost === 0 && "text-green-600 dark:text-green-400"
                 )}>
                   {method.cost === 0
-                    ? (locale === "vi" ? "Miễn phí" : "Free")
+                    ? t("checkout.delivery.free")
                     : `$${method.cost.toFixed(2)}`}
                 </span>
               </div>
