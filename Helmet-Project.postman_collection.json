@@ -1,0 +1,1155 @@
+{
+  "info": {
+    "name": "Helmet-Project API",
+    "description": "Postman Collection for Helmet-Project - Motorcycle Helmet E-commerce API\n\nBase URL: http://localhost:3000\n\n## How to use:\n1. Run `npm run dev` to start the server\n2. Update `base_url` variable if server runs on different port\n3. Start with Register/Login to get auth token\n4. Explore Products, Cart, Checkout flow\n\n## Variables:\n- base_url: http://localhost:3000\n- auth_token: (auto-filled after login)\n- order_id: (auto-filled after checkout)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "helmet-project"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "order_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "product_slug",
+      "value": "hjc-rpha-71",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🏷️ Auth",
+      "description": "Authentication endpoints - Register, Login, Logout",
+      "item": [
+        {
+          "name": "📝 Register (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('auth_token', jsonData.token);",
+                  "    console.log('✅ Registered successfully. Token saved:', jsonData.token);",
+                  "    console.log('👤 User:', jsonData.user.name, '-', jsonData.user.email);",
+                  "}",
+                  "",
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has user and token', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('user');",
+                  "    pm.expect(jsonData).to.have.property('token');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Nguyễn Văn A\",\n  \"email\": \"nguyenvana@email.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "📝 Login (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('auth_token', jsonData.token);",
+                  "    console.log('✅ Login successful. Token saved:', jsonData.token);",
+                  "}",
+                  "",
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has token', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('token');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"nguyenvana@email.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "📝 Logout (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Logout message', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql('Logged out successfully');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Products",
+      "description": "Product endpoints - List, Filter, Featured, Detail",
+      "item": [
+        {
+          "name": "📥 Get All Products (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has products array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('products');",
+                  "    pm.expect(jsonData.products).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Response has pagination', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('pagination');",
+                  "    pm.expect(jsonData.pagination).to.have.property('total');",
+                  "    pm.expect(jsonData.pagination).to.have.property('totalPages');",
+                  "});",
+                  "",
+                  "pm.test('Response has available brands and categories', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('availableBrands');",
+                  "    pm.expect(jsonData).to.have.property('availableCategories');",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('📦 Total products:', jsonData.pagination.total);",
+                  "    console.log('📄 Total pages:', jsonData.pagination.totalPages);",
+                  "    console.log('🏷️ Brands:', jsonData.availableBrands.join(', '));",
+                  "    console.log('📂 Categories:', jsonData.availableCategories.join(', '));",
+                  "    if (jsonData.products.length > 0) {",
+                  "        console.log('🆔 First product slug:', jsonData.products[0].slug);",
+                  "        console.log('💵 First product price: $' + jsonData.products[0].price);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default: 1)"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "12",
+                  "description": "Items per page (default: 12)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "📥 Products with Filters (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products?search=fullface&minRating=4&minPrice=100&maxPrice=500&sortBy=price-asc&inStock=true&page=1&pageSize=6",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "fullface",
+                  "description": "Search by name/brand/description"
+                },
+                {
+                  "key": "category",
+                  "value": "",
+                  "description": "Filter by category slug"
+                },
+                {
+                  "key": "brand",
+                  "value": "",
+                  "description": "Filter by brand name"
+                },
+                {
+                  "key": "minPrice",
+                  "value": "100",
+                  "description": "Minimum price"
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "500",
+                  "description": "Maximum price"
+                },
+                {
+                  "key": "minRating",
+                  "value": "4",
+                  "description": "Minimum rating (1-5)"
+                },
+                {
+                  "key": "inStock",
+                  "value": "true",
+                  "description": "Only in-stock items"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "price-asc",
+                  "description": "Sort: popularity, name-asc, name-desc, price-asc, price-desc"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "6",
+                  "description": "Items per page"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "📥 Get Featured Products (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has products array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('products');",
+                  "    pm.expect(jsonData.products).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/featured",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "featured"]
+            }
+          }
+        },
+        {
+          "name": "📥 Get Product By Slug (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has product details', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('name');",
+                  "    pm.expect(jsonData).to.have.property('price');",
+                  "    pm.expect(jsonData).to.have.property('images');",
+                  "    pm.expect(jsonData).to.have.property('colors');",
+                  "    pm.expect(jsonData).to.have.property('sizes');",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('🔍 Product:', jsonData.name);",
+                  "    console.log('💵 Price: $' + jsonData.price);",
+                  "    console.log('⭐ Rating:', jsonData.rating);",
+                  "    console.log('🎨 Colors:', jsonData.colors.length);",
+                  "    console.log('📏 Sizes:', jsonData.sizes.length);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/{{product_slug}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "{{product_slug}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Cart",
+      "description": "Cart endpoints - View cart, Add items",
+      "item": [
+        {
+          "name": "📥 Get Cart (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has items and total', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('items');",
+                  "    pm.expect(jsonData).to.have.property('total');",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('🛒 Cart items:', jsonData.items.length);",
+                  "    console.log('💰 Total: $' + jsonData.total);",
+                  "    jsonData.items.forEach(function(item, index) {",
+                  "        console.log('  ' + (index+1) + '. ' + item.name + ' x' + item.quantity + ' = $' + (item.price * item.quantity));",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cart",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cart"]
+            }
+          }
+        },
+        {
+          "name": "📝 Add to Cart (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has items and total', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('items');",
+                  "    pm.expect(jsonData).to.have.property('total');",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('✅ Added to cart!');",
+                  "    console.log('🛒 Total items:', jsonData.items.length);",
+                  "    console.log('💰 Cart total: $' + jsonData.total);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"prod-1\",\n  \"name\": \"HJC RPHA 71\",\n  \"price\": 499.99,\n  \"image\": \"/images/hjc-rpha-71.jpg\",\n  \"quantity\": 2,\n  \"variant\": \"M\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cart/items",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cart", "items"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Orders",
+      "description": "Order endpoints - List orders, Order detail",
+      "item": [
+        {
+          "name": "📥 Get Orders (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has orders and pagination', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('orders');",
+                  "    pm.expect(jsonData).to.have.property('pagination');",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('📦 Total orders:', jsonData.pagination.total);",
+                  "    jsonData.orders.forEach(function(order, index) {",
+                  "        console.log('  ' + (index+1) + '. ' + order.orderNumber + ' - ' + order.status + ' - $' + order.total);",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "description": "Orders per page"
+                },
+                {
+                  "key": "userId",
+                  "value": "",
+                  "description": "Filter by user ID"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "📥 Get Order By ID (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('📋 Order:', jsonData.orderNumber);",
+                  "    console.log('📊 Status:', jsonData.status);",
+                  "    console.log('💰 Total: $' + jsonData.total);",
+                  "    console.log('👤 Customer:', jsonData.customer.name);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "{{order_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Checkout",
+      "description": "Checkout endpoint - Create new order",
+      "item": [
+        {
+          "name": "📝 Create Order (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('order_id', jsonData.orderId);",
+                  "    console.log('✅ Order created!');",
+                  "    console.log('🆔 Order ID:', jsonData.orderId);",
+                  "    console.log('🔢 Order Number:', jsonData.orderNumber);",
+                  "    console.log('📊 Status:', jsonData.status);",
+                  "    console.log('💰 Total: $' + jsonData.total);",
+                  "}",
+                  "",
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has order details', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('orderId');",
+                  "    pm.expect(jsonData).to.have.property('orderNumber');",
+                  "    pm.expect(jsonData).to.have.property('status');",
+                  "    pm.expect(jsonData).to.have.property('total');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shipping\": {\n    \"firstName\": \"Nguyễn\",\n    \"lastName\": \"Văn A\",\n    \"email\": \"nguyenvana@email.com\",\n    \"phone\": \"0901234567\",\n    \"address\": \"123 Đường Lê Lợi\",\n    \"city\": \"Hồ Chí Minh\",\n    \"state\": \"Hồ Chí Minh\",\n    \"zipCode\": \"70000\",\n    \"country\": \"VN\"\n  },\n  \"shippingMethod\": \"express\",\n  \"paymentMethod\": \"credit-card\",\n  \"items\": [\n    {\n      \"productId\": \"prod-1\",\n      \"name\": \"HJC RPHA 71\",\n      \"price\": 499.99,\n      \"quantity\": 2\n    },\n    {\n      \"productId\": \"prod-2\",\n      \"name\": \"AGV K3 SV\",\n      \"price\": 299.99,\n      \"quantity\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/checkout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "checkout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Wishlist",
+      "description": "Wishlist endpoints - View and add favorites",
+      "item": [
+        {
+          "name": "📥 Get Wishlist (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has items array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('items');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/wishlist",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist"]
+            }
+          }
+        },
+        {
+          "name": "📝 Add to Wishlist (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Item added to wishlist', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('items');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"prod-1\",\n  \"name\": \"HJC RPHA 71\",\n  \"price\": 499.99,\n  \"image\": \"/images/hjc-rpha-71.jpg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/wishlist/items",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist", "items"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Addresses",
+      "description": "Address endpoints - View and manage shipping addresses",
+      "item": [
+        {
+          "name": "📥 Get Addresses (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/addresses",
+              "host": ["{{base_url}}"],
+              "path": ["api", "addresses"]
+            }
+          }
+        },
+        {
+          "name": "📝 Create Address (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Address has id', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Nguyễn Văn A\",\n  \"phone\": \"0901234567\",\n  \"address\": \"123 Đường Lê Lợi\",\n  \"city\": \"Hồ Chí Minh\",\n  \"state\": \"Hồ Chí Minh\",\n  \"zipCode\": \"70000\",\n  \"isDefault\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/addresses",
+              "host": ["{{base_url}}"],
+              "path": ["api", "addresses"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Admin",
+      "description": "Admin endpoints - Dashboard stats, customers, orders, products management",
+      "item": [
+        {
+          "name": "📥 Dashboard Stats (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has all stats fields', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('totalRevenue');",
+                  "    pm.expect(jsonData).to.have.property('totalOrders');",
+                  "    pm.expect(jsonData).to.have.property('totalCustomers');",
+                  "    pm.expect(jsonData).to.have.property('conversionRate');",
+                  "    pm.expect(jsonData).to.have.property('recentOrders');",
+                  "    pm.expect(jsonData).to.have.property('lowStockProducts');",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('📊 Dashboard Stats:');",
+                  "    console.log('💰 Total Revenue: $' + jsonData.totalRevenue.toLocaleString());",
+                  "    console.log('📦 Total Orders:', jsonData.totalOrders);",
+                  "    console.log('👥 Total Customers:', jsonData.totalCustomers);",
+                  "    console.log('📈 Conversion Rate:', jsonData.conversionRate + '%');",
+                  "    console.log('📉 Revenue Change:', jsonData.revenueChange + '%');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "stats"]
+            }
+          }
+        },
+        {
+          "name": "📥 Get Customers (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/customers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "customers"]
+            }
+          }
+        },
+        {
+          "name": "📥 Get All Orders - Admin (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "orders"]
+            }
+          }
+        },
+        {
+          "name": "📥 Get All Products - Admin (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/products",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "products"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Other",
+      "description": "Other utility endpoints",
+      "item": [
+        {
+          "name": "📥 Get Shipping Methods (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('🚚 Available Shipping Methods:');",
+                  "    jsonData.forEach(function(method) {",
+                  "        console.log('  - ' + method.name + ': $' + method.price + ' (' + method.estimatedDays + ')');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/shipping-methods",
+              "host": ["{{base_url}}"],
+              "path": ["api", "shipping-methods"]
+            }
+          }
+        },
+        {
+          "name": "📥 Get States/Provinces (GET)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('📍 Available States/Provinces:');",
+                  "    jsonData.forEach(function(state) {",
+                  "        console.log('  - ' + state.name);",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/states",
+              "host": ["{{base_url}}"],
+              "path": ["api", "states"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔄 Complete Purchase Workflow",
+      "description": "Complete E2E purchase flow - Register → Add to cart → Checkout → View order\n\nRun this folder to simulate a complete customer journey from registration to order confirmation.",
+      "item": [
+        {
+          "name": "Step 1: Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 409) {",
+                  "    if (pm.response.code === 409) {",
+                  "        console.log('⚠️  User already exists, proceeding with login...');",
+                  "    } else {",
+                  "        const jsonData = pm.response.json();",
+                  "        pm.collectionVariables.set('auth_token', jsonData.token);",
+                  "        console.log('✅ Step 1: Registered successfully');",
+                  "    }",
+                  "} else {",
+                  "    console.log('❌ Registration failed:', pm.response.json().error);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Nguyễn Văn A\",\n  \"email\": \"nguyenvana@email.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Step 2: Add to Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    console.log('✅ Step 2: Added products to cart');",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('   Cart total: $' + jsonData.total);",
+                  "} else {",
+                  "    console.log('❌ Add to cart failed');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"productId\": \"prod-1\",\n    \"name\": \"HJC RPHA 71\",\n    \"price\": 499.99,\n    \"image\": \"/images/hjc-rpha-71.jpg\",\n    \"quantity\": 2,\n    \"variant\": \"M\"\n  },\n  {\n    \"productId\": \"prod-2\",\n    \"name\": \"AGV K3 SV\",\n    \"price\": 299.99,\n    \"image\": \"/images/agv-k3-sv.jpg\",\n    \"quantity\": 1,\n    \"variant\": \"L\"\n  }\n]"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cart/items",
+              "host": ["{{base_url}}"],
+              "path": ["api", "cart", "items"]
+            }
+          }
+        },
+        {
+          "name": "Step 3: Checkout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('order_id', jsonData.orderId);",
+                  "    console.log('✅ Step 3: Order created!');",
+                  "    console.log('   Order Number:', jsonData.orderNumber);",
+                  "    console.log('   Total: $' + jsonData.total);",
+                  "} else {",
+                  "    console.log('❌ Checkout failed:', pm.response.json().error);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shipping\": {\n    \"firstName\": \"Nguyễn\",\n    \"lastName\": \"Văn A\",\n    \"email\": \"nguyenvana@email.com\",\n    \"phone\": \"0901234567\",\n    \"address\": \"123 Đường Lê Lợi\",\n    \"city\": \"Hồ Chí Minh\",\n    \"state\": \"Hồ Chí Minh\",\n    \"zipCode\": \"70000\",\n    \"country\": \"VN\"\n  },\n  \"shippingMethod\": \"express\",\n  \"paymentMethod\": \"credit-card\",\n  \"items\": [\n    {\n      \"productId\": \"prod-1\",\n      \"name\": \"HJC RPHA 71\",\n      \"price\": 499.99,\n      \"quantity\": 2\n    },\n    {\n      \"productId\": \"prod-2\",\n      \"name\": \"AGV K3 SV\",\n      \"price\": 299.99,\n      \"quantity\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/checkout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "checkout"]
+            }
+          }
+        },
+        {
+          "name": "Step 4: View Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log('✅ Step 4: Order retrieved!');",
+                  "    console.log('   Order:', jsonData.orderNumber);",
+                  "    console.log('   Status:', jsonData.status);",
+                  "    console.log('   Total: $' + jsonData.total);",
+                  "    console.log('   ');",
+                  "    console.log('🎉 Complete purchase flow finished!');",
+                  "} else {",
+                  "    console.log('❌ Could not retrieve order');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/{{order_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "{{order_id}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

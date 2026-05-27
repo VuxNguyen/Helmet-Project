@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "prod-1",
+    "name": "HJC RPHA 71",
+    "price": 499.99,
+    "image": "/images/hjc-rpha-71.jpg",
+    "quantity": 2,
+    "variant": "M"
+  }
+]

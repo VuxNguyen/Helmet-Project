@@ -40,5 +40,12 @@
     "email": "eve@example.com",
     "password": "password123",
     "createdAt": "2025-12-05T16:00:00.000Z"
+  },
+  {
+    "id": "user-1779180762745",
+    "name": "Nguyễn Văn A",
+    "email": "nguyenvana@email.com",
+    "password": "password123",
+    "createdAt": "2026-05-19T08:52:42.745Z"
   }
 ]
