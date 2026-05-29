@@ -29,6 +29,11 @@ export async function POST(request: Request) {
       return Response.json({ error: "Mật khẩu không đúng" }, { status: 401 })
     }
 
+    // Không có quyền admin
+    if (user.role !== "admin") {
+      return Response.json({ error: "Email không có quyền truy cập trang quản trị" }, { status: 403 })
+    }
+
     const { password: _, ...safeUser } = user
     return Response.json({
       user: safeUser,

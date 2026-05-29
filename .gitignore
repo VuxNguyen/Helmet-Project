@@ -44,5 +44,8 @@ next-env.d.ts
 AGENTS.md
 CLAUDE.md
 
+# agents folder
+.agents/
+
 # project docs
 docs/

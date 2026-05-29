@@ -66,7 +66,7 @@ async function seed() {
       email: user.email,
       password: user.password,
       phone: user.phone || null,
-      role: "customer",
+      role: user.role || "customer",
     })
 
     if (error) {

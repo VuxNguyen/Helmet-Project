@@ -1,5 +1,6 @@
 "use client"
 
+import { useQuery } from "@tanstack/react-query"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -14,44 +15,41 @@ import {
   MapPin,
   Clock,
   ChevronRight,
+  Loader2,
 } from "lucide-react"
 import Link from "next/link"
-
-const recentOrders = [
-  {
-    id: "ORD-001",
-    date: "2026-04-28",
-    total: 899.99,
-    status: "delivered" as const,
-    items: 1,
-  },
-  {
-    id: "ORD-002",
-    date: "2026-05-01",
-    total: 1299.98,
-    status: "shipped" as const,
-    items: 2,
-  },
-  {
-    id: "ORD-003",
-    date: "2026-05-05",
-    total: 549.99,
-    status: "processing" as const,
-    items: 1,
-  },
-]
+import { fetchOrders } from "@/features/orders/api/orders-api"
 
 const statusLabels: Record<string, { label: string; variant: "default" | "secondary" | "outline" | "destructive" }> = {
   delivered: { label: "Đã giao", variant: "default" },
   shipped: { label: "Đang vận chuyển", variant: "secondary" },
   processing: { label: "Đang xử lý", variant: "outline" },
+  pending: { label: "Chờ xác nhận", variant: "outline" },
+  confirmed: { label: "Đã xác nhận", variant: "default" },
   cancelled: { label: "Đã hủy", variant: "destructive" },
+}
+
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("vi-VN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  })
 }
 
 export function OverviewContent() {
   const { user } = useAuthStore()
   const wishlistCount = useWishlistStore((s) => s.items.length)
   const cartCount = useCartStore((s) => s.items.length)
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["orders-overview", user?.id],
+    queryFn: () => fetchOrders(user?.id || "guest"),
+    enabled: !!user?.id,
+  })
+
+  const orders = data?.orders ?? []
+  const recentOrders = orders.slice(0, 3)
 
   return (
     <div className="space-y-6">
@@ -73,7 +71,13 @@ export function OverviewContent() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{recentOrders.length}</p>
+            <p className="text-2xl font-bold">
+              {isLoading ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                orders.length
+              )}
+            </p>
             <p className="mt-1 text-xs text-muted-foreground">Tổng số đơn hàng</p>
           </CardContent>
         </Card>
@@ -124,10 +128,10 @@ export function OverviewContent() {
                     <Package className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{order.id}</p>
+                    <p className="text-sm font-medium">{order.orderNumber}</p>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Clock className="h-3 w-3" />
-                      {order.date}
+                      {formatDate(order.createdAt)}
                       <span className="font-medium">${order.total.toFixed(2)}</span>
                     </div>
                   </div>

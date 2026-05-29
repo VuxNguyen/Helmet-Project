@@ -26,7 +26,12 @@ export async function POST(request: Request) {
       return Response.json({ error: "Email already registered" }, { status: 409 })
     }
 
-    // Create user (password hashing would be added with bcryptjs)
+    // Check if there's already an admin (prevent mass admin registration)
+    const { count } = await supabase
+      .from("users")
+      .select("*", { count: "exact", head: true })
+      .eq("role", "admin")
+
     const { data: newUser, error } = await supabase
       .from("users")
       .insert({
@@ -34,13 +39,13 @@ export async function POST(request: Request) {
         name: fullName,
         email,
         password,
-        role: "customer",
+        role: "admin",
       })
       .select()
       .single()
 
     if (error) {
-      return Response.json({ error: "Failed to create user" }, { status: 500 })
+      return Response.json({ error: "Failed to create admin account" }, { status: 500 })
     }
 
     const { password: _, ...safeUser } = newUser
