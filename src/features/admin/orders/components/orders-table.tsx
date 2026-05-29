@@ -12,6 +12,7 @@ import {
 import { DataTable } from "@/components/common/data-table"
 import { SortHeader } from "@/components/common/sort-header"
 import { OrderStatusBadge } from "./order-status-badge"
+import { useTranslations } from "@/hooks/use-translations"
 import type { AdminOrder } from "../types"
 import type { ColumnDef } from "@tanstack/react-table"
 
@@ -21,12 +22,13 @@ interface OrdersTableProps {
 }
 
 export function OrdersTable({ data, onViewDetails }: OrdersTableProps) {
+  const { t } = useTranslations()
   const columns = useMemo<ColumnDef<AdminOrder>[]>(
     () => [
       {
         accessorKey: "orderNumber",
         header: ({ column }) => (
-          <SortHeader column={column}>Order</SortHeader>
+           <SortHeader column={column}>{t("admin.orders.table.order")}</SortHeader>
         ),
         cell: ({ row }) => (
           <div className="min-w-0">
@@ -44,7 +46,7 @@ export function OrdersTable({ data, onViewDetails }: OrdersTableProps) {
       {
         accessorKey: "customer.name",
         header: ({ column }) => (
-          <SortHeader column={column}>Customer</SortHeader>
+           <SortHeader column={column}>{t("admin.orders.table.customer")}</SortHeader>
         ),
         cell: ({ row }) => (
           <div className="flex items-center gap-3">
@@ -65,7 +67,7 @@ export function OrdersTable({ data, onViewDetails }: OrdersTableProps) {
       {
         accessorKey: "items",
         header: ({ column }) => (
-          <SortHeader column={column}>Items</SortHeader>
+           <SortHeader column={column}>{t("admin.orders.table.items")}</SortHeader>
         ),
         meta: {
           headerClassName: "hidden md:table-cell",
@@ -84,7 +86,7 @@ export function OrdersTable({ data, onViewDetails }: OrdersTableProps) {
       {
         accessorKey: "total",
         header: ({ column }) => (
-          <SortHeader column={column}>Total</SortHeader>
+           <SortHeader column={column}>{t("admin.orders.table.total")}</SortHeader>
         ),
         cell: ({ row }) => (
           <span className="text-sm tabular-nums font-medium">
@@ -95,14 +97,14 @@ export function OrdersTable({ data, onViewDetails }: OrdersTableProps) {
       {
         accessorKey: "status",
         header: ({ column }) => (
-          <SortHeader column={column}>Status</SortHeader>
+           <SortHeader column={column}>{t("admin.orders.table.status")}</SortHeader>
         ),
         cell: ({ row }) => <OrderStatusBadge status={row.original.status} />,
       },
       {
         accessorKey: "paymentMethod",
         header: ({ column }) => (
-          <SortHeader column={column}>Payment</SortHeader>
+           <SortHeader column={column}>{t("admin.orders.table.actions")}</SortHeader>
         ),
         meta: {
           headerClassName: "hidden lg:table-cell",
@@ -127,7 +129,7 @@ export function OrdersTable({ data, onViewDetails }: OrdersTableProps) {
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem onClick={() => onViewDetails(row.original)}>
                 <Eye className="h-3.5 w-3.5" />
-                View Details
+                {t("admin.orders.table.viewDetails")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -145,7 +147,7 @@ export function OrdersTable({ data, onViewDetails }: OrdersTableProps) {
       data={data}
       getRowId={(row) => row.id}
       pageSize={10}
-      emptyMessage="No orders found matching your filters."
+      emptyMessage={t("admin.orders.noOrders")}
     />
   )
 }

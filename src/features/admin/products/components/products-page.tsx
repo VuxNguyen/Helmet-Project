@@ -10,9 +10,12 @@ import { ProductsTable } from "./products-table"
 import { AddProductSheet } from "./add-product-sheet"
 import { EditProductSheet } from "./edit-product-sheet"
 import { useAdminProductsStore } from "../stores/admin-products-store"
+import { getFilteredProducts } from "../product-data"
+import { useTranslations } from "@/hooks/use-translations"
 import type { ProductStatus, AdminProduct } from "../types"
 
 export function ProductsPage() {
+  const { t } = useTranslations()
   const [addProductOpen, setAddProductOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(null)
   const [search, setSearch] = useState("")
@@ -22,7 +25,7 @@ export function ProductsPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const bulkUpdateStatus = useAdminProductsStore((s) => s.bulkUpdateStatus)
   const bulkDelete = useAdminProductsStore((s) => s.bulkDelete)
-  const getFiltered = useAdminProductsStore((s) => s.getFiltered)
+  const items = useAdminProductsStore((s) => s.items)
   const fetchItems = useAdminProductsStore((s) => s.fetchItems)
 
   useEffect(() => {
@@ -31,13 +34,13 @@ export function ProductsPage() {
 
   const filteredProducts = useMemo(
     () =>
-      getFiltered({
+      getFilteredProducts(items, {
         search,
         category: categoryFilter,
         brand: brandFilter,
         status: statusFilter,
       }),
-    [search, categoryFilter, brandFilter, statusFilter, getFiltered],
+    [items, search, categoryFilter, brandFilter, statusFilter],
   )
 
   const handleSelectionChange = useCallback((ids: string[]) => {
@@ -65,9 +68,9 @@ export function ProductsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold tracking-tight">Products</h2>
+        <h2 className="text-lg font-semibold tracking-tight">{t("admin.products.title")}</h2>
         <p className="text-sm text-muted-foreground">
-          Manage your product catalog.
+          {t("admin.products.description")}
         </p>
       </div>
 
@@ -103,7 +106,7 @@ export function ProductsPage() {
         )}
       >
         <span className="text-sm font-medium">
-          {selectedIds.length} selected
+          {selectedIds.length} {t("admin.products.selected")}
         </span>
         <div className="ml-auto flex items-center gap-2">
           <Button
@@ -112,7 +115,7 @@ export function ProductsPage() {
             onClick={() => handleBulkStatus("active")}
           >
             <CheckCircle className="h-3 w-3" />
-            Mark Active
+            {t("admin.products.active")}
           </Button>
           <Button
             variant="outline"
@@ -120,7 +123,7 @@ export function ProductsPage() {
             onClick={() => handleBulkStatus("draft")}
           >
             <FileEdit className="h-3 w-3" />
-            Mark Draft
+            {t("admin.products.draft")}
           </Button>
           <Button
             variant="destructive"
@@ -128,7 +131,7 @@ export function ProductsPage() {
             onClick={handleBulkDelete}
           >
             <Trash2 className="h-3 w-3" />
-            Delete
+            {t("admin.products.table.delete")}
           </Button>
           <Button
             variant="ghost"
@@ -136,7 +139,7 @@ export function ProductsPage() {
             onClick={handleClearSelection}
           >
             <X className="h-3 w-3" />
-            Clear
+            {t("admin.products.clearFilters")}
           </Button>
         </div>
       </div>

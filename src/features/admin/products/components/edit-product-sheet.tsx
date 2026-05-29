@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ProductForm } from "./product-form"
+import { useTranslations } from "@/hooks/use-translations"
 import type { AdminProduct } from "../types"
 
 interface EditProductSheetProps {
@@ -18,6 +19,7 @@ interface EditProductSheetProps {
 }
 
 export function EditProductSheet({ open, onOpenChange, product }: EditProductSheetProps) {
+  const { t } = useTranslations()
   const handleSuccess = () => {
     onOpenChange(false)
   }
@@ -29,9 +31,9 @@ export function EditProductSheet({ open, onOpenChange, product }: EditProductShe
         className="w-full sm:max-w-xl lg:max-w-2xl p-0 gap-0"
       >
         <SheetHeader className="border-b border-border px-6 py-4">
-          <SheetTitle>Edit Product</SheetTitle>
+          <SheetTitle>{t("admin.products.editProduct")}</SheetTitle>
           <SheetDescription>
-            Update the details for {product?.name ?? "this product"}.
+            {t("admin.products.editDescription", { name: product?.name ?? t("admin.products.thisProduct") })}
           </SheetDescription>
         </SheetHeader>
 

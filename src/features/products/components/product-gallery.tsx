@@ -20,7 +20,7 @@ interface ProductGalleryProps {
 /* ───────── Component ───────── */
 
 export function ProductGallery({
-  images,
+  images = [],
   productName,
   discount,
   className,
@@ -30,7 +30,7 @@ export function ProductGallery({
   const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 })
   const [loaded, setLoaded] = useState<Set<number>>(new Set([0]))
 
-  const currentImage = images[activeIndex] ?? images[0]
+  const currentImage = images[activeIndex] ?? images[0] ?? "/placeholder-helmet.svg"
 
   const handlePrev = useCallback(() => {
     setIsZoomed(false)

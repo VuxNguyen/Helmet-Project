@@ -22,6 +22,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { DataTable } from "@/components/common/data-table"
 import { SortHeader } from "@/components/common/sort-header"
 import { ProductStatusBadge } from "./product-status-badge"
+import { useTranslations } from "@/hooks/use-translations"
 import type { AdminProduct } from "../types"
 import type { ColumnDef } from "@tanstack/react-table"
 
@@ -32,6 +33,7 @@ interface ProductsTableProps {
 }
 
 export function ProductsTable({ data, onSelectionChange, onEdit }: ProductsTableProps) {
+  const { t } = useTranslations()
   const columns = useMemo<ColumnDef<AdminProduct>[]>(
     () => [
       {
@@ -84,7 +86,7 @@ export function ProductsTable({ data, onSelectionChange, onEdit }: ProductsTable
       {
         accessorKey: "name",
         header: ({ column }) => (
-          <SortHeader column={column}>Product</SortHeader>
+           <SortHeader column={column}>{t("admin.products.table.product")}</SortHeader>
         ),
         cell: ({ row }) => (
           <div className="min-w-0">
@@ -98,7 +100,7 @@ export function ProductsTable({ data, onSelectionChange, onEdit }: ProductsTable
       {
         accessorKey: "category",
         header: ({ column }) => (
-          <SortHeader column={column}>Category</SortHeader>
+           <SortHeader column={column}>{t("admin.products.table.sku")}</SortHeader>
         ),
         meta: {
           headerClassName: "hidden md:table-cell",
@@ -113,7 +115,7 @@ export function ProductsTable({ data, onSelectionChange, onEdit }: ProductsTable
       {
         accessorKey: "brand",
         header: ({ column }) => (
-          <SortHeader column={column}>Brand</SortHeader>
+           <SortHeader column={column}>{t("admin.products.table.price")}</SortHeader>
         ),
         meta: {
           headerClassName: "hidden sm:table-cell",
@@ -128,7 +130,7 @@ export function ProductsTable({ data, onSelectionChange, onEdit }: ProductsTable
       {
         accessorKey: "stock",
         header: ({ column }) => (
-          <SortHeader column={column}>Stock</SortHeader>
+           <SortHeader column={column}>{t("admin.products.table.stock")}</SortHeader>
         ),
         meta: {
           headerClassName: "hidden lg:table-cell",
@@ -179,7 +181,7 @@ export function ProductsTable({ data, onSelectionChange, onEdit }: ProductsTable
       {
         accessorKey: "price",
         header: ({ column }) => (
-          <SortHeader column={column}>Price</SortHeader>
+           <SortHeader column={column}>{t("admin.products.table.status")}</SortHeader>
         ),
         cell: ({ row }) => (
           <div className="text-sm tabular-nums">
@@ -197,7 +199,7 @@ export function ProductsTable({ data, onSelectionChange, onEdit }: ProductsTable
       {
         accessorKey: "status",
         header: ({ column }) => (
-          <SortHeader column={column}>Status</SortHeader>
+           <SortHeader column={column}>{t("admin.products.table.actions")}</SortHeader>
         ),
         cell: ({ row }) => <ProductStatusBadge status={row.original.status} />,
       },
@@ -218,11 +220,11 @@ export function ProductsTable({ data, onSelectionChange, onEdit }: ProductsTable
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem onClick={() => onEdit?.(row.original)}>
                 <Pencil className="h-3.5 w-3.5" />
-                Edit
+                {t("admin.products.table.edit")}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Eye className="h-3.5 w-3.5" />
-                View
+                {t("admin.products.table.view")}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Copy className="h-3.5 w-3.5" />
@@ -235,7 +237,7 @@ export function ProductsTable({ data, onSelectionChange, onEdit }: ProductsTable
               </DropdownMenuItem>
               <DropdownMenuItem variant="destructive">
                 <Trash2 className="h-3.5 w-3.5" />
-                Delete
+                {t("admin.products.table.delete")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -10,11 +10,13 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { FormSection } from "@/components/common/form-section"
 import { securitySchema } from "../lib/settings-schema"
+import { useTranslations } from "@/hooks/use-translations"
 import type { SecurityFormValues } from "../types"
 
 export function SecurityTab() {
   const [submitting, setSubmitting] = useState(false)
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
+  const { t } = useTranslations()
 
   const {
     register,
@@ -33,24 +35,24 @@ export function SecurityTab() {
   const onSubmit = useCallback(async () => {
     setSubmitting(true)
     await new Promise((r) => setTimeout(r, 800))
-    toast.success("Security settings updated.")
+    toast.success(t("admin.settings.security.passwordUpdated"))
     setSubmitting(false)
   }, [])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <FormSection
-        title="Change Password"
-        description="Update your account password."
+        title={t("admin.settings.security.changePassword")}
+        description={t("admin.settings.security.changePasswordDesc")}
       >
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div className="space-y-1.5 sm:col-span-2">
             <label className="text-sm font-medium">
-              Current Password <span className="ml-0.5 text-destructive">*</span>
+              {t("admin.settings.security.currentPassword")} <span className="ml-0.5 text-destructive">*</span>
             </label>
             <Input
               type="password"
-              placeholder="Enter current password"
+              placeholder={t("admin.settings.security.currentPasswordPlaceholder")}
               {...register("currentPassword")}
               aria-invalid={!!errors.currentPassword}
             />
@@ -63,11 +65,11 @@ export function SecurityTab() {
 
           <div className="space-y-1.5">
             <label className="text-sm font-medium">
-              New Password <span className="ml-0.5 text-destructive">*</span>
+              {t("admin.settings.security.newPassword")} <span className="ml-0.5 text-destructive">*</span>
             </label>
             <Input
               type="password"
-              placeholder="At least 8 characters"
+              placeholder={t("admin.settings.security.newPasswordPlaceholder")}
               {...register("newPassword")}
               aria-invalid={!!errors.newPassword}
             />
@@ -80,11 +82,11 @@ export function SecurityTab() {
 
           <div className="space-y-1.5">
             <label className="text-sm font-medium">
-              Confirm Password <span className="ml-0.5 text-destructive">*</span>
+              {t("admin.settings.security.confirmPassword")} <span className="ml-0.5 text-destructive">*</span>
             </label>
             <Input
               type="password"
-              placeholder="Re-enter new password"
+              placeholder={t("admin.settings.security.confirmPasswordPlaceholder")}
               {...register("confirmPassword")}
               aria-invalid={!!errors.confirmPassword}
             />
@@ -98,8 +100,8 @@ export function SecurityTab() {
       </FormSection>
 
       <FormSection
-        title="Two-Factor Authentication"
-        description="Add an extra layer of security to your account."
+        title={t("admin.settings.security.twoFactor")}
+        description={t("admin.settings.security.twoFactorDesc")}
       >
         <label className="flex items-start gap-3 rounded-lg border border-border bg-muted/30 p-3 transition-colors hover:bg-muted/60 cursor-pointer">
           <Checkbox
@@ -108,9 +110,9 @@ export function SecurityTab() {
             className="mt-0.5"
           />
           <div className="min-w-0">
-            <p className="text-sm font-medium">Enable 2FA</p>
+            <p className="text-sm font-medium">{t("admin.settings.security.enable2fa")}</p>
             <p className="text-xs text-muted-foreground">
-              Receive a one-time code via email when signing in from a new device.
+              {t("admin.settings.security.twoFactorDesc")}
             </p>
           </div>
         </label>
@@ -123,7 +125,7 @@ export function SecurityTab() {
           ) : (
             <Save className="h-4 w-4" />
           )}
-          Save Changes
+          {t("admin.settings.security.updatePassword")}
         </Button>
       </div>
     </form>

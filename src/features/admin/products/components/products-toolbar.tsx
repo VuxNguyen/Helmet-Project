@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useTranslations } from "@/hooks/use-translations"
 import { CATEGORY_OPTIONS, BRAND_OPTIONS, STATUS_OPTIONS, type ProductStatus } from "../types"
 
 interface ProductsToolbarProps {
@@ -35,6 +36,7 @@ export function ProductsToolbar({
   onStatusChange,
   onAddProduct,
 }: ProductsToolbarProps) {
+  const { t } = useTranslations()
   const hasActiveFilters = categoryFilter || brandFilter || statusFilter
 
   return (
@@ -43,7 +45,7 @@ export function ProductsToolbar({
         <div className="relative flex-1 sm:max-w-xs">
           <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search products..."
+            placeholder={t("admin.products.searchPlaceholder")}
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             className="h-8 w-full pl-8 text-xs"
@@ -64,10 +66,10 @@ export function ProductsToolbar({
             onValueChange={(v) => onCategoryChange(v === "all" ? null : v)}
           >
             <SelectTrigger className="h-8 w-[130px] text-xs">
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
+               <SelectValue placeholder={t("admin.products.allCategories")} />
+             </SelectTrigger>
+             <SelectContent>
+               <SelectItem value="all">{t("admin.products.allCategories")}</SelectItem>
               {CATEGORY_OPTIONS.map((opt) => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
@@ -81,10 +83,10 @@ export function ProductsToolbar({
             onValueChange={(v) => onBrandChange(v === "all" ? null : v)}
           >
             <SelectTrigger className="h-8 w-[120px] text-xs">
-              <SelectValue placeholder="Brand" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Brands</SelectItem>
+               <SelectValue placeholder={t("admin.products.allBrands")} />
+             </SelectTrigger>
+             <SelectContent>
+               <SelectItem value="all">{t("admin.products.allBrands")}</SelectItem>
               {BRAND_OPTIONS.map((opt) => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
@@ -98,10 +100,10 @@ export function ProductsToolbar({
             onValueChange={(v) => onStatusChange(v === "all" ? null : v as ProductStatus)}
           >
             <SelectTrigger className="h-8 w-[120px] text-xs">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
+               <SelectValue placeholder={t("admin.products.allStatus")} />
+             </SelectTrigger>
+             <SelectContent>
+               <SelectItem value="all">{t("admin.products.allStatus")}</SelectItem>
               {STATUS_OPTIONS.map((opt) => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
@@ -120,7 +122,7 @@ export function ProductsToolbar({
                 onStatusChange(null)
               }}
             >
-              Clear
+               {t("admin.products.clearFilters")}
             </Button>
           )}
         </div>
@@ -128,7 +130,7 @@ export function ProductsToolbar({
 
       <Button size="sm" onClick={onAddProduct} className="shrink-0">
         <Plus className="h-3.5 w-3.5" />
-        Add Product
+         {t("admin.products.addProduct")}
       </Button>
     </div>
   )

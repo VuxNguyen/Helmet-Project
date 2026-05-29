@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useTranslations } from "@/hooks/use-translations"
 import { STATUS_OPTIONS, type OrderStatus } from "../types"
 
 interface OrdersToolbarProps {
@@ -32,6 +33,7 @@ export function OrdersToolbar({
   dateTo,
   onDateToChange,
 }: OrdersToolbarProps) {
+  const { t } = useTranslations()
   const hasActiveFilters = statusFilter || dateFrom || dateTo
 
   const handleClear = () => {
@@ -47,7 +49,7 @@ export function OrdersToolbar({
           <div className="relative flex-1 sm:max-w-xs">
             <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search orders..."
+              placeholder={t("admin.orders.searchPlaceholder")}
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
               className="h-8 w-full pl-8 text-xs"
@@ -68,10 +70,10 @@ export function OrdersToolbar({
               onValueChange={(v) => onStatusChange(v === "all" ? null : v as OrderStatus)}
             >
               <SelectTrigger className="h-8 w-[130px] text-xs">
-                <SelectValue placeholder="Status" />
+                <SelectValue placeholder={t("admin.orders.statusLabel")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">{t("admin.orders.allStatus")}</SelectItem>
                 {STATUS_OPTIONS.map((opt) => (
                   <SelectItem key={opt.value} value={opt.value}>
                     {opt.label}
@@ -103,7 +105,7 @@ export function OrdersToolbar({
                 onClick={handleClear}
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
-                Clear
+                {t("admin.orders.clear")}
               </button>
             )}
           </div>
@@ -116,10 +118,10 @@ export function OrdersToolbar({
           onValueChange={(v) => onStatusChange(v === "all" ? null : v as OrderStatus)}
         >
           <SelectTrigger className="h-8 w-[130px] text-xs">
-            <SelectValue placeholder="Status" />
+            <SelectValue placeholder={t("admin.orders.statusLabel")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
+            <SelectItem value="all">{t("admin.orders.allStatus")}</SelectItem>
             {STATUS_OPTIONS.map((opt) => (
               <SelectItem key={opt.value} value={opt.value}>
                 {opt.label}
@@ -133,7 +135,7 @@ export function OrdersToolbar({
             onClick={handleClear}
             className="text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
-            Clear filters
+            {t("admin.orders.clearFilters")}
           </button>
         )}
       </div>

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ProductForm } from "./product-form"
+import { useTranslations } from "@/hooks/use-translations"
 
 interface AddProductSheetProps {
   open: boolean
@@ -16,6 +17,7 @@ interface AddProductSheetProps {
 }
 
 export function AddProductSheet({ open, onOpenChange }: AddProductSheetProps) {
+  const { t } = useTranslations()
   const handleSuccess = () => {
     onOpenChange(false)
   }
@@ -27,9 +29,9 @@ export function AddProductSheet({ open, onOpenChange }: AddProductSheetProps) {
         className="w-full sm:max-w-xl lg:max-w-2xl p-0 gap-0"
       >
         <SheetHeader className="border-b border-border px-6 py-4">
-          <SheetTitle>Add Product</SheetTitle>
+          <SheetTitle>{t("admin.products.addProduct")}</SheetTitle>
           <SheetDescription>
-            Fill in the details to create a new product.
+            {t("admin.products.addDescription")}
           </SheetDescription>
         </SheetHeader>
 

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
+import { useTranslations } from "@/hooks/use-translations"
 
 const containerVariants = {
   hidden: {},
@@ -37,6 +38,7 @@ const itemVariants = {
 export function AdminLoginForm() {
   const router = useRouter()
   const login = useAuthStore((s) => s.login)
+  const { t } = useTranslations()
   const [showPassword, setShowPassword] = useState(false)
   const [isPending, setIsPending] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -64,16 +66,16 @@ export function AdminLoginForm() {
       })
       const json = await res.json()
       if (!res.ok) {
-        const errorMessage = json.error || "Login failed"
+        const errorMessage = json.error || t("admin.login.loginFailed")
         setServerError(errorMessage)
         toast.error(errorMessage)
         return
       }
       login(json.user, json.token)
-      toast.success("Welcome to Admin Dashboard!")
+      toast.success(t("admin.login.welcome"))
       router.push("/admin")
     } catch {
-      const errorMessage = "Something went wrong. Please try again."
+      const errorMessage = t("admin.login.error")
       setServerError(errorMessage)
       toast.error(errorMessage)
     } finally {
@@ -92,14 +94,14 @@ export function AdminLoginForm() {
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border bg-muted px-4 py-1.5">
           <ShieldCheck className="h-4 w-4 text-muted-foreground" />
           <span className="text-xs font-semibold tracking-wider text-muted-foreground">
-            Admin
+            {t("admin.login.badge")}
           </span>
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Admin Sign In
+          {t("admin.login.title")}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Sign in to access the admin dashboard.
+          {t("admin.login.subtitle")}
         </p>
       </motion.div>
 
@@ -108,13 +110,13 @@ export function AdminLoginForm() {
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("admin.login.email")}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@example.com"
+                    placeholder={t("admin.login.emailPlaceholder")}
                     className="h-11 pl-10"
                     {...register("email", {
                       onChange: () => {
@@ -130,13 +132,13 @@ export function AdminLoginForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("admin.login.password")}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
+                    placeholder={t("admin.login.passwordPlaceholder")}
                     className="h-11 pl-10 pr-10"
                     {...register("password", {
                       onChange: () => {
@@ -175,7 +177,7 @@ export function AdminLoginForm() {
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <>
-                    Sign In
+                    {t("admin.login.signIn")}
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -186,12 +188,12 @@ export function AdminLoginForm() {
       </motion.div>
 
       <motion.div variants={itemVariants} className="mt-6 text-center text-sm">
-        <span className="text-muted-foreground">{`Don't have an admin account?`} </span>
+        <span className="text-muted-foreground">{t("admin.login.noAccount")} </span>
         <Link
           href="/admin/register"
           className="font-medium text-foreground underline-offset-4 hover:underline"
         >
-          Create one
+          {t("admin.login.createOne")}
         </Link>
       </motion.div>
     </motion.div>

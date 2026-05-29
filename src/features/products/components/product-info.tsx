@@ -188,7 +188,7 @@ export function ProductInfo({ product, className }: ProductInfoProps) {
       id: `${product.id}-${selectedColor}-${selectedSize}`,
       name: product.name,
       price: product.price,
-      image: product.images[0] ?? "/placeholder-helmet.svg",
+      image: (product.images?.[0]) ?? "/placeholder-helmet.svg",
       slug: product.slug,
       variant: `${selectedColor ? `${product.colors.find((c) => c.hex === selectedColor)?.name} / ` : ""}${selectedSize}`,
     })

@@ -6,9 +6,11 @@ import { OrdersToolbar } from "./orders-toolbar"
 import { OrdersTable } from "./orders-table"
 import { OrderDetailsDrawer } from "./order-details-drawer"
 import { useAdminOrdersStore } from "../stores/admin-orders-store"
+import { useTranslations } from "@/hooks/use-translations"
 import { STATUS_CONFIG, type AdminOrder, type OrderStatus } from "../types"
 
 export function OrdersPage() {
+  const { t } = useTranslations()
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState<OrderStatus | null>(null)
   const [dateFrom, setDateFrom] = useState("")
@@ -46,7 +48,7 @@ export function OrdersPage() {
       const updated = allOrders.find((o) => o.id === orderId)
       setSelectedOrder(updated ?? null)
       toast.success(
-        `Order updated to ${STATUS_CONFIG[newStatus].label}`,
+        t("admin.orders.statusUpdated", { status: STATUS_CONFIG[newStatus].label }),
       )
     },
     [updateOrderStatus, allOrders],
@@ -55,9 +57,9 @@ export function OrdersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold tracking-tight">Orders</h2>
+        <h2 className="text-lg font-semibold tracking-tight">{t("admin.orders.title")}</h2>
         <p className="text-sm text-muted-foreground">
-          Manage and track customer orders.
+          {t("admin.orders.description")}
         </p>
       </div>
 

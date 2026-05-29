@@ -11,7 +11,7 @@ interface ProductRaw {
   images: string[]
   price: number
   original_price?: number
-  discount?: number
+  discount_percent?: number
   rating: number
   review_count: number
   category: string
@@ -19,7 +19,7 @@ interface ProductRaw {
   in_stock: boolean
   stock_count: number
   sku: string
-  featured?: boolean
+  is_featured?: boolean
   colors: { name: string; hex: string }[]
   sizes: { label: string; in_stock: boolean }[]
   specifications: { label: string; value: string }[]
@@ -58,6 +58,44 @@ export async function GET(
     return Response.json({ error: "Product not found" }, { status: 404 })
   }
 
+  // Fetch product images from the product_images table
+  const { data: productImages } = await supabase
+    .from("product_images")
+    .select("url")
+    .eq("product_id", (product as ProductRaw).id)
+    .order("sort_order", { ascending: true })
+
+  // Build images array: use main image as first, then append product_images
+  const rawProduct = product as ProductRaw
+  const images: string[] = []
+  if (rawProduct.image) images.push(rawProduct.image)
+  if (productImages) {
+    for (const img of productImages) {
+      if (!images.includes(img.url)) {
+        images.push(img.url)
+      }
+    }
+  }
+
+  // Build the transformed product object
+  const transformedProduct = {
+    ...rawProduct,
+    images,
+    brand: rawProduct.brand || "",
+    categorySlug: rawProduct.category_slug || "",
+    category: "", // No category field in products table directly
+    inStock: rawProduct.in_stock ?? rawProduct.stock_count > 0,
+    reviewCount: rawProduct.review_count ?? 0,
+    originalPrice: rawProduct.original_price ?? undefined,
+    discount: rawProduct.discount_percent ?? undefined,
+    relatedIds: rawProduct.related_ids ?? [],
+    reviews: rawProduct.reviews ?? [],
+    colors: rawProduct.colors ?? [],
+    sizes: rawProduct.sizes ?? [],
+    specifications: rawProduct.specifications ?? [],
+    featured: rawProduct.is_featured ?? false,
+  }
+
   // Fetch related products
   const relatedIds = (product as ProductRaw).related_ids || []
   let related: RelatedProduct[] = []
@@ -85,5 +123,5 @@ export async function GET(
     }
   }
 
-  return Response.json({ product, related })
+  return Response.json({ product: transformedProduct, related })
 }

@@ -38,14 +38,14 @@ export function AdminOverview() {
     {
       title: t("admin.overview.totalRevenue"),
       value: `$${(stats?.totalRevenue ?? 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-      change: `${stats?.revenueChange ?? 0}% vs last month`,
+      change: `${stats?.revenueChange ?? 0}% ${t("admin.statsCard.vsLastMonth")}`,
       trend: (stats?.revenueChange ?? 0) >= 0 ? "up" as const : "down" as const,
       icon: DollarSign,
     },
     {
       title: t("admin.overview.orders"),
       value: String(stats?.totalOrders ?? 0),
-      change: `${stats?.ordersChange ?? 0} vs last month`,
+      change: `${stats?.ordersChange ?? 0} ${t("admin.statsCard.vsLastMonth")}`,
       trend: (stats?.ordersChange ?? 0) >= 0 ? "up" as const : "down" as const,
       icon: ShoppingCart,
     },
@@ -59,7 +59,7 @@ export function AdminOverview() {
     {
       title: t("admin.overview.lowStock"),
       value: String(stats?.lowStockProducts?.length ?? 0),
-      change: "items need replenishment",
+      change: t("admin.lowStock.description"),
       trend: (stats?.lowStockProducts?.length ?? 0) > 5 ? "down" as const : "up" as const,
       icon: TrendingUp,
     },

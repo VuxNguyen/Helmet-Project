@@ -11,12 +11,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { FormSection } from "@/components/common/form-section"
 import { profileSchema } from "../lib/settings-schema"
 import { useAdminSettingsStore } from "../stores/admin-settings-store"
+import { useTranslations } from "@/hooks/use-translations"
 import type { ProfileFormValues } from "../types"
 
 export function ProfileTab() {
   const [submitting, setSubmitting] = useState(false)
   const settings = useAdminSettingsStore((s) => s.settings)
   const updateSettings = useAdminSettingsStore((s) => s.updateSettings)
+  const { t } = useTranslations()
 
   const {
     register,
@@ -37,7 +39,7 @@ export function ProfileTab() {
       setSubmitting(true)
       await new Promise((r) => setTimeout(r, 800))
       updateSettings(data)
-      toast.success("Profile updated successfully.")
+      toast.success(t("admin.settings.profile.saved"))
       setSubmitting(false)
     },
     [updateSettings],
@@ -45,26 +47,26 @@ export function ProfileTab() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <FormSection title="Profile" description="Your personal information.">
+      <FormSection title={t("admin.settings.profile.title")} description={t("admin.settings.profile.description")}>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div className="space-y-1.5 sm:col-span-2">
-            <label className="text-sm font-medium">Avatar</label>
+            <label className="text-sm font-medium">{t("admin.settings.profile.avatar")}</label>
             <div className="flex items-center gap-4">
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted text-lg font-semibold text-muted-foreground">
                 A
               </div>
               <Button type="button" variant="outline" size="sm">
-                Change Photo
+                {t("admin.settings.profile.changePhoto")}
               </Button>
             </div>
           </div>
 
           <div className="space-y-1.5">
             <label className="text-sm font-medium">
-              Name <span className="ml-0.5 text-destructive">*</span>
+              {t("admin.settings.profile.name")} <span className="ml-0.5 text-destructive">*</span>
             </label>
             <Input
-              placeholder="Your name"
+              placeholder={t("admin.settings.profile.namePlaceholder")}
               {...register("name")}
               aria-invalid={!!errors.name}
             />
@@ -75,10 +77,10 @@ export function ProfileTab() {
 
           <div className="space-y-1.5">
             <label className="text-sm font-medium">
-              Email <span className="ml-0.5 text-destructive">*</span>
+              {t("admin.settings.profile.email")} <span className="ml-0.5 text-destructive">*</span>
             </label>
             <Input
-              placeholder="your@email.com"
+              placeholder={t("admin.settings.profile.emailPlaceholder")}
               {...register("email")}
               aria-invalid={!!errors.email}
             />
@@ -89,10 +91,10 @@ export function ProfileTab() {
 
           <div className="space-y-1.5">
             <label className="text-sm font-medium">
-              Phone <span className="ml-0.5 text-destructive">*</span>
+              {t("admin.settings.profile.phone")} <span className="ml-0.5 text-destructive">*</span>
             </label>
             <Input
-              placeholder="+1 (555) 000-0000"
+              placeholder={t("admin.settings.profile.phonePlaceholder")}
               {...register("phone")}
               aria-invalid={!!errors.phone}
             />
@@ -102,10 +104,10 @@ export function ProfileTab() {
           </div>
 
           <div className="space-y-1.5 sm:col-span-2">
-            <label className="text-sm font-medium">Bio</label>
+            <label className="text-sm font-medium">{t("admin.settings.profile.bio")}</label>
             <Textarea
               rows={3}
-              placeholder="Tell us about yourself..."
+              placeholder={t("admin.settings.profile.bioPlaceholder")}
               {...register("bio")}
               aria-invalid={!!errors.bio}
             />
@@ -123,7 +125,7 @@ export function ProfileTab() {
           ) : (
             <Save className="h-4 w-4" />
           )}
-          Save Changes
+          {t("admin.settings.profile.saveChanges")}
         </Button>
       </div>
     </form>

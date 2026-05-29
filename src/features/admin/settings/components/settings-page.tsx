@@ -11,22 +11,25 @@ import { StoreTab } from "./store-tab"
 import { NotificationsTab } from "./notifications-tab"
 import { AppearanceTab } from "./appearance-tab"
 import { SecurityTab } from "./security-tab"
-
-const tabs = [
-  { value: "profile", label: "Profile" },
-  { value: "store", label: "Store" },
-  { value: "notifications", label: "Notifications" },
-  { value: "appearance", label: "Appearance" },
-  { value: "security", label: "Security" },
-] as const
+import { useTranslations } from "@/hooks/use-translations"
 
 export function SettingsPage() {
+  const { t } = useTranslations()
+
+  const tabs = [
+    { value: "profile", label: t("admin.settings.tabs.profile") },
+    { value: "store", label: t("admin.settings.tabs.store") },
+    { value: "notifications", label: t("admin.settings.tabs.notifications") },
+    { value: "appearance", label: t("admin.settings.tabs.appearance") },
+    { value: "security", label: t("admin.settings.tabs.security") },
+  ] as const
+
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold tracking-tight">Settings</h2>
+        <h2 className="text-lg font-semibold tracking-tight">{t("admin.settings.title")}</h2>
         <p className="text-sm text-muted-foreground">
-          Manage your account and store preferences.
+          {t("admin.settings.description")}
         </p>
       </div>
 

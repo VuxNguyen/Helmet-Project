@@ -17,25 +17,14 @@ import {
 import { FormSection } from "@/components/common/form-section"
 import { appearanceSchema } from "../lib/settings-schema"
 import { useAdminSettingsStore } from "../stores/admin-settings-store"
+import { useTranslations } from "@/hooks/use-translations"
 import { THEME_OPTIONS, SIDEBAR_OPTIONS, type AppearanceFormValues } from "../types"
-
-const APPEARANCE_OPTIONS = [
-  {
-    key: "reducedMotion" as const,
-    label: "Reduced Motion",
-    description: "Minimize animations across the dashboard.",
-  },
-  {
-    key: "compactMode" as const,
-    label: "Compact Mode",
-    description: "Use tighter spacing for dense information display.",
-  },
-]
 
 export function AppearanceTab() {
   const [submitting, setSubmitting] = useState(false)
   const settings = useAdminSettingsStore((s) => s.settings)
   const updateSettings = useAdminSettingsStore((s) => s.updateSettings)
+  const { t } = useTranslations()
 
   const {
     handleSubmit,
@@ -62,7 +51,7 @@ export function AppearanceTab() {
         reducedMotion: data.reducedMotion,
         compactMode: data.compactMode,
       })
-      toast.success("Appearance settings updated.")
+      toast.success(t("admin.settings.appearance.saved"))
       setSubmitting(false)
     },
     [updateSettings],
@@ -71,12 +60,12 @@ export function AppearanceTab() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <FormSection
-        title="Theme"
-        description="Customize the dashboard appearance."
+        title={t("admin.settings.appearance.title")}
+        description={t("admin.settings.appearance.description")}
       >
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label className="text-sm font-medium">Theme Mode</label>
+            <label className="text-sm font-medium">{t("admin.settings.appearance.theme")}</label>
             <Select
               value={watch("theme")}
               onValueChange={(v) => setValue("theme", v as "dark" | "light" | "system")}
@@ -120,7 +109,10 @@ export function AppearanceTab() {
         description="Fine-tune the dashboard experience."
       >
         <div className="space-y-3">
-          {APPEARANCE_OPTIONS.map((opt) => (
+          {[
+            { key: "reducedMotion" as const, label: "Reduced Motion", description: "Minimize animations across the dashboard." },
+            { key: "compactMode" as const, label: "Compact Mode", description: "Use tighter spacing for dense information display." },
+          ].map((opt) => (
             <label
               key={opt.key}
               className="flex items-start gap-3 rounded-lg border border-border bg-muted/30 p-3 transition-colors hover:bg-muted/60 cursor-pointer"
@@ -148,7 +140,7 @@ export function AppearanceTab() {
           ) : (
             <Save className="h-4 w-4" />
           )}
-          Save Changes
+          {t("admin.settings.profile.saveChanges")}
         </Button>
       </div>
     </form>

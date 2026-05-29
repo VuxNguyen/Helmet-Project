@@ -6,9 +6,11 @@ import { CustomersTable } from "./customers-table"
 import { CustomerDetailsDrawer } from "./customer-details-drawer"
 import { useAdminCustomersStore } from "../stores/admin-customers-store"
 import { getFilteredCustomers } from "../customer-data"
+import { useTranslations } from "@/hooks/use-translations"
 import type { AdminCustomer, CustomerStatus } from "../types"
 
 export function CustomersPage() {
+  const { t } = useTranslations()
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState<CustomerStatus | null>(null)
   const [minSpent, setMinSpent] = useState("")
@@ -39,9 +41,9 @@ export function CustomersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold tracking-tight">Customers</h2>
+        <h2 className="text-lg font-semibold tracking-tight">{t("admin.customers.title")}</h2>
         <p className="text-sm text-muted-foreground">
-          View and manage your customer base.
+          {t("admin.customers.description")}
         </p>
       </div>
 

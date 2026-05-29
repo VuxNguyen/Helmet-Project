@@ -24,6 +24,7 @@ import {
 } from "../lib/product-form-schema"
 import { CATEGORY_OPTIONS, BRAND_OPTIONS, type AdminProduct, type ProductStatus } from "../types"
 import { useAdminProductsStore } from "../stores/admin-products-store"
+import { useTranslations } from "@/hooks/use-translations"
 
 interface ProductFormProps {
   onSuccess?: () => void
@@ -31,6 +32,7 @@ interface ProductFormProps {
 }
 
 export function ProductForm({ onSuccess, product }: ProductFormProps) {
+  const { t } = useTranslations()
   const isEditing = !!product
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [images, setImages] = useState<ImageFile[]>([])
@@ -42,7 +44,7 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
     resolver: zodResolver(productFormSchema),
     defaultValues: {
       name: product?.name ?? "",
-      brand: product?.brand ?? "",
+      brand: product?.brand?.toLowerCase() ?? "",
       category: product?.category ?? "",
       sku: product?.sku ?? "",
       price: product?.price ?? 0,
@@ -73,7 +75,7 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
 
   async function onSubmit(data: ProductFormValues) {
     if (!isEditing && images.length === 0) {
-      setImagesError("At least one product image is required")
+      setImagesError(t("admin.products.form.imageRequired"))
       return
     }
     setIsSubmitting(true)
@@ -95,7 +97,7 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
     if (isEditing && product) {
       updateProduct(product.id, base)
     } else {
-      addProduct(base)
+      await addProduct(base)
     }
 
     setIsSubmitting(false)
@@ -106,8 +108,8 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <FormSection
-          title="Media"
-          description="Upload product images. The first image will be used as the cover."
+          title={t("admin.products.form.media")}
+          description={t("admin.products.form.mediaDesc")}
         >
           <ImageUpload
             value={images}
@@ -118,12 +120,12 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
         </FormSection>
 
         <FormSection
-          title="Basic Information"
-          description="Product name, brand, category and SKU."
+          title={t("admin.products.form.basicInfo")}
+          description={t("admin.products.form.basicInfoDesc")}
         >
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <FormField
-              label="Product Name"
+              label={t("admin.products.form.productName")}
               error={errors.name?.message}
               required
               className="sm:col-span-2"
@@ -136,7 +138,7 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
             </FormField>
 
             <FormField
-              label="Brand"
+              label={t("admin.products.form.brand")}
               error={errors.brand?.message}
               required
             >
@@ -151,16 +153,16 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
                 </SelectTrigger>
                 <SelectContent>
                   {BRAND_OPTIONS.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.label}>
-                      {opt.label}
-                    </SelectItem>
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </FormField>
 
             <FormField
-              label="Category"
+              label={t("admin.products.form.category")}
               error={errors.category?.message}
               required
             >
@@ -199,12 +201,12 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
         </FormSection>
 
         <FormSection
-          title="Pricing"
-          description="Set the product price and optional compare-at price."
+          title={t("admin.products.form.pricing")}
+          description={t("admin.products.form.pricingDesc")}
         >
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <FormField
-              label="Price"
+              label={t("admin.products.form.price")}
               error={errors.price?.message}
               required
             >
@@ -224,7 +226,7 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
               </div>
             </FormField>
 
-            <FormField label="Compare at Price">
+            <FormField label={t("admin.products.form.compareAtPrice")}>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                   $
@@ -243,12 +245,12 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
         </FormSection>
 
         <FormSection
-          title="Inventory"
-          description="Stock quantity and product status."
+          title={t("admin.products.form.inventory")}
+          description={t("admin.products.form.inventoryDesc")}
         >
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <FormField
-              label="Stock Quantity"
+              label={t("admin.products.form.stockQuantity")}
               error={errors.stock?.message}
               required
             >
@@ -262,7 +264,7 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
             </FormField>
 
             <FormField
-              label="Status"
+              label={t("admin.products.form.status")}
               error={errors.status?.message}
               required
             >
@@ -275,11 +277,11 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
                 }
               >
                 <SelectTrigger aria-invalid={!!errors.status}>
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder={t("admin.products.form.status")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="draft">{t("admin.products.draft")}</SelectItem>
+                  <SelectItem value="active">{t("admin.products.active")}</SelectItem>
                 </SelectContent>
               </Select>
             </FormField>
@@ -287,11 +289,11 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
         </FormSection>
 
         <FormSection
-          title="Description"
-          description="Detailed product description for customers."
+          title={t("admin.products.form.description")}
+          description={t("admin.products.form.descriptionDesc")}
         >
           <FormField
-            label="Description"
+            label={t("admin.products.form.description")}
             error={errors.description?.message}
             required
           >
@@ -315,9 +317,9 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
             {isSubmitting ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : isEditing ? (
-              "Save Changes"
+              t("admin.products.form.saveChanges")
             ) : (
-              "Publish Product"
+              t("admin.products.form.publishProduct")
             )}
           </Button>
         </div>

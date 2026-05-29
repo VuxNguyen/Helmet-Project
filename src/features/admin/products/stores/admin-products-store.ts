@@ -56,20 +56,46 @@ export const useAdminProductsStore = create<AdminProductsState>()((set, get) => 
     }
   },
 
-  addProduct: (product) => {
-    apiCreateProduct(product as Record<string, unknown>).catch(() => {})
-    set((state) => ({
-      items: [
-        ...state.items,
-        {
-          ...product,
-          id: `product-${Date.now()}`,
-          rating: 0,
-          reviewCount: 0,
-          createdAt: new Date().toISOString().split("T")[0],
-        },
-      ],
-    }))
+  addProduct: async (product) => {
+    try {
+      const result = await apiCreateProduct(product as Record<string, unknown>)
+      const newProduct = result.product
+      set((state) => ({
+        items: [
+          ...state.items,
+          {
+            id: newProduct.id,
+            name: newProduct.name,
+            sku: newProduct.sku,
+            brand: newProduct.brand,
+            category: newProduct.category,
+            price: newProduct.price,
+            originalPrice: newProduct.originalPrice,
+            stock: newProduct.stock,
+            status: newProduct.status as ProductStatus,
+            rating: newProduct.rating,
+            reviewCount: newProduct.reviewCount,
+            createdAt: newProduct.createdAt,
+            image: newProduct.image,
+            description: newProduct.description,
+          },
+        ],
+      }))
+    } catch {
+      // Fallback: add optimistically if API fails
+      set((state) => ({
+        items: [
+          ...state.items,
+          {
+            ...product,
+            id: `product-${Date.now()}`,
+            rating: 0,
+            reviewCount: 0,
+            createdAt: new Date().toISOString().split("T")[0],
+          },
+        ],
+      }))
+    }
   },
 
   updateProduct: (id, data) => {

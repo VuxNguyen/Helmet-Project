@@ -12,6 +12,7 @@ import {
 import { DataTable } from "@/components/common/data-table"
 import { SortHeader } from "@/components/common/sort-header"
 import { CustomerStatusBadge } from "./customer-status-badge"
+import { useTranslations } from "@/hooks/use-translations"
 import type { AdminCustomer } from "../types"
 import type { ColumnDef } from "@tanstack/react-table"
 
@@ -21,12 +22,13 @@ interface CustomersTableProps {
 }
 
 export function CustomersTable({ data, onViewDetails }: CustomersTableProps) {
+  const { t } = useTranslations()
   const columns = useMemo<ColumnDef<AdminCustomer>[]>(
     () => [
       {
         accessorKey: "name",
         header: ({ column }) => (
-          <SortHeader column={column}>Customer</SortHeader>
+           <SortHeader column={column}>{t("admin.customers.table.customer")}</SortHeader>
         ),
         cell: ({ row }) => (
           <div className="flex items-center gap-3">
@@ -47,7 +49,7 @@ export function CustomersTable({ data, onViewDetails }: CustomersTableProps) {
       {
         accessorKey: "location",
         header: ({ column }) => (
-          <SortHeader column={column}>Location</SortHeader>
+           <SortHeader column={column}>{t("admin.customers.table.location")}</SortHeader>
         ),
         meta: {
           headerClassName: "hidden md:table-cell",
@@ -62,7 +64,7 @@ export function CustomersTable({ data, onViewDetails }: CustomersTableProps) {
       {
         accessorKey: "totalOrders",
         header: ({ column }) => (
-          <SortHeader column={column}>Orders</SortHeader>
+           <SortHeader column={column}>{t("admin.customers.table.orders")}</SortHeader>
         ),
         cell: ({ row }) => (
           <span className="text-sm tabular-nums font-medium">
@@ -73,7 +75,7 @@ export function CustomersTable({ data, onViewDetails }: CustomersTableProps) {
       {
         accessorKey: "totalSpent",
         header: ({ column }) => (
-          <SortHeader column={column}>Spent</SortHeader>
+           <SortHeader column={column}>{t("admin.customers.table.spent")}</SortHeader>
         ),
         cell: ({ row }) => (
           <div className="text-sm tabular-nums">
@@ -81,7 +83,7 @@ export function CustomersTable({ data, onViewDetails }: CustomersTableProps) {
               ${row.original.totalSpent.toLocaleString("en-US", { minimumFractionDigits: 2 })}
             </span>
             <p className="text-xs text-muted-foreground">
-              ${row.original.averageOrderValue.toFixed(2)} / order
+               ${row.original.averageOrderValue.toFixed(2)} {t("admin.customers.table.perOrder")}
             </p>
           </div>
         ),
@@ -89,7 +91,7 @@ export function CustomersTable({ data, onViewDetails }: CustomersTableProps) {
       {
         accessorKey: "lastOrderDate",
         header: ({ column }) => (
-          <SortHeader column={column}>Last Order</SortHeader>
+           <SortHeader column={column}>{t("admin.customers.table.lastOrder")}</SortHeader>
         ),
         meta: {
           headerClassName: "hidden lg:table-cell",
@@ -102,7 +104,7 @@ export function CustomersTable({ data, onViewDetails }: CustomersTableProps) {
 
           return (
             <span className="text-sm text-muted-foreground">
-              {diffDays === 0 ? "Today" : diffDays === 1 ? "Yesterday" : `${diffDays} days ago`}
+               {diffDays === 0 ? t("admin.customers.table.today") : diffDays === 1 ? "Yesterday" : t("admin.customers.table.daysAgo", { count: diffDays })}
             </span>
           )
         },
@@ -110,7 +112,7 @@ export function CustomersTable({ data, onViewDetails }: CustomersTableProps) {
       {
         accessorKey: "status",
         header: ({ column }) => (
-          <SortHeader column={column}>Status</SortHeader>
+           <SortHeader column={column}>{t("admin.customers.table.status")}</SortHeader>
         ),
         cell: ({ row }) => <CustomerStatusBadge status={row.original.status} />,
       },
@@ -127,7 +129,7 @@ export function CustomersTable({ data, onViewDetails }: CustomersTableProps) {
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem onClick={() => onViewDetails(row.original)}>
                 <Eye className="h-3.5 w-3.5" />
-                View Details
+                {t("admin.customers.table.viewDetails")}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Mail className="h-3.5 w-3.5" />
@@ -149,7 +151,7 @@ export function CustomersTable({ data, onViewDetails }: CustomersTableProps) {
       data={data}
       getRowId={(row) => row.id}
       pageSize={10}
-      emptyMessage="No customers found matching your filters."
+      emptyMessage="No customers found."
     />
   )
 }

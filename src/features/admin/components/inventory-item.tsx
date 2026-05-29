@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
+import { useTranslations } from "@/hooks/use-translations"
 
 interface InventoryItemProps {
   name: string
@@ -18,40 +19,22 @@ const stockLevel = (stock: number, threshold: number) => {
   return "warning" as const
 }
 
-const levelConfig = {
-  out: {
-    label: "Out of Stock",
-    bar: "bg-destructive",
-    dot: "bg-destructive",
-    text: "text-destructive",
-    bg: "bg-destructive/10",
-  },
-  critical: {
-    label: "Critical",
-    bar: "bg-destructive",
-    dot: "bg-destructive",
-    text: "text-destructive",
-    bg: "bg-destructive/10",
-  },
-  low: {
-    label: "Low Stock",
-    bar: "bg-amber-500",
-    dot: "bg-amber-500",
-    text: "text-amber-500",
-    bg: "bg-amber-500/10",
-  },
-  warning: {
-    label: "Warning",
-    bar: "bg-amber-500/60",
-    dot: "bg-amber-500/60",
-    text: "text-amber-500/60",
-    bg: "bg-amber-500/10",
-  },
-}
-
 export function InventoryItem({ name, sku, stock, threshold }: InventoryItemProps) {
+  const { t } = useTranslations()
   const level = stockLevel(stock, threshold)
-  const config = levelConfig[level]
+  const levelLabels = {
+    out: t("admin.inventory.outOfStock"),
+    critical: t("admin.inventory.critical"),
+    low: t("admin.inventory.lowStock"),
+    warning: t("admin.inventory.warning"),
+  }
+  const levelStyles = {
+    out: { bar: "bg-destructive", dot: "bg-destructive", text: "text-destructive", bg: "bg-destructive/10" },
+    critical: { bar: "bg-destructive", dot: "bg-destructive", text: "text-destructive", bg: "bg-destructive/10" },
+    low: { bar: "bg-amber-500", dot: "bg-amber-500", text: "text-amber-500", bg: "bg-amber-500/10" },
+    warning: { bar: "bg-amber-500/60", dot: "bg-amber-500/60", text: "text-amber-500/60", bg: "bg-amber-500/10" },
+  }
+  const config = { label: levelLabels[level], ...levelStyles[level] }
   const barWidth = Math.min(100, (stock / threshold) * 100)
 
   return (

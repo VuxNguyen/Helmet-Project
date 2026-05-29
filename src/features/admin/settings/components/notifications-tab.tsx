@@ -7,70 +7,14 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { FormSection } from "@/components/common/form-section"
 import { useAdminSettingsStore } from "../stores/admin-settings-store"
+import { useTranslations } from "@/hooks/use-translations"
 import type { NotificationFormValues } from "../types"
-
-const NOTIFICATION_GROUPS = [
-  {
-    title: "Order Notifications",
-    items: [
-      {
-        key: "orderConfirmed" as const,
-        label: "Order Confirmed",
-        description: "When a customer confirms an order.",
-      },
-      {
-        key: "orderShipped" as const,
-        label: "Order Shipped",
-        description: "When an order is marked as shipped.",
-      },
-      {
-        key: "orderDelivered" as const,
-        label: "Order Delivered",
-        description: "When an order is marked as delivered.",
-      },
-    ],
-  },
-  {
-    title: "Store Notifications",
-    items: [
-      {
-        key: "lowStock" as const,
-        label: "Low Stock Alerts",
-        description: "When a product runs low on stock.",
-      },
-      {
-        key: "newCustomer" as const,
-        label: "New Customer",
-        description: "When a new customer registers.",
-      },
-      {
-        key: "reviewSubmitted" as const,
-        label: "Review Submitted",
-        description: "When a product review is submitted.",
-      },
-    ],
-  },
-  {
-    title: "Email Digest",
-    items: [
-      {
-        key: "marketingEmails" as const,
-        label: "Marketing Emails",
-        description: "Receive marketing and promotional emails.",
-      },
-      {
-        key: "weeklyReport" as const,
-        label: "Weekly Report",
-        description: "Weekly store performance summary.",
-      },
-    ],
-  },
-]
 
 export function NotificationsTab() {
   const [submitting, setSubmitting] = useState(false)
   const settings = useAdminSettingsStore((s) => s.settings)
   const updateSettings = useAdminSettingsStore((s) => s.updateSettings)
+  const { t } = useTranslations()
   const [values, setValues] = useState<NotificationFormValues>({
     orderConfirmed: settings.orderConfirmed,
     orderShipped: settings.orderShipped,
@@ -90,18 +34,42 @@ export function NotificationsTab() {
     setSubmitting(true)
     await new Promise((r) => setTimeout(r, 800))
     updateSettings(values)
-    toast.success("Notification preferences updated.")
+    toast.success(t("admin.settings.notifications.saved"))
     setSubmitting(false)
   }, [values, updateSettings])
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <FormSection
-        title="Notification Preferences"
-        description="Choose which notifications you receive."
+        title={t("admin.settings.notifications.title")}
+        description={t("admin.settings.notifications.description")}
       >
         <div className="space-y-6">
-          {NOTIFICATION_GROUPS.map((group) => (
+          {[
+            {
+              title: t("admin.settings.notifications.orderUpdates"),
+              items: [
+                { key: "orderConfirmed" as const, label: t("admin.settings.notifications.orderUpdates"), description: t("admin.settings.notifications.orderUpdatesDesc") },
+                { key: "orderShipped" as const, label: t("admin.settings.notifications.orderUpdates"), description: t("admin.settings.notifications.orderUpdatesDesc") },
+                { key: "orderDelivered" as const, label: t("admin.settings.notifications.orderUpdates"), description: t("admin.settings.notifications.orderUpdatesDesc") },
+              ],
+            },
+            {
+              title: t("admin.settings.notifications.lowStockAlerts"),
+              items: [
+                { key: "lowStock" as const, label: t("admin.settings.notifications.lowStockAlerts"), description: t("admin.settings.notifications.lowStockAlertsDesc") },
+                { key: "newCustomer" as const, label: t("admin.settings.notifications.customerReviews"), description: t("admin.settings.notifications.customerReviewsDesc") },
+                { key: "reviewSubmitted" as const, label: t("admin.settings.notifications.customerReviews"), description: t("admin.settings.notifications.customerReviewsDesc") },
+              ],
+            },
+            {
+              title: t("admin.settings.notifications.marketingEmails"),
+              items: [
+                { key: "marketingEmails" as const, label: t("admin.settings.notifications.marketingEmails"), description: t("admin.settings.notifications.marketingEmailsDesc") },
+                { key: "weeklyReport" as const, label: t("admin.settings.notifications.marketingEmails"), description: t("admin.settings.notifications.marketingEmailsDesc") },
+              ],
+            },
+          ].map((group) => (
             <div key={group.title}>
               <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {group.title}
@@ -138,7 +106,7 @@ export function NotificationsTab() {
           ) : (
             <Save className="h-4 w-4" />
           )}
-          Save Preferences
+          {t("admin.settings.notifications.saveChanges")}
         </Button>
       </div>
     </form>

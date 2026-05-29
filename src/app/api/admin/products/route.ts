@@ -87,10 +87,22 @@ export async function POST(request: Request) {
     const { count } = await supabase.from("products").select("*", { count: "exact", head: true })
     const sku = body.sku || `HELM-${String((count || 0) + 1).padStart(4, "0")}`
 
+    // Generate a unique slug from the product name
+    const baseSlug = body.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+    const slug = `${baseSlug}-${Date.now()}`
+
+    // Generate a unique ID (the migration-fix schema requires id to be provided)
+    const id = `prod-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`
+
     const { data: newProduct, error } = await supabase
       .from("products")
       .insert({
+        id,
         name: body.name,
+        slug,
         sku,
         brand: body.brand,
         category_slug: body.category,
@@ -105,10 +117,30 @@ export async function POST(request: Request) {
       .single()
 
     if (error) {
-      return Response.json({ error: "Failed to create product" }, { status: 500 })
+      return Response.json({ error: "Failed to create product", details: error.message }, { status: 500 })
     }
 
-    return Response.json({ product: newProduct }, { status: 201 })
+    // Map snake_case DB columns to camelCase as expected by frontend
+    // Note: The deployed DB (migration-fix) doesn't have a status column,
+    // so we infer it from stock_count, matching the GET route behavior.
+    const product: AdminProduct = {
+      id: newProduct.id,
+      name: newProduct.name,
+      sku: newProduct.sku || "",
+      brand: newProduct.brand,
+      category: newProduct.category_slug || newProduct.category || "",
+      price: newProduct.price,
+      originalPrice: newProduct.original_price || undefined,
+      stock: newProduct.stock_count || 0,
+      status: ((newProduct.stock_count || 0) === 0 ? "archived" : "active") as "active" | "draft" | "archived",
+      rating: newProduct.rating || 0,
+      reviewCount: newProduct.review_count || 0,
+      createdAt: newProduct.created_at || new Date().toISOString(),
+      image: newProduct.image || "/placeholder-helmet.svg",
+      description: newProduct.description || "",
+    }
+
+    return Response.json({ product }, { status: 201 })
   } catch {
     return Response.json({ error: "Invalid request body" }, { status: 400 })
   }

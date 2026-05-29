@@ -49,3 +49,6 @@ CLAUDE.md
 
 # project docs
 docs/
+
+# supabase migration files
+supabase/

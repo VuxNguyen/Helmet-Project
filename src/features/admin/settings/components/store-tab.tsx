@@ -18,6 +18,7 @@ import {
 import { FormSection } from "@/components/common/form-section"
 import { storeSchema } from "../lib/settings-schema"
 import { useAdminSettingsStore } from "../stores/admin-settings-store"
+import { useTranslations } from "@/hooks/use-translations"
 import {
   CURRENCY_OPTIONS,
   LANGUAGE_OPTIONS,
@@ -29,6 +30,7 @@ export function StoreTab() {
   const [submitting, setSubmitting] = useState(false)
   const settings = useAdminSettingsStore((s) => s.settings)
   const updateSettings = useAdminSettingsStore((s) => s.updateSettings)
+  const { t } = useTranslations()
 
   const {
     register,
@@ -53,7 +55,7 @@ export function StoreTab() {
       setSubmitting(true)
       await new Promise((r) => setTimeout(r, 800))
       updateSettings(data)
-      toast.success("Store settings updated successfully.")
+      toast.success(t("admin.settings.store.saved"))
       setSubmitting(false)
     },
     [updateSettings],
@@ -62,16 +64,16 @@ export function StoreTab() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <FormSection
-        title="Store Details"
-        description="Your store name and public information."
+        title={t("admin.settings.store.title")}
+        description={t("admin.settings.store.description")}
       >
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div className="space-y-1.5">
             <label className="text-sm font-medium">
-              Store Name <span className="ml-0.5 text-destructive">*</span>
+              {t("admin.settings.store.storeName")} <span className="ml-0.5 text-destructive">*</span>
             </label>
             <Input
-              placeholder="My Store"
+              placeholder={t("admin.settings.store.storeNamePlaceholder")}
               {...register("storeName")}
               aria-invalid={!!errors.storeName}
             />
@@ -84,10 +86,10 @@ export function StoreTab() {
 
           <div className="space-y-1.5">
             <label className="text-sm font-medium">
-              Store Email <span className="ml-0.5 text-destructive">*</span>
+              {t("admin.settings.store.storeEmail")} <span className="ml-0.5 text-destructive">*</span>
             </label>
             <Input
-              placeholder="store@example.com"
+              placeholder={t("admin.settings.store.storeEmailPlaceholder")}
               {...register("storeEmail")}
               aria-invalid={!!errors.storeEmail}
             />
@@ -200,7 +202,7 @@ export function StoreTab() {
           ) : (
             <Save className="h-4 w-4" />
           )}
-          Save Changes
+          {t("admin.settings.store.saveChanges")}
         </Button>
       </div>
     </form>

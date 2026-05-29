@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
+import { useTranslations } from "@/hooks/use-translations"
 
 const containerVariants = {
   hidden: {},
@@ -44,6 +45,7 @@ const itemVariants = {
 
 export function AdminRegisterForm() {
   const router = useRouter()
+  const { t } = useTranslations()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isPending, setIsPending] = useState(false)
@@ -72,13 +74,13 @@ export function AdminRegisterForm() {
       })
       const json = await res.json()
       if (!res.ok) {
-        toast.error(json.error || "Registration failed")
+        toast.error(json.error || t("admin.register.registerFailed"))
         return
       }
-      toast.success("Admin account created! Please sign in.")
+      toast.success(t("admin.register.success"))
       router.push("/admin/login")
     } catch {
-      toast.error("Something went wrong. Please try again.")
+      toast.error(t("admin.register.error"))
     } finally {
       setIsPending(false)
     }
@@ -95,14 +97,14 @@ export function AdminRegisterForm() {
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border bg-muted px-4 py-1.5">
           <ShieldCheck className="h-4 w-4 text-muted-foreground" />
           <span className="text-xs font-semibold tracking-wider text-muted-foreground">
-            Admin
+            {t("admin.register.badge")}
           </span>
         </div>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Create Admin Account
+          {t("admin.register.title")}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Register to manage the Helmet Pro store.
+          {t("admin.register.subtitle")}
         </p>
       </motion.div>
 
@@ -111,13 +113,13 @@ export function AdminRegisterForm() {
           <CardContent className="p-6 sm:p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
+                <Label htmlFor="fullName">{t("admin.register.nameLabel")}</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="fullName"
                     type="text"
-                    placeholder="Admin Name"
+                    placeholder={t("admin.register.namePlaceholder")}
                     className="h-11 pl-10"
                     {...register("fullName")}
                     aria-invalid={!!errors.fullName}
@@ -129,13 +131,13 @@ export function AdminRegisterForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("admin.register.emailLabel")}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@example.com"
+                    placeholder={t("admin.register.emailPlaceholder")}
                     className="h-11 pl-10"
                     {...register("email")}
                     aria-invalid={!!errors.email}
@@ -147,13 +149,13 @@ export function AdminRegisterForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("admin.register.passwordLabel")}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Min. 8 characters"
+                    placeholder={t("admin.register.passwordPlaceholder")}
                     className="h-11 pl-10 pr-10"
                     {...register("password")}
                     aria-invalid={!!errors.password}
@@ -177,13 +179,13 @@ export function AdminRegisterForm() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Label htmlFor="confirmPassword">{t("admin.register.confirmPasswordLabel")}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Repeat your password"
+                    placeholder={t("admin.register.confirmPasswordPlaceholder")}
                     className="h-11 pl-10 pr-10"
                     {...register("confirmPassword")}
                     aria-invalid={!!errors.confirmPassword}
@@ -217,7 +219,7 @@ export function AdminRegisterForm() {
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <>
-                    Create Account
+                    {t("admin.register.createAccount")}
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
@@ -228,12 +230,12 @@ export function AdminRegisterForm() {
       </motion.div>
 
       <motion.div variants={itemVariants} className="mt-6 text-center text-sm">
-        <span className="text-muted-foreground">Already have an admin account? </span>
+        <span className="text-muted-foreground">{t("admin.register.alreadyHaveAccount")} </span>
         <Link
           href="/admin/login"
           className="font-medium text-foreground underline-offset-4 hover:underline"
         >
-          Sign in
+          {t("admin.register.signIn")}
         </Link>
       </motion.div>
     </motion.div>
