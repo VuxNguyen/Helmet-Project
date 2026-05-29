@@ -5,6 +5,7 @@ import { CustomersToolbar } from "./customers-toolbar"
 import { CustomersTable } from "./customers-table"
 import { CustomerDetailsDrawer } from "./customer-details-drawer"
 import { useAdminCustomersStore } from "../stores/admin-customers-store"
+import { getFilteredCustomers } from "../customer-data"
 import type { AdminCustomer, CustomerStatus } from "../types"
 
 export function CustomersPage() {
@@ -13,7 +14,7 @@ export function CustomersPage() {
   const [minSpent, setMinSpent] = useState("")
   const [selectedCustomer, setSelectedCustomer] = useState<AdminCustomer | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const getFiltered = useAdminCustomersStore((s) => s.getFiltered)
+  const items = useAdminCustomersStore((s) => s.items)
   const fetchItems = useAdminCustomersStore((s) => s.fetchItems)
 
   useEffect(() => {
@@ -22,12 +23,12 @@ export function CustomersPage() {
 
   const filteredCustomers = useMemo(
     () =>
-      getFiltered({
+      getFilteredCustomers(items, {
         search,
         status: statusFilter,
         minSpent,
       }),
-    [search, statusFilter, minSpent, getFiltered],
+    [search, statusFilter, minSpent, items],
   )
 
   const handleViewDetails = useCallback((customer: AdminCustomer) => {

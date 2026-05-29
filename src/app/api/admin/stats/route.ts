@@ -11,10 +11,11 @@ export async function GET() {
     .from("products")
     .select("id, name, stock_count")
 
-  // Fetch users for customer count
+  // Fetch users for customer count (exclude admin users)
   const { count: totalCustomers } = await supabase
     .from("users")
     .select("*", { count: "exact", head: true })
+    .neq("role", "admin")
 
   const allOrders = orders || []
 
@@ -47,9 +48,22 @@ export async function GET() {
   const ordersChange = thisMonthOrders.length - prevMonthOrders.length
   const customersChange = thisMonthOrders.length > 0 ? 1 : 0
 
-  const recentOrders = allOrders
+  const rawRecentOrders = allOrders
     .sort((a: { created_at: string }, b: { created_at: string }) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5)
+
+  // Transform recentOrders: snake_case -> camelCase
+  const recentOrders = rawRecentOrders.map((o: Record<string, unknown>) => ({
+    id: o.id,
+    orderNumber: o.order_number,
+    total: o.total,
+    status: o.status,
+    createdAt: o.created_at,
+    customer: {
+      name: o.customer_name || "",
+      email: o.customer_email || "",
+    },
+  }))
 
   const lowStockProducts = (products || [])
     .filter((p: { stock_count: number }) => p.stock_count > 0 && p.stock_count <= 10)

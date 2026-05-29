@@ -4,6 +4,7 @@ import "./globals.css";
 import { SiteShell } from "@/components/layout/site-shell";
 import { LocaleProvider } from "@/components/locale-provider";
 import { Providers } from "@/components/providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -64,6 +65,7 @@ export default function RootLayout({
         <LocaleProvider />
         <Providers>
           <SiteShell>{children}</SiteShell>
+          <Toaster />
         </Providers>
       </body>
     </html>

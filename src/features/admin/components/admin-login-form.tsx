@@ -39,6 +39,7 @@ export function AdminLoginForm() {
   const login = useAuthStore((s) => s.login)
   const [showPassword, setShowPassword] = useState(false)
   const [isPending, setIsPending] = useState(false)
+  const [serverError, setServerError] = useState<string | null>(null)
 
   const {
     register,
@@ -54,6 +55,7 @@ export function AdminLoginForm() {
 
   async function onSubmit(data: LoginFormData) {
     setIsPending(true)
+    setServerError(null)
     try {
       const res = await fetch("/api/admin/auth/login", {
         method: "POST",
@@ -62,14 +64,18 @@ export function AdminLoginForm() {
       })
       const json = await res.json()
       if (!res.ok) {
-        toast.error(json.error || "Login failed")
+        const errorMessage = json.error || "Login failed"
+        setServerError(errorMessage)
+        toast.error(errorMessage)
         return
       }
       login(json.user, json.token)
       toast.success("Welcome to Admin Dashboard!")
       router.push("/admin")
     } catch {
-      toast.error("Something went wrong. Please try again.")
+      const errorMessage = "Something went wrong. Please try again."
+      setServerError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setIsPending(false)
     }
@@ -110,8 +116,12 @@ export function AdminLoginForm() {
                     type="email"
                     placeholder="admin@example.com"
                     className="h-11 pl-10"
-                    {...register("email")}
-                    aria-invalid={!!errors.email}
+                    {...register("email", {
+                      onChange: () => {
+                        if (serverError) setServerError(null)
+                      },
+                    })}
+                    aria-invalid={!!errors.email || !!serverError}
                   />
                 </div>
                 {errors.email && (
@@ -128,8 +138,12 @@ export function AdminLoginForm() {
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     className="h-11 pl-10 pr-10"
-                    {...register("password")}
-                    aria-invalid={!!errors.password}
+                    {...register("password", {
+                      onChange: () => {
+                        if (serverError) setServerError(null)
+                      },
+                    })}
+                    aria-invalid={!!errors.password || !!serverError}
                   />
                   <button
                     type="button"
@@ -146,6 +160,9 @@ export function AdminLoginForm() {
                 </div>
                 {errors.password && (
                   <p className="text-xs text-destructive">{errors.password.message}</p>
+                )}
+                {serverError && (
+                  <p className="text-xs text-destructive">{serverError}</p>
                 )}
               </div>
 

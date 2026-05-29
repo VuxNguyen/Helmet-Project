@@ -31,8 +31,29 @@ export async function GET(request: Request) {
   const total = count || 0
   const totalPages = Math.ceil(total / pageSize)
 
+  // Transform snake_case DB fields -> camelCase fields expected by frontend
+  const orders = (data || []).map((o) => ({
+    id: o.id,
+    orderNumber: o.order_number,
+    customer: {
+      name: o.customer_name || "",
+      email: o.customer_email || "",
+    },
+    items: o.items || [],
+    total: o.total,
+    subtotal: o.subtotal,
+    shipping: o.shipping ?? 0,
+    tax: o.tax ?? 0,
+    status: o.status,
+    shippingAddress: o.shipping_address || {},
+    paymentMethod: o.payment_method || "",
+    notes: o.notes || "",
+    createdAt: o.created_at,
+    updatedAt: o.updated_at,
+  }))
+
   return Response.json({
-    orders: data || [],
+    orders,
     pagination: { page, pageSize, total, totalPages },
   })
 }
