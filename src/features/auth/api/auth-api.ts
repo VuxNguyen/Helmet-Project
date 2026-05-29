@@ -21,8 +21,21 @@ export interface AuthResponse {
   token: string
 }
 
-export function loginApi(data: LoginRequest) {
-  return axios.post<AuthResponse>("/api/auth/login", data).then((r) => r.data)
+export async function loginApi(data: LoginRequest) {
+  try {
+    const response = await axios.post<AuthResponse>("/api/auth/login", data)
+    return response.data
+  } catch (error: unknown) {
+    const axiosErr = error as {
+      response?: { data?: { error?: string }; status?: number }
+      message?: string
+    }
+    const message =
+      axiosErr.response?.data?.error ??
+      axiosErr.message ??
+      "Đã xảy ra lỗi, vui lòng thử lại"
+    throw new Error(message)
+  }
 }
 
 export function registerApi(data: RegisterRequest) {

@@ -42,6 +42,7 @@ export function LoginForm() {
   const router = useRouter()
   const loginMutation = useLogin()
   const [showPassword, setShowPassword] = useState(false)
+  const [serverError, setServerError] = useState<string | null>(null)
 
   const {
     register,
@@ -56,9 +57,13 @@ export function LoginForm() {
   })
 
   async function onSubmit(data: LoginFormData) {
+    setServerError(null)
     loginMutation.mutate(data, {
-      onSuccess: () => router.push("/account"),
-      onError: (err: Error) => toast.error(err.message),
+      onSuccess: () => router.push("/"),
+      onError: (err: Error) => {
+        setServerError(err.message)
+        toast.error(err.message)
+      },
     })
   }
 
@@ -126,8 +131,12 @@ export function LoginForm() {
                     type={showPassword ? "text" : "password"}
                     placeholder={t("auth.login.passwordPlaceholder")}
                     className="h-11 pl-10 pr-10"
-                    {...register("password")}
-                    aria-invalid={!!errors.password}
+                    {...register("password", {
+                      onChange: () => {
+                        if (serverError) setServerError(null)
+                      },
+                    })}
+                    aria-invalid={!!errors.password || !!serverError}
                   />
                   <button
                     type="button"
@@ -144,6 +153,9 @@ export function LoginForm() {
                 </div>
                 {errors.password && (
                   <p className="text-xs text-destructive">{t(errors.password.message ?? "")}</p>
+                )}
+                {serverError && (
+                  <p className="text-xs text-destructive">{serverError}</p>
                 )}
               </div>
 
@@ -209,7 +221,7 @@ export function LoginForm() {
               onClick={() => {
                 loginMutation.mutate(
                   { email: "alice@example.com", password: "password123" },
-                  { onSuccess: () => router.push("/account") },
+                  { onSuccess: () => router.push("/") },
                 )
               }}
             >
