@@ -1,14 +1,4 @@
-import { getAll } from "@/lib/json-db"
-
-interface User {
-  id: string
-  name: string
-  email: string
-  password: string
-  phone?: string
-  dob?: string
-  createdAt: string
-}
+import { supabase } from "@/lib/supabase"
 
 export async function POST(request: Request) {
   try {
@@ -19,10 +9,13 @@ export async function POST(request: Request) {
       return Response.json({ error: "Email and password are required" }, { status: 400 })
     }
 
-    const users = getAll<User>("users.json")
-    const user = users.find((u) => u.email === email && u.password === password)
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", email)
+      .single()
 
-    if (!user) {
+    if (error || !user || user.password !== password) {
       return Response.json({ error: "Invalid credentials" }, { status: 401 })
     }
 

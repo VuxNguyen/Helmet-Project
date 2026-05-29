@@ -1,66 +1,60 @@
-import { getAll, create } from "@/lib/json-db"
-
-interface Address {
-  id: string
-  userId: string
-  name: string
-  phone: string
-  street: string
-  apartment?: string
-  city: string
-  state: string
-  zipCode: string
-  country: string
-  isDefault: boolean
-  type: "home" | "office"
-}
+import { supabase } from "@/lib/supabase"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const userId = searchParams.get("userId")
 
-  let addresses = getAll<Address>("addresses.json")
+  let query = supabase.from("addresses").select("*")
+
   if (userId) {
-    addresses = addresses.filter((a) => a.userId === userId)
+    query = query.eq("user_id", userId)
   }
 
-  return Response.json({ addresses })
+  const { data, error } = await query
+
+  if (error) {
+    return Response.json({ error: "Failed to fetch addresses" }, { status: 500 })
+  }
+
+  return Response.json({ addresses: data || [] })
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { userId, name, phone, street, city, state, zipCode, country, isDefault, type } = body
+    const { userId, fullName, phone, address, city, state, zipCode, isDefault } = body
 
-    if (!name || !street || !city || !state || !zipCode) {
+    if (!fullName || !address || !city || !state || !zipCode) {
       return Response.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    const newAddress: Address = {
-      id: `addr-${Date.now()}`,
-      userId: userId || "guest",
-      name,
-      phone: phone || "",
-      street,
-      apartment: body.apartment,
-      city,
-      state,
-      zipCode,
-      country: country || "US",
-      isDefault: isDefault ?? false,
-      type: type || "home",
+    // If setting as default, unset other defaults
+    if (isDefault) {
+      await supabase
+        .from("addresses")
+        .update({ is_default: false })
+        .eq("user_id", userId || "guest")
     }
 
-    if (newAddress.isDefault) {
-      const addresses = getAll<Address>("addresses.json")
-      addresses.forEach((a) => {
-        if (a.userId === newAddress.userId) {
-          import("@/lib/json-db").then(({ update }) => update<Address>("addresses.json", a.id, { isDefault: false }))
-        }
+    const { data: newAddress, error } = await supabase
+      .from("addresses")
+      .insert({
+        user_id: userId || "guest",
+        full_name: fullName,
+        phone: phone || "",
+        address,
+        city,
+        state,
+        zip_code: zipCode,
+        is_default: isDefault ?? false,
       })
+      .select()
+      .single()
+
+    if (error) {
+      return Response.json({ error: "Failed to create address" }, { status: 500 })
     }
 
-    create("addresses.json", newAddress)
     return Response.json({ address: newAddress }, { status: 201 })
   } catch {
     return Response.json({ error: "Invalid request body" }, { status: 400 })

@@ -1,4 +1,4 @@
-import { getAll } from "@/lib/json-db"
+import { supabase } from "@/lib/supabase"
 
 interface ProductRaw {
   id: string
@@ -6,22 +6,22 @@ interface ProductRaw {
   brand: string
   slug: string
   description: string
-  shortDescription: string
+  short_description: string
   image: string
   images: string[]
   price: number
-  originalPrice?: number
+  original_price?: number
   discount?: number
   rating: number
-  reviewCount: number
+  review_count: number
   category: string
-  categorySlug: string
-  inStock: boolean
-  stockCount: number
+  category_slug: string
+  in_stock: boolean
+  stock_count: number
   sku: string
   featured?: boolean
   colors: { name: string; hex: string }[]
-  sizes: { label: string; inStock: boolean }[]
+  sizes: { label: string; in_stock: boolean }[]
 }
 
 interface Product {
@@ -53,16 +53,16 @@ function mapProduct(p: ProductRaw): Product {
     description: p.description,
     image: p.image,
     price: p.price,
-    originalPrice: p.originalPrice,
+    originalPrice: p.original_price,
     discount: p.discount,
     rating: p.rating,
-    reviewCount: p.reviewCount,
-    category: p.categorySlug,
-    categorySlug: p.categorySlug,
-    inStock: p.inStock,
+    reviewCount: p.review_count,
+    category: p.category_slug,
+    categorySlug: p.category_slug,
+    inStock: p.in_stock,
     featured: p.featured,
-    colors: p.colors.map((c) => c.hex),
-    sizes: p.sizes.map((s) => s.label),
+    colors: p.colors?.map((c) => c.hex),
+    sizes: p.sizes?.map((s) => s.label),
   }
 }
 
@@ -79,62 +79,78 @@ export async function GET(request: Request) {
   const page = Number.parseInt(searchParams.get("page") || "1")
   const pageSize = Number.parseInt(searchParams.get("pageSize") || "12")
 
-  let products = getAll<ProductRaw>("products.json").map(mapProduct)
+  let query = supabase.from("products").select("*", { count: "exact" })
 
   if (search) {
-    products = products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(search) ||
-        p.brand.toLowerCase().includes(search) ||
-        p.description.toLowerCase().includes(search),
-    )
+    query = query.or(`name.ilike.%${search}%,brand.ilike.%${search}%,description.ilike.%${search}%`)
   }
   if (category) {
-    products = products.filter((p) => p.categorySlug === category)
+    query = query.eq("category_slug", category)
   }
   if (brand) {
-    products = products.filter((p) => p.brand.toLowerCase() === brand)
+    query = query.ilike("brand", brand)
   }
   if (minPrice) {
-    products = products.filter((p) => p.price >= Number(minPrice))
+    query = query.gte("price", Number(minPrice))
   }
   if (maxPrice) {
-    products = products.filter((p) => p.price <= Number(maxPrice))
+    query = query.lte("price", Number(maxPrice))
   }
   if (minRating) {
-    products = products.filter((p) => p.rating >= Number(minRating))
+    query = query.gte("rating", Number(minRating))
   }
   if (inStock === "true") {
-    products = products.filter((p) => p.inStock)
+    query = query.eq("in_stock", true)
   }
 
+  // Apply sorting
   switch (sortBy) {
     case "name-asc":
-      products.sort((a, b) => a.name.localeCompare(b.name))
+      query = query.order("name", { ascending: true })
       break
     case "name-desc":
-      products.sort((a, b) => b.name.localeCompare(a.name))
+      query = query.order("name", { ascending: false })
       break
     case "price-asc":
-      products.sort((a, b) => a.price - b.price)
+      query = query.order("price", { ascending: true })
       break
     case "price-desc":
-      products.sort((a, b) => b.price - a.price)
+      query = query.order("price", { ascending: false })
       break
     default:
-      products.sort((a, b) => b.rating * b.reviewCount - a.rating * a.reviewCount)
+      // popularity = rating * review_count (sort by rating desc, then review_count desc)
+      query = query.order("rating", { ascending: false }).order("review_count", { ascending: false })
   }
 
-  const total = products.length
-  const totalPages = Math.ceil(total / pageSize)
-  const paginatedProducts = products.slice((page - 1) * pageSize, page * pageSize)
+  // Pagination
+  const from = (page - 1) * pageSize
+  const to = from + pageSize - 1
+  query = query.range(from, to)
 
-  const allProducts = getAll<ProductRaw>("products.json")
-  const availableBrands = Array.from(new Set(allProducts.map((p) => p.brand))).sort()
-  const availableCategories = Array.from(new Set(allProducts.map((p) => p.categorySlug))).sort()
+  const { data, error, count } = await query
+
+  if (error) {
+    return Response.json({ error: "Failed to fetch products" }, { status: 500 })
+  }
+
+  const products = (data as ProductRaw[] || []).map(mapProduct)
+  const total = count || 0
+  const totalPages = Math.ceil(total / pageSize)
+
+  // Get available brands and categories from all products
+  const { data: allProducts } = await supabase
+    .from("products")
+    .select("brand, category_slug")
+
+  const availableBrands = allProducts
+    ? Array.from(new Set(allProducts.map((p: { brand: string }) => p.brand))).sort()
+    : []
+  const availableCategories = allProducts
+    ? Array.from(new Set(allProducts.map((p: { category_slug: string }) => p.category_slug))).sort()
+    : []
 
   return Response.json({
-    products: paginatedProducts,
+    products,
     pagination: { page, pageSize, total, totalPages },
     availableBrands,
     availableCategories,

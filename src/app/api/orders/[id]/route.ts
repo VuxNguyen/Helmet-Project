@@ -1,31 +1,18 @@
-import { getById } from "@/lib/json-db"
-
-interface Order {
-  id: string
-  orderNumber: string
-  userId: string
-  customer: { name: string; email: string }
-  items: { id: string; name: string; sku: string; quantity: number; price: number; image: string }[]
-  total: number
-  subtotal: number
-  shipping: number
-  tax: number
-  status: string
-  shippingAddress: Record<string, string>
-  paymentMethod: string
-  notes?: string
-  createdAt: string
-  updatedAt: string
-}
+import { supabase } from "@/lib/supabase"
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params
-  const order = getById<Order>("orders.json", id)
 
-  if (!order) {
+  const { data: order, error } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle()
+
+  if (error || !order) {
     return Response.json({ error: "Order not found" }, { status: 404 })
   }
 

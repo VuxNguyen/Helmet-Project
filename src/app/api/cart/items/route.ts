@@ -1,4 +1,4 @@
-import { getAll, create } from "@/lib/json-db"
+import { supabase } from "@/lib/supabase"
 
 interface CartItem {
   id: string
@@ -19,17 +19,34 @@ export async function POST(request: Request) {
       return Response.json({ error: "productId and quantity are required" }, { status: 400 })
     }
 
-    const item: CartItem = {
-      id: productId,
-      name: body.name || "Product",
-      price: body.price || 0,
-      image: body.image || "/placeholder-helmet.svg",
-      quantity,
-      variant,
-    }
-    create("cart.json", item)
+    const sessionId = "guest" // In production, get from auth or session
 
-    const items = getAll<CartItem>("cart.json")
+    const { error: insertError } = await supabase
+      .from("cart_items")
+      .insert({
+        session_id: sessionId,
+        product_id: productId,
+        name: body.name || "Product",
+        price: body.price || 0,
+        image: body.image || "/placeholder-helmet.svg",
+        quantity,
+        variant,
+      })
+
+    if (insertError) {
+      return Response.json({ error: "Failed to add item to cart" }, { status: 500 })
+    }
+
+    const { data, error } = await supabase
+      .from("cart_items")
+      .select("*")
+      .eq("session_id", sessionId)
+
+    if (error) {
+      return Response.json({ error: "Failed to fetch cart" }, { status: 500 })
+    }
+
+    const items = (data as CartItem[]) || []
     const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
     return Response.json({ items, total })
   } catch {

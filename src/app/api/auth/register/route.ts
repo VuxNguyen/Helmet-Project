@@ -1,14 +1,4 @@
-import { getAll, getById, create } from "@/lib/json-db"
-
-interface User {
-  id: string
-  name: string
-  email: string
-  password: string
-  phone?: string
-  dob?: string
-  createdAt: string
-}
+import { supabase } from "@/lib/supabase"
 
 export async function POST(request: Request) {
   try {
@@ -25,20 +15,32 @@ export async function POST(request: Request) {
       return Response.json({ error: "Password must be at least 8 characters" }, { status: 400 })
     }
 
-    const users = getAll<User>("users.json")
-    const existing = users.find((u) => u.email === email)
+    // Check if email already exists
+    const { data: existing } = await supabase
+      .from("users")
+      .select("id")
+      .eq("email", email)
+      .maybeSingle()
+
     if (existing) {
       return Response.json({ error: "Email already registered" }, { status: 409 })
     }
 
-    const newUser: User = {
-      id: `user-${Date.now()}`,
-      name: fullName,
-      email,
-      password,
-      createdAt: new Date().toISOString(),
+    // Create user (password hashing would be added with bcryptjs)
+    const { data: newUser, error } = await supabase
+      .from("users")
+      .insert({
+        name: fullName,
+        email,
+        password,
+        role: "customer",
+      })
+      .select()
+      .single()
+
+    if (error) {
+      return Response.json({ error: "Failed to create user" }, { status: 500 })
     }
-    create("users.json", newUser)
 
     const { password: _, ...safeUser } = newUser
     return Response.json(

@@ -1,37 +1,32 @@
-import { getAll, update } from "@/lib/json-db"
-
-interface Address {
-  id: string
-  userId: string
-  name: string
-  phone: string
-  street: string
-  apartment?: string
-  city: string
-  state: string
-  zipCode: string
-  country: string
-  isDefault: boolean
-  type: "home" | "office"
-}
+import { supabase } from "@/lib/supabase"
 
 export async function PATCH(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params
-  const addresses = getAll<Address>("addresses.json")
-  const target = addresses.find((a) => a.id === id)
+
+  const { data: target } = await supabase
+    .from("addresses")
+    .select("user_id")
+    .eq("id", id)
+    .maybeSingle()
 
   if (!target) {
     return Response.json({ error: "Address not found" }, { status: 404 })
   }
 
-  addresses.forEach((a) => {
-    if (a.userId === target.userId) {
-      update<Address>("addresses.json", a.id, { isDefault: a.id === id })
-    }
-  })
+  // Unset all defaults for this user
+  await supabase
+    .from("addresses")
+    .update({ is_default: false })
+    .eq("user_id", target.user_id)
+
+  // Set the target as default
+  await supabase
+    .from("addresses")
+    .update({ is_default: true })
+    .eq("id", id)
 
   return Response.json({ message: "Default address updated" })
 }

@@ -1,21 +1,4 @@
-import { getAll } from "@/lib/json-db"
-
-interface Order {
-  id: string
-  orderNumber: string
-  customer: { name: string; email: string }
-  items: { id: string; name: string; sku: string; quantity: number; price: number; image: string }[]
-  total: number
-  subtotal: number
-  shipping: number
-  tax: number
-  status: string
-  shippingAddress: Record<string, string>
-  paymentMethod: string
-  notes?: string
-  createdAt: string
-  updatedAt: string
-}
+import { supabase } from "@/lib/supabase"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -24,28 +7,32 @@ export async function GET(request: Request) {
   const page = Number.parseInt(searchParams.get("page") || "1")
   const pageSize = Number.parseInt(searchParams.get("pageSize") || "10")
 
-  let orders = getAll<Order>("orders.json")
+  let query = supabase.from("orders").select("*", { count: "exact" })
 
   if (search) {
-    orders = orders.filter(
-      (o) =>
-        o.orderNumber.toLowerCase().includes(search) ||
-        o.customer.name.toLowerCase().includes(search) ||
-        o.customer.email.toLowerCase().includes(search),
-    )
+    query = query.or(`order_number.ilike.%${search}%,customer_name.ilike.%${search}%,customer_email.ilike.%${search}%`)
   }
   if (status) {
-    orders = orders.filter((o) => o.status === status)
+    query = query.eq("status", status)
   }
 
-  orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  query = query.order("created_at", { ascending: false })
 
-  const total = orders.length
+  const from = (page - 1) * pageSize
+  const to = from + pageSize - 1
+  query = query.range(from, to)
+
+  const { data, error, count } = await query
+
+  if (error) {
+    return Response.json({ error: "Failed to fetch orders" }, { status: 500 })
+  }
+
+  const total = count || 0
   const totalPages = Math.ceil(total / pageSize)
-  const paginated = orders.slice((page - 1) * pageSize, page * pageSize)
 
   return Response.json({
-    orders: paginated,
+    orders: data || [],
     pagination: { page, pageSize, total, totalPages },
   })
 }

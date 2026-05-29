@@ -1,24 +1,20 @@
-import { getAll } from "@/lib/json-db"
-
-interface WishlistItem {
-  id: string
-  userId: string
-  productId: string
-  name: string
-  price: number
-  image: string
-  inStock: boolean
-  addedAt: string
-}
+import { supabase } from "@/lib/supabase"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const userId = searchParams.get("userId")
 
-  let items = getAll<WishlistItem>("wishlist.json")
+  let query = supabase.from("wishlist_items").select("*")
+
   if (userId) {
-    items = items.filter((i) => i.userId === userId)
+    query = query.eq("user_id", userId)
   }
 
-  return Response.json({ items })
+  const { data, error } = await query
+
+  if (error) {
+    return Response.json({ error: "Failed to fetch wishlist" }, { status: 500 })
+  }
+
+  return Response.json({ items: data || [] })
 }

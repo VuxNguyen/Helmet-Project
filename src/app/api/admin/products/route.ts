@@ -1,21 +1,4 @@
-import { getAll, create } from "@/lib/json-db"
-
-interface RawProduct {
-  id: string
-  name: string
-  sku: string
-  brand: string
-  category: string
-  categorySlug: string
-  price: number
-  originalPrice?: number
-  stockCount: number
-  rating: number
-  reviewCount: number
-  image: string
-  description: string
-  featured?: boolean
-}
+import { supabase } from "@/lib/supabase"
 
 interface AdminProduct {
   id: string
@@ -39,61 +22,59 @@ export async function GET(request: Request) {
   const search = searchParams.get("search")?.toLowerCase()
   const category = searchParams.get("category")
   const brand = searchParams.get("brand")
-  const status = searchParams.get("status")
-  const sortBy = searchParams.get("sortBy") || "createdAt"
+  const sortBy = searchParams.get("sortBy") || "created_at"
   const sortOrder = searchParams.get("sortOrder") || "desc"
   const page = Number.parseInt(searchParams.get("page") || "1")
   const pageSize = Number.parseInt(searchParams.get("pageSize") || "10")
 
-  let products = getAll<RawProduct>("products.json").map((p) => ({
-    id: p.id,
-    name: p.name,
-    sku: p.sku,
-    brand: p.brand,
-    category: p.categorySlug || p.category,
-    price: p.price,
-    originalPrice: p.originalPrice,
-    stock: p.stockCount,
-    status: (p.stockCount === 0 ? "archived" : "active") as "active" | "draft" | "archived",
-    rating: p.rating,
-    reviewCount: p.reviewCount,
-    createdAt: new Date().toISOString(),
-    image: p.image,
-    description: p.description,
-  }))
+  let query = supabase.from("products").select("*", { count: "exact" })
 
   if (search) {
-    products = products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(search) ||
-        p.sku.toLowerCase().includes(search) ||
-        p.brand.toLowerCase().includes(search),
-    )
+    query = query.or(`name.ilike.%${search}%,sku.ilike.%${search}%,brand.ilike.%${search}%`)
   }
   if (category) {
-    products = products.filter((p) => p.category === category)
+    query = query.eq("category_slug", category)
   }
   if (brand) {
-    products = products.filter((p) => p.brand.toLowerCase() === brand.toLowerCase())
-  }
-  if (status) {
-    products = products.filter((p) => p.status === status)
+    query = query.ilike("brand", brand)
   }
 
-  products.sort((a, b) => {
-    const dir = sortOrder === "asc" ? 1 : -1
-    if (sortBy === "name") return a.name.localeCompare(b.name) * dir
-    if (sortBy === "price") return (a.price - b.price) * dir
-    if (sortBy === "stock") return (a.stock - b.stock) * dir
-    return 0
-  })
+  // Apply sorting
+  const orderCol = sortBy === "name" ? "name" : sortBy === "price" ? "price" : "created_at"
+  query = query.order(orderCol, { ascending: sortOrder === "asc" })
 
-  const total = products.length
+  const from = (page - 1) * pageSize
+  const to = from + pageSize - 1
+  query = query.range(from, to)
+
+  const { data, error, count } = await query
+
+  if (error) {
+    return Response.json({ error: "Failed to fetch products" }, { status: 500 })
+  }
+
+  const products: AdminProduct[] = (data || []).map((p: Record<string, unknown>) => ({
+    id: p.id as string,
+    name: p.name as string,
+    sku: (p.sku as string) || "",
+    brand: p.brand as string,
+    category: (p.category_slug as string) || (p.category as string) || "",
+    price: p.price as number,
+    originalPrice: p.original_price as number | undefined,
+    stock: (p.stock_count as number) || 0,
+    status: ((p.stock_count as number) === 0 ? "archived" : "active") as "active" | "draft" | "archived",
+    rating: (p.rating as number) || 0,
+    reviewCount: (p.review_count as number) || 0,
+    createdAt: (p.created_at as string) || new Date().toISOString(),
+    image: (p.image as string) || "/placeholder-helmet.svg",
+    description: p.description as string,
+  }))
+
+  const total = count || 0
   const totalPages = Math.ceil(total / pageSize)
-  const paginated = products.slice((page - 1) * pageSize, page * pageSize)
 
   return Response.json({
-    products: paginated,
+    products,
     pagination: { page, pageSize, total, totalPages },
   })
 }
@@ -101,24 +82,32 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const newProduct: AdminProduct = {
-      id: `product-${Date.now()}`,
-      name: body.name,
-      sku: body.sku || `HELM-${String(getAll<RawProduct>("products.json").length + 1).padStart(4, "0")}`,
-      brand: body.brand,
-      category: body.category,
-      price: body.price,
-      originalPrice: body.originalPrice,
-      stock: body.stock || 0,
-      status: body.status || "draft",
-      rating: 0,
-      reviewCount: 0,
-      createdAt: new Date().toISOString().split("T")[0],
-      image: body.image || "/placeholder-helmet.svg",
-      description: body.description,
+
+    // Get count for SKU generation
+    const { count } = await supabase.from("products").select("*", { count: "exact", head: true })
+    const sku = body.sku || `HELM-${String((count || 0) + 1).padStart(4, "0")}`
+
+    const { data: newProduct, error } = await supabase
+      .from("products")
+      .insert({
+        name: body.name,
+        sku,
+        brand: body.brand,
+        category_slug: body.category,
+        price: body.price,
+        original_price: body.originalPrice,
+        stock_count: body.stock || 0,
+        image: body.image || "/placeholder-helmet.svg",
+        description: body.description || "",
+        in_stock: (body.stock || 0) > 0,
+      })
+      .select()
+      .single()
+
+    if (error) {
+      return Response.json({ error: "Failed to create product" }, { status: 500 })
     }
 
-    create("products.json", newProduct)
     return Response.json({ product: newProduct }, { status: 201 })
   } catch {
     return Response.json({ error: "Invalid request body" }, { status: 400 })

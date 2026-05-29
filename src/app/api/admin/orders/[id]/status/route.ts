@@ -1,10 +1,4 @@
-import { getById, update } from "@/lib/json-db"
-
-interface Order {
-  id: string
-  status: string
-  updatedAt?: string
-}
+import { supabase } from "@/lib/supabase"
 
 const validTransitions: Record<string, string[]> = {
   pending: ["confirmed", "cancelled"],
@@ -24,7 +18,12 @@ export async function PATCH(
     const body = await request.json()
     const { status: newStatus } = body
 
-    const order = getById<Order>("orders.json", id)
+    const { data: order } = await supabase
+      .from("orders")
+      .select("status")
+      .eq("id", id)
+      .maybeSingle()
+
     if (!order) {
       return Response.json({ error: "Order not found" }, { status: 404 })
     }
@@ -37,10 +36,16 @@ export async function PATCH(
       )
     }
 
-    const updated = update<Order>("orders.json", id, {
-      status: newStatus,
-      updatedAt: new Date().toISOString(),
-    })
+    const { data: updated, error } = await supabase
+      .from("orders")
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .eq("id", id)
+      .select()
+      .single()
+
+    if (error) {
+      return Response.json({ error: "Failed to update order status" }, { status: 500 })
+    }
 
     return Response.json({ order: updated })
   } catch {

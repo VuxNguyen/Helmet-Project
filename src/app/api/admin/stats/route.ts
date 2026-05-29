@@ -1,53 +1,45 @@
-import { getAll } from "@/lib/json-db"
-
-interface Order {
-  id: string
-  total: number
-  status: string
-  createdAt: string
-  customer: { name: string; email: string }
-}
-
-interface Product {
-  id: string
-  stockCount: number
-  name: string
-}
-
-interface Customer {
-  id: string
-  totalOrders: number
-  totalSpent: number
-}
+import { supabase } from "@/lib/supabase"
 
 export async function GET() {
-  const orders = getAll<Order>("orders.json")
-  const products = getAll<Product>("products.json")
-  const customers = getAll<Customer>("customers.json")
+  // Fetch orders
+  const { data: orders } = await supabase
+    .from("orders")
+    .select("*")
 
-  const totalRevenue = orders
+  // Fetch products for low stock
+  const { data: products } = await supabase
+    .from("products")
+    .select("id, name, stock_count")
+
+  // Fetch users for customer count
+  const { count: totalCustomers } = await supabase
+    .from("users")
+    .select("*", { count: "exact", head: true })
+
+  const allOrders = orders || []
+
+  const totalRevenue = allOrders
     .filter((o) => o.status !== "cancelled")
-    .reduce((sum, o) => sum + o.total, 0)
+    .reduce((sum: number, o: { total: number }) => sum + o.total, 0)
 
-  const totalOrders = orders.length
-  const totalCustomers = customers.length
+  const totalOrders = allOrders.length
 
-  const deliveredOrders = orders.filter((o) => o.status === "delivered").length
+  const deliveredOrders = allOrders.filter((o: { status: string }) => o.status === "delivered").length
   const conversionRate = totalOrders > 0
     ? Math.round((deliveredOrders / totalOrders) * 100 * 10) / 10
     : 0
 
   const lastMonth = new Date()
   lastMonth.setMonth(lastMonth.getMonth() - 1)
-  const thisMonthOrders = orders.filter((o) => new Date(o.createdAt) >= lastMonth)
+  const thisMonthOrders = allOrders.filter((o: { created_at: string }) => new Date(o.created_at) >= lastMonth)
   const prevMonth = new Date()
   prevMonth.setMonth(prevMonth.getMonth() - 2)
-  const prevMonthOrders = orders.filter(
-    (o) => new Date(o.createdAt) >= prevMonth && new Date(o.createdAt) < lastMonth,
+  const prevMonthOrders = allOrders.filter(
+    (o: { created_at: string }) => new Date(o.created_at) >= prevMonth && new Date(o.created_at) < lastMonth,
   )
 
-  const currentRevenue = thisMonthOrders.reduce((s, o) => s + o.total, 0)
-  const previousRevenue = prevMonthOrders.reduce((s, o) => s + o.total, 0)
+  const currentRevenue = thisMonthOrders.reduce((s: number, o: { total: number }) => s + o.total, 0)
+  const previousRevenue = prevMonthOrders.reduce((s: number, o: { total: number }) => s + o.total, 0)
   const revenueChange = previousRevenue > 0
     ? Math.round(((currentRevenue - previousRevenue) / previousRevenue) * 100 * 10) / 10
     : 0
@@ -55,24 +47,25 @@ export async function GET() {
   const ordersChange = thisMonthOrders.length - prevMonthOrders.length
   const customersChange = thisMonthOrders.length > 0 ? 1 : 0
 
-  const recentOrders = orders
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  const recentOrders = allOrders
+    .sort((a: { created_at: string }, b: { created_at: string }) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5)
 
-  const lowStockProducts = products
-    .filter((p) => p.stockCount > 0 && p.stockCount <= 10)
+  const lowStockProducts = (products || [])
+    .filter((p: { stock_count: number }) => p.stock_count > 0 && p.stock_count <= 10)
     .slice(0, 5)
+    .map((p: { id: string; name: string; stock_count: number }) => ({ id: p.id, name: p.name, stock: p.stock_count }))
 
   return Response.json({
     totalRevenue,
     totalOrders,
-    totalCustomers,
+    totalCustomers: totalCustomers || 0,
     conversionRate,
     revenueChange,
     ordersChange,
     customersChange,
     conversionChange: 0,
     recentOrders,
-    lowStockProducts: lowStockProducts.map((p) => ({ id: p.id, name: p.name, stock: p.stockCount })),
+    lowStockProducts,
   })
 }

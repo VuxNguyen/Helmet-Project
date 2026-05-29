@@ -1,22 +1,4 @@
-import { getAll, create } from "@/lib/json-db"
-
-interface Order {
-  id: string
-  orderNumber: string
-  userId: string
-  customer: { name: string; email: string }
-  items: { id: string; name: string; sku: string; quantity: number; price: number; image: string }[]
-  total: number
-  subtotal: number
-  shipping: number
-  tax: number
-  status: string
-  shippingAddress: Record<string, string>
-  paymentMethod: string
-  notes?: string
-  createdAt: string
-  updatedAt: string
-}
+import { supabase } from "@/lib/supabase"
 
 export async function POST(request: Request) {
   try {
@@ -37,33 +19,40 @@ export async function POST(request: Request) {
     const tax = Math.round(subtotal * 0.08 * 100) / 100
     const total = Math.round((subtotal + shippingCost + tax) * 100) / 100
 
-    const orderNumber = `ORD-2026-${String(getAll<Order>("orders.json").length + 1).padStart(3, "0")}`
+    // Get count of existing orders to generate order number
+    const { count } = await supabase.from("orders").select("*", { count: "exact", head: true })
+    const orderCount = count || 0
+    const orderNumber = `ORD-2026-${String(orderCount + 1).padStart(3, "0")}`
 
-    const newOrder: Order = {
-      id: `order-${Date.now()}`,
-      orderNumber,
-      userId: "guest",
-      customer: { name: shipping.firstName + " " + shipping.lastName, email: shipping.email },
-      items: items.map((item: { productId: string; name: string; quantity: number; price: number }) => ({
-        id: item.productId,
-        name: item.name,
-        sku: "",
-        quantity: item.quantity,
-        price: item.price,
-        image: "/placeholder-helmet.svg",
-      })),
-      total,
-      subtotal,
-      shipping: shippingCost,
-      tax,
-      status: "pending",
-      shippingAddress: shipping,
-      paymentMethod: paymentMethod || "credit-card",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+    const { data: newOrder, error } = await supabase
+      .from("orders")
+      .insert({
+        order_number: orderNumber,
+        user_id: null,
+        customer_name: shipping.firstName + " " + shipping.lastName,
+        customer_email: shipping.email,
+        items: items.map((item: { productId: string; name: string; quantity: number; price: number }) => ({
+          id: item.productId,
+          name: item.name,
+          sku: "",
+          quantity: item.quantity,
+          price: item.price,
+          image: "/placeholder-helmet.svg",
+        })),
+        total,
+        subtotal,
+        shipping: shippingCost,
+        tax,
+        status: "pending",
+        shipping_address: shipping,
+        payment_method: paymentMethod || "credit-card",
+      })
+      .select()
+      .single()
+
+    if (error) {
+      return Response.json({ error: "Failed to create order" }, { status: 500 })
     }
-
-    create("orders.json", newOrder)
 
     return Response.json(
       {
@@ -71,7 +60,7 @@ export async function POST(request: Request) {
         orderNumber,
         status: "pending",
         total,
-        createdAt: newOrder.createdAt,
+        createdAt: newOrder.created_at,
       },
       { status: 201 },
     )

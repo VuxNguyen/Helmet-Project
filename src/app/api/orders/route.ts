@@ -1,22 +1,4 @@
-import { getAll } from "@/lib/json-db"
-
-interface Order {
-  id: string
-  orderNumber: string
-  userId: string
-  customer: { name: string; email: string }
-  items: { id: string; name: string; sku: string; quantity: number; price: number; image: string }[]
-  total: number
-  subtotal: number
-  shipping: number
-  tax: number
-  status: string
-  shippingAddress: Record<string, string>
-  paymentMethod: string
-  notes?: string
-  createdAt: string
-  updatedAt: string
-}
+import { supabase } from "@/lib/supabase"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -24,20 +6,30 @@ export async function GET(request: Request) {
   const page = Number.parseInt(searchParams.get("page") || "1")
   const pageSize = Number.parseInt(searchParams.get("pageSize") || "10")
 
-  let orders = getAll<Order>("orders.json")
+  let query = supabase.from("orders").select("*", { count: "exact" })
 
   if (userId) {
-    orders = orders.filter((o) => o.userId === userId)
+    query = query.eq("user_id", userId)
   }
 
-  orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  query = query.order("created_at", { ascending: false })
 
-  const total = orders.length
+  // Pagination
+  const from = (page - 1) * pageSize
+  const to = from + pageSize - 1
+  query = query.range(from, to)
+
+  const { data, error, count } = await query
+
+  if (error) {
+    return Response.json({ error: "Failed to fetch orders" }, { status: 500 })
+  }
+
+  const total = count || 0
   const totalPages = Math.ceil(total / pageSize)
-  const paginatedOrders = orders.slice((page - 1) * pageSize, page * pageSize)
 
   return Response.json({
-    orders: paginatedOrders,
+    orders: data || [],
     pagination: { page, pageSize, total, totalPages },
   })
 }

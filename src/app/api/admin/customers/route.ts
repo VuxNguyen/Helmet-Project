@@ -1,19 +1,4 @@
-import { getAll } from "@/lib/json-db"
-
-interface Customer {
-  id: string
-  name: string
-  email: string
-  phone: string
-  status: "active" | "inactive" | "blocked"
-  totalOrders: number
-  totalSpent: number
-  city: string
-  state: string
-  country: string
-  tags: string[]
-  createdAt: string
-}
+import { supabase } from "@/lib/supabase"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -22,29 +7,29 @@ export async function GET(request: Request) {
   const page = Number.parseInt(searchParams.get("page") || "1")
   const pageSize = Number.parseInt(searchParams.get("pageSize") || "10")
 
-  let customers = getAll<Customer>("customers.json")
+  let query = supabase.from("users").select("*", { count: "exact" })
 
   if (search) {
-    customers = customers.filter(
-      (c) =>
-        c.name.toLowerCase().includes(search) ||
-        c.email.toLowerCase().includes(search) ||
-        c.phone.includes(search) ||
-        c.city.toLowerCase().includes(search),
-    )
-  }
-  if (status) {
-    customers = customers.filter((c) => c.status === status)
+    query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%`)
   }
 
-  customers.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  query = query.order("created_at", { ascending: false })
 
-  const total = customers.length
+  const from = (page - 1) * pageSize
+  const to = from + pageSize - 1
+  query = query.range(from, to)
+
+  const { data, error, count } = await query
+
+  if (error) {
+    return Response.json({ error: "Failed to fetch customers" }, { status: 500 })
+  }
+
+  const total = count || 0
   const totalPages = Math.ceil(total / pageSize)
-  const paginated = customers.slice((page - 1) * pageSize, page * pageSize)
 
   return Response.json({
-    customers: paginated,
+    customers: data || [],
     pagination: { page, pageSize, total, totalPages },
   })
 }
